@@ -2,13 +2,18 @@ POST http://localhost:8080/api/v1/people
 Content-Type: application/json
 
 {
-    "nombres": "segundo enrique",
-    "apellidos": "correa perez",
+    "nombres": "jose martin",
+    "apellidos": "ramirez cabo",
     "tipoDocumentoCode": "DNI",
-    "numeroDocumento": "12345678",
+    "numeroDocumento": "26605478",
     "generoCode": "MASCULINO",
-    "estadoCivilCode": "SOLTERO",
-    "fechaNacimiento": "1969-01-15",
-    "numero_celular": "(+51) 987654321",
-    "correo": "enrique@example.com"
+    "estadoCivilCode": "CASADO",
+    "fechaNacimiento": "1969-01-14",
+    "numero_celular": "(+51) 987654322",
+    "correo": "lilia@example.com"
 }
+
+###
+
+GET http://localhost:8080/api/v1/people?q=
+Content-Type: application/json

@@ -1,5 +1,7 @@
 package com.dataverse.dataverserentals.administrations.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -8,6 +10,7 @@ import com.dataverse.dataverserentals.administrations.entities.Persona;
 import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
 import com.dataverse.dataverserentals.administrations.exceptions.FieldConstraintException;
 import com.dataverse.dataverserentals.administrations.repositories.PersonaRepository;
+import com.dataverse.dataverserentals.administrations.repositories.specifications.PersonaSpecifications;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,11 @@ import lombok.extern.slf4j.Slf4j;
 public class PersonaService {
 
     private final PersonaRepository personaRepository;
+
+    public Page<Persona> findAll(Pageable pageable, String q) {
+        return personaRepository.findAll(PersonaSpecifications.nombresOrApellidosOrNumeroDocumentoContains(q),
+                pageable);
+    }
 
     public Long create(@Valid CreatePersonaDto payload) throws ConflictException, FieldConstraintException {
 
