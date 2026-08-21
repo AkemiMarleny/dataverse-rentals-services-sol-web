@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreatePersonaDto;
+import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdatePersonDto;
 import com.dataverse.dataverserentals.administrations.entities.Persona;
 import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
 import com.dataverse.dataverserentals.administrations.exceptions.FieldConstraintException;
@@ -42,5 +43,12 @@ public class PersonaService {
     public Persona findById(Long id) throws RecordNotFoundException {
         return personaRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(
                 String.format("La persona solicitada con el id: %s no se encuentra registrada.", id)));
+    }
+
+    public void update(Long id, @Valid UpdatePersonDto payload) throws RecordNotFoundException {
+
+        Persona persona = findById(id);
+        persona.updateWith(payload);
+        personaRepository.save(persona);
     }
 }

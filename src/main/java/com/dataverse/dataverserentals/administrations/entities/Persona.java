@@ -3,6 +3,7 @@ package com.dataverse.dataverserentals.administrations.entities;
 import java.time.LocalDate;
 
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreatePersonaDto;
+import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdatePersonDto;
 import com.dataverse.dataverserentals.administrations.enums.EstadoCivil;
 import com.dataverse.dataverserentals.administrations.enums.Genero;
 import com.dataverse.dataverserentals.administrations.enums.TipoDocumento;
@@ -73,6 +74,18 @@ public class Persona {
         persona.setNumeroCelular(request.numero_celular());
         persona.setCorreo(request.correo());
         return persona;
+    }
+
+    public void updateWith(UpdatePersonDto request) {
+        this.nombres = request.nombres();
+        this.apellidos = request.apellidos();
+        this.tipoDocumentoCode = request.tipoDocumentoCode();
+        this.numeroDocumento = request.numeroDocumento();
+        this.generoCode = request.generoCode();
+        this.estadoCivilCode = request.estadoCivilCode();
+        this.fechaNacimiento = request.fechaNacimiento();
+        this.numeroCelular = request.numero_celular();
+        this.correo = request.correo();
     }
 
 }
