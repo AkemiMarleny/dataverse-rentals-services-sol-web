@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreatePersonaDto;
+import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreatePersonDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdatePersonDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.response.DetailPersonaDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.response.PersonaPaginaDto;
@@ -42,7 +42,7 @@ public class PersonaController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponse> create(@RequestBody CreatePersonaDto request)
+    public ResponseEntity<CreateResponse> create(@RequestBody CreatePersonDto request)
             throws Exception {
 
         log.info("Creando una nueva persona con solicitud: {}", request);

@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreatePersonaDto;
+import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreatePersonDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdatePersonDto;
 import com.dataverse.dataverserentals.administrations.entities.Persona;
 import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
@@ -31,7 +31,7 @@ public class PersonaService {
                 pageable);
     }
 
-    public Long create(@Valid CreatePersonaDto payload) throws ConflictException, FieldConstraintException {
+    public Long create(@Valid CreatePersonDto payload) throws ConflictException, FieldConstraintException {
 
         log.info("Proceso de creación de la persona iniciado con la solicitud: {}", payload);
 

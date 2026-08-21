@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-public record CreatePersonaDto(
+public record CreatePersonDto(
         @NotBlank @Length(min = 3) String nombres,
         @NotBlank @Length(min = 3) String apellidos,
         @NotNull TipoDocumento tipoDocumentoCode,

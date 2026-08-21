@@ -2,7 +2,7 @@ package com.dataverse.dataverserentals.administrations.entities;
 
 import java.time.LocalDate;
 
-import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreatePersonaDto;
+import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreatePersonDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdatePersonDto;
 import com.dataverse.dataverserentals.administrations.enums.EstadoCivil;
 import com.dataverse.dataverserentals.administrations.enums.Genero;
@@ -62,7 +62,7 @@ public class Persona {
     @Column(nullable = false, length = 100, unique = true)
     private String correo;
 
-    public static Persona from(CreatePersonaDto request) throws FieldConstraintException {
+    public static Persona from(CreatePersonDto request) throws FieldConstraintException {
         Persona persona = new Persona();
         persona.setNombres(request.nombres());
         persona.setApellidos(request.apellidos());
