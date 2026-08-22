@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateUnidadDto;
 import com.dataverse.dataverserentals.administrations.entities.Unidad;
 import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
+import com.dataverse.dataverserentals.administrations.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.administrations.repositories.EdificioRepository;
 import com.dataverse.dataverserentals.administrations.repositories.UnidadRepository;
 
@@ -45,6 +46,11 @@ public class UnidadService {
         Unidad unidad = Unidad.from(payload);
         return unidadRepository.save(unidad).getId();
 
+    }
+
+    public Unidad findById(Long id) throws RecordNotFoundException {
+        return unidadRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(
+                String.format("La unidad solicitada con el id: %s no se encuentra registrada.", id)));
     }
 
 }
