@@ -33,7 +33,7 @@ public class EdificioService {
         log.info("Proceso de creación del edificio iniciado con payload: {}", payload);
 
         if (edificioRepository.existsByNombre(payload.nombre())) {
-            throw new ConflictException("Ya existe un edificio con el nombre: " + payload.nombre());
+            throw new ConflictException(String.format("Ya existe un edificio con el nombre: ", payload.nombre()));
         }
 
         Edificio edificio = Edificio.from(payload);
