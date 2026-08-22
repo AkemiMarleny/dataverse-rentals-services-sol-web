@@ -23,8 +23,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "units", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_units_edificio_piso_puerta", columnNames = { "edificio_id", "numero_piso",
-                "numero_puerta" })
+        @UniqueConstraint(name = "uk_units_edificio_puerta", columnNames = { "edificio_id", "numero_puerta" })
 })
 @Getter
 @Setter

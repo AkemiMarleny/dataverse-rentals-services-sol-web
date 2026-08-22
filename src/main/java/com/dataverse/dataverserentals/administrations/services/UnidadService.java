@@ -36,10 +36,10 @@ public class UnidadService {
                 String.format("El edificio solicitado con el id: %s no se encuentra registrado.",
                         payload.edificioId())));
 
-        if (unidadRepository.existsByEdificioIdAndNumeroPisoAndNumeroPuerta(
-                payload.edificioId(), payload.numeroPiso(), payload.numeroPuerta())) {
-            throw new ConflictException(String.format("Ya existe la puerta %s en el piso %s de este edificio.",
-                    payload.numeroPuerta(), payload.numeroPiso()));
+        if (unidadRepository.existsByEdificioIdAndNumeroPuerta(
+                payload.edificioId(), payload.numeroPuerta())) {
+            throw new ConflictException(String.format("La puerta %s ya se encuentra registrada en este edificio.",
+                    payload.numeroPuerta()));
         }
 
         Unidad unidad = Unidad.from(payload);

@@ -10,7 +10,7 @@ import com.dataverse.dataverserentals.administrations.entities.Unidad;
 
 public interface UnidadRepository extends JpaRepository<Unidad, Long> {
 
-    boolean existsByEdificioIdAndNumeroPisoAndNumeroPuerta(Long edificioId, Integer numeroPiso, String numeroPuerta);
+    boolean existsByEdificioIdAndNumeroPuerta(Long edificioId, String numeroPuerta);
 
     @Query("SELECT u FROM Unidad u LEFT JOIN u.edificio e " +
            "WHERE CAST(u.numeroPiso AS string) LIKE %:q% " + 
