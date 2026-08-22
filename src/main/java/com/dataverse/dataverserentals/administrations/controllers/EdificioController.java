@@ -6,12 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateEdificioDto;
+import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdateEdificioDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.response.DetailEdificioDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.response.EdificioPaginaDto;
 import com.dataverse.dataverserentals.administrations.entities.Edificio;
@@ -56,6 +58,15 @@ public class EdificioController {
         Edificio edificio = edificioService.findById(id);
         DetailEdificioDto detailEdificioDto = DetailEdificioDto.fromEntity(edificio);
         return new ResponseEntity<>(detailEdificioDto, HttpStatus.OK);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UpdateEdificioDto request)
+            throws RecordNotFoundException, ConflictException {
+
+        log.info("actualizando el edificio con request: {}", request);
+        edificioService.update(id, request);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

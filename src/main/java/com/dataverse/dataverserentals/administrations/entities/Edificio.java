@@ -1,6 +1,7 @@
 package com.dataverse.dataverserentals.administrations.entities;
 
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateEdificioDto;
+import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdateEdificioDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,6 +39,12 @@ public class Edificio {
         edificio.setDireccion(request.direccion());
         edificio.setNumeroPisos(request.numeroPisos());
         return edificio;
+    }
+
+    public void updateWith(UpdateEdificioDto request) {
+        this.nombre = request.nombre();
+        this.direccion = request.direccion();
+        this.numeroPisos = request.numeroPisos();
     }
 
 }

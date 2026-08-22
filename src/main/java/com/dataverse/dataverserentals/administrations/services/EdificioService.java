@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateEdificioDto;
+import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdateEdificioDto;
 import com.dataverse.dataverserentals.administrations.entities.Edificio;
 import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
 import com.dataverse.dataverserentals.administrations.exceptions.RecordNotFoundException;
@@ -42,6 +43,17 @@ public class EdificioService {
     public Edificio findById(Long id) throws RecordNotFoundException {
         return edificioRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(
                 String.format("El edificio solicitado con el id: %s no se encuentra registrado.", id)));
+    }
+
+    public void update(Long id, @Valid UpdateEdificioDto payload) throws RecordNotFoundException, ConflictException {
+        Edificio edificio = findById(id);
+
+        if (edificioRepository.existsByNombre(payload.nombre())) {
+            throw new ConflictException(String.format("Ya existe un edificio con el nombre: %s", payload.nombre()));
+        }
+
+        edificio.updateWith(payload);
+        edificioRepository.save(edificio);
     }
 
 }
