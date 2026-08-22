@@ -1,5 +1,7 @@
 package com.dataverse.dataverserentals.administrations.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -19,6 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 public class EdificioService {
 
     private final EdificioRepository edificioRepository;
+
+    public Page<Edificio> findAll(Pageable pageable, String q) {
+        return edificioRepository.findByNombreContaining(pageable, q);
+    }
 
     public Long create(@Valid CreateEdificioDto payload) throws ConflictException {
 
