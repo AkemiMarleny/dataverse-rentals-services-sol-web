@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateEdificioDto;
 import com.dataverse.dataverserentals.administrations.entities.Edificio;
 import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
+import com.dataverse.dataverserentals.administrations.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.administrations.repositories.EdificioRepository;
 
 import jakarta.validation.Valid;
@@ -36,6 +37,11 @@ public class EdificioService {
 
         Edificio edificio = Edificio.from(payload);
         return edificioRepository.save(edificio).getId();
+    }
+
+    public Edificio findById(Long id) throws RecordNotFoundException {
+        return edificioRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(
+                String.format("El edificio solicitado con el id: %s no se encuentra registrado.", id)));
     }
 
 }
