@@ -6,6 +6,7 @@ import com.dataverse.dataverserentals.administrations.entities.Unidad;
 import com.dataverse.dataverserentals.administrations.enums.TipoAcabado;
 
 public record UnidadPaginaDto(
+        Long id,
         Long edificioId,
         String nombreEdificio,
         Integer numeroPiso,
@@ -15,6 +16,7 @@ public record UnidadPaginaDto(
 
     public static UnidadPaginaDto fromEntity(Unidad unidad) {
         return new UnidadPaginaDto(
+                unidad.getId(),
                 unidad.getEdificioId(),
                 unidad.getEdificio().getNombre(),
                 unidad.getNumeroPiso(),
