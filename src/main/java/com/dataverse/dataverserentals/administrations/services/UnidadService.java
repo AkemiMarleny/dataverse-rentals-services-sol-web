@@ -1,5 +1,7 @@
 package com.dataverse.dataverserentals.administrations.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -21,6 +23,10 @@ public class UnidadService {
 
     private final UnidadRepository unidadRepository;
     private final EdificioRepository edificioRepository;
+
+    public Page<Unidad> findAll(Pageable pageable, String q) {
+        return unidadRepository.nombreEdificioOrNumeroPisoOrNumeroPuertaContains(q, pageable);
+    }
 
     public Long create(@Valid CreateUnidadDto payload) throws ConflictException {
 
