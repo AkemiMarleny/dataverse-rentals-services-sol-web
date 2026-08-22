@@ -1,0 +1,10 @@
+POST http://localhost:8080/api/v1/units
+Content-Type: application/json
+
+{
+    "edificioId": 1,
+    "numeroPiso": 1,
+    "numeroPuerta": "100",
+    "areaMetrosCuadrados": 200,
+    "tipoAcabado": "SEMI_LUJO"
+}
