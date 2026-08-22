@@ -6,12 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateUnidadDto;
+import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdateUnidadDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.response.DetailUnidadDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.response.UnidadPaginaDto;
 import com.dataverse.dataverserentals.administrations.entities.Unidad;
@@ -54,6 +56,15 @@ public class UnidadController {
         Unidad unidad = unidadService.findById(id);
         DetailUnidadDto detailUnidadDto = DetailUnidadDto.fromEntity(unidad);
         return new ResponseEntity<>(detailUnidadDto, HttpStatus.OK);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UpdateUnidadDto request)
+            throws ConflictException, RecordNotFoundException {
+
+        log.info("actualizando la unidad con request: {}", request);
+        unidadService.update(id, request);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

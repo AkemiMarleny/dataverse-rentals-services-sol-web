@@ -3,6 +3,7 @@ package com.dataverse.dataverserentals.administrations.entities;
 import java.math.BigDecimal;
 
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateUnidadDto;
+import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdateUnidadDto;
 import com.dataverse.dataverserentals.administrations.enums.TipoAcabado;
 
 import jakarta.persistence.Column;
@@ -62,6 +63,14 @@ public class Unidad {
         unidad.setAreaMetrosCuadrados(request.areaMetrosCuadrados());
         unidad.setTipoAcabado(request.tipoAcabado());
         return unidad;
+    }
+
+    public void updateWith(UpdateUnidadDto request) {
+        this.edificioId = request.edificioId();
+        this.numeroPiso = request.numeroPiso();
+        this.numeroPuerta = request.numeroPuerta();
+        this.areaMetrosCuadrados = request.areaMetrosCuadrados();
+        this.tipoAcabado = request.tipoAcabado();
     }
 
 }

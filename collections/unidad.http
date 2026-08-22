@@ -2,19 +2,32 @@ POST http://localhost:8080/api/v1/units
 Content-Type: application/json
 
 {
-    "edificioId": 2,
+    "edificioId": 1,
     "numeroPiso": 5,
-    "numeroPuerta": "500",
-    "areaMetrosCuadrados": 200,
-    "tipoAcabado": "SEMI_LUJO"
+    "numeroPuerta": "501",
+    "areaMetrosCuadrados": 100,
+    "tipoAcabado": "LUJO"
 }
 
 ###
 
-GET http://localhost:8080/api/v1/units?q=1
+GET http://localhost:8080/api/v1/units?q=
 Content-Type: application/json
 
 ###
 
 GET http://localhost:8080/api/v1/units/3
 Content-Type: application/json
+
+###
+
+PUT http://localhost:8080/api/v1/units/5
+Content-Type: application/json
+
+{
+    "edificioId": 1,
+    "numeroPiso": 10,
+    "numeroPuerta": "500",
+    "areaMetrosCuadrados": 200,
+    "tipoAcabado": "LUJO"
+}

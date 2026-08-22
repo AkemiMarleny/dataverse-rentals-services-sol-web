@@ -1,11 +1,13 @@
 package com.dataverse.dataverserentals.administrations.services;
 
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateUnidadDto;
+import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdateUnidadDto;
 import com.dataverse.dataverserentals.administrations.entities.Unidad;
 import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
 import com.dataverse.dataverserentals.administrations.exceptions.RecordNotFoundException;
@@ -51,6 +53,27 @@ public class UnidadService {
     public Unidad findById(Long id) throws RecordNotFoundException {
         return unidadRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(
                 String.format("La unidad solicitada con el id: %s no se encuentra registrada.", id)));
+    }
+
+    public void update(Long id, @Valid UpdateUnidadDto payload) throws ConflictException, RecordNotFoundException {
+        Unidad unidad = findById(id);
+
+        edificioRepository.findById(payload.edificioId())
+                .orElseThrow(() -> new ConflictException(String.format(
+                        "El edificio solicitado con el id: %s no se encuentra registrado.", payload.edificioId())));
+
+        Long cantidadPuertasDuplicadas = unidadRepository.countByEdificioIdAndNumeroPuertaAndIdNot(payload.edificioId(),
+                payload.numeroPuerta(), id);
+
+        if (cantidadPuertasDuplicadas > 0) {
+            log.info("Intento de registro de puerta duplicada en actualización: {}", payload);
+            throw new ConflictException(String.format("La puerta %s ya se encuentra registrada en este edificio.",
+                    payload.numeroPuerta()));
+        }
+
+        unidad.updateWith(payload);
+        unidadRepository.save(unidad);
+
     }
 
 }
