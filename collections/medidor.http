@@ -1,0 +1,12 @@
+POST http://localhost:8080/api/v1/meters
+Content-Type: application/json
+
+{
+    "unidadId": 1,
+    "tipoMedidor": "GENERAL_AGUA",
+    "numeroSerie": "sdfghjkakk",
+    "fechaCreacion": "2026-04-12T00:00:00",
+    "usuarioCreacionId": 1,
+    "fechaModificacion": null,
+    "usuarioModificacionId": null
+}
