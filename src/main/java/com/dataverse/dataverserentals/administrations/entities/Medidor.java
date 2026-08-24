@@ -39,9 +39,9 @@ public class Medidor {
     @Column(name = "unidad_id", nullable = false)
     private Long unidadId;
 
-    @Column(name = "tipo_codigo", nullable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private TipoMedidor tipoMedidor;
+    private TipoMedidor tipoMedidorCode;
 
     @Column(nullable = false, unique = true, length = 20)
     private String numeroSerie;
@@ -69,7 +69,7 @@ public class Medidor {
     public static Medidor from(CreateMedidorDto request) {
         Medidor medidor = new Medidor();
         medidor.setUnidadId(request.unidadId());
-        medidor.setTipoMedidor(request.tipoMedidor());
+        medidor.setTipoMedidorCode(request.tipoMedidorCode());
         medidor.setNumeroSerie(request.numeroSerie());
         medidor.setFechaCreacion(request.fechaCreacion());
         medidor.setUsuarioCreacionId(request.usuarioCreacionId());

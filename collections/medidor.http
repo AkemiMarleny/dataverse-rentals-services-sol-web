@@ -3,10 +3,15 @@ Content-Type: application/json
 
 {
     "unidadId": 1,
-    "tipoMedidor": "GENERAL_AGUA",
+    "tipoMedidorCode": "GENERAL_LUZ",
     "numeroSerie": "sdfghjkakk",
     "fechaCreacion": "2026-04-12T00:00:00",
     "usuarioCreacionId": 1,
     "fechaModificacion": null,
     "usuarioModificacionId": null
 }
+
+###
+
+GET http://localhost:8080/api/v1/meters?q=GENERAL_ELECTRICIDAD
+Content-Type: application/json
