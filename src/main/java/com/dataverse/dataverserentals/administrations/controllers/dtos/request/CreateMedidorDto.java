@@ -10,7 +10,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record CreateMedidorDto(
-        @NotNull Long unidadId,
         @NotNull TipoMedidor tipoMedidorCode,
         @NotBlank @Length(min = 7) String numeroSerie,
         @NotNull LocalDateTime fechaCreacion,

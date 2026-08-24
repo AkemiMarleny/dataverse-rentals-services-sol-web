@@ -66,9 +66,9 @@ public class Medidor {
     @Column(name = "usuario_modificacion_id", nullable = true)
     private Long usuarioModificacionId;
 
-    public static Medidor from(CreateMedidorDto request) {
+    public static Medidor from(CreateMedidorDto request, Long unidadId) {
         Medidor medidor = new Medidor();
-        medidor.setUnidadId(request.unidadId());
+        medidor.setUnidadId(unidadId);
         medidor.setTipoMedidorCode(request.tipoMedidorCode());
         medidor.setNumeroSerie(request.numeroSerie());
         medidor.setFechaCreacion(request.fechaCreacion());

@@ -29,15 +29,15 @@ public class MedidorService {
         return medidorRepository.findAll(MedidorSpecifications.tipoMedidorOrNumeroSerieContains(q), pageable);
     }
 
-    public Long create(@Valid CreateMedidorDto payload) throws ConflictException {
+    public Long create(@Valid CreateMedidorDto payload, Long unidadId) throws ConflictException {
         log.info("Proceso de creación del medidor iniciado con la solicitud: {}", payload);
-        unidadRepository.findById(payload.unidadId()).orElseThrow(() -> new ConflictException(String.format(
-                "La unidad solicitada con el id: %s no se encuentra registrada.", payload.unidadId())));
+        unidadRepository.findById(unidadId).orElseThrow(() -> new ConflictException(String.format(
+                "La unidad solicitada con el id: %s no se encuentra registrada.", unidadId)));
 
-        if (medidorRepository.existsByUnidadIdAndTipoMedidorCode(payload.unidadId(), payload.tipoMedidorCode())) {
+        if (medidorRepository.existsByUnidadIdAndTipoMedidorCode(unidadId, payload.tipoMedidorCode())) {
             throw new ConflictException(String.format(
                     "Ya existe un medidor de tipo %s para la unidad %s",
-                    payload.tipoMedidorCode(), payload.unidadId()));
+                    payload.tipoMedidorCode(), unidadId));
         }
 
         if (medidorRepository.existsByNumeroSerie(payload.numeroSerie())) {
@@ -46,7 +46,7 @@ public class MedidorService {
                     payload.numeroSerie()));
         }
 
-        Medidor medidor = Medidor.from(payload);
+        Medidor medidor = Medidor.from(payload, unidadId);
         return medidorRepository.save(medidor).getId();
 
     }

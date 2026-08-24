@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/meters")
+@RequestMapping("api/v1/units/{unitId}/meters")
 @Slf4j
 public class MedidorController {
 
@@ -37,9 +38,10 @@ public class MedidorController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponse> create(@RequestBody CreateMedidorDto request) throws ConflictException {
+    public ResponseEntity<CreateResponse> create(@PathVariable Long unidadId, @RequestBody CreateMedidorDto request)
+            throws ConflictException {
         log.info("Creando un nuevo medidor con solicitud: {}", request);
-        Long id = medidorService.create(request);
+        Long id = medidorService.create(request, unidadId);
         return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
     }
 
