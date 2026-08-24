@@ -1,8 +1,7 @@
-POST http://localhost:8080/api/v1/units/1/meters
+POST http://localhost:8080/api/v1/units/2/meters
 Content-Type: application/json
 
 {
-    "unidadId": 1,
     "tipoMedidorCode": "GENERAL_LUZ",
     "numeroSerie": "sdfghjkakk",
     "fechaCreacion": "2026-04-12T00:00:00",

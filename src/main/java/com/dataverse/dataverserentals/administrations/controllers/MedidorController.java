@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/units/{unitId}/meters")
+@RequestMapping("api/v1/units/{unidadId}/meters")
 @Slf4j
 public class MedidorController {
 
