@@ -32,9 +32,13 @@ public class PersonaService {
     }
 
     public Long create(@Valid CreatePersonDto payload) throws ConflictException, FieldConstraintException {
-
         log.info("Proceso de creación de la persona iniciado con la solicitud: {}", payload);
-
+        if (personaRepository.existsByTipoDocumentoCodeAndNumeroDocumento(payload.tipoDocumentoCode(),
+                payload.numeroDocumento())) {
+            throw new ConflictException(
+                    String.format("El tipo y el número de documento ya han sido registrados anteriormente.",
+                            payload.tipoDocumentoCode(), payload.numeroDocumento()));
+        }
         Persona persona = Persona.from(payload);
 
         return personaRepository.save(persona).getId();
