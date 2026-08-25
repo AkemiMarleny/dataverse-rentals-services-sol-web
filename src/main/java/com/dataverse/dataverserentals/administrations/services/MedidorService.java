@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateMedidorDto;
 import com.dataverse.dataverserentals.administrations.entities.Medidor;
 import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
+import com.dataverse.dataverserentals.administrations.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.administrations.repositories.MedidorRepository;
 import com.dataverse.dataverserentals.administrations.repositories.UnidadRepository;
 import com.dataverse.dataverserentals.administrations.repositories.specifications.MedidorSpecifications;
@@ -49,6 +50,11 @@ public class MedidorService {
         Medidor medidor = Medidor.from(payload, unidadId);
         return medidorRepository.save(medidor).getId();
 
+    }
+
+    public Medidor findById(Long medidorId) throws RecordNotFoundException {
+        return medidorRepository.findById(medidorId).orElseThrow(() -> new RecordNotFoundException(
+                String.format("El medidor solictado con el id: %s no se encuentra registrado.", medidorId)));
     }
 
 }

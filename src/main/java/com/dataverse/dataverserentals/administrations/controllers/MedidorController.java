@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateMedidorDto;
+import com.dataverse.dataverserentals.administrations.controllers.dtos.response.DetailMedidorDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.response.MedidorPaginaDto;
+import com.dataverse.dataverserentals.administrations.entities.Medidor;
 import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
+import com.dataverse.dataverserentals.administrations.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.administrations.services.MedidorService;
 import com.dataverse.dataverserentals.common.dto.Page;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
@@ -43,6 +46,13 @@ public class MedidorController {
         log.info("Creando un nuevo medidor con solicitud: {}", request);
         Long id = medidorService.create(request, unidadId);
         return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
+    }
+
+    @GetMapping("{medidorId}")
+    public ResponseEntity<DetailMedidorDto> findById(@PathVariable Long medidorId) throws RecordNotFoundException {
+        Medidor medidor = medidorService.findById(medidorId);
+        DetailMedidorDto detailMedidorDto = DetailMedidorDto.fromEntity(medidor);
+        return new ResponseEntity<>(detailMedidorDto, HttpStatus.OK);
     }
 
 }

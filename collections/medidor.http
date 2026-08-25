@@ -2,8 +2,8 @@ POST http://localhost:8080/api/v1/units/2/meters
 Content-Type: application/json
 
 {
-    "tipoMedidorCode": "GENERAL_LUZ",
-    "numeroSerie": "sdfghjkakk",
+    "tipoMedidorCode": "GENERAL_AGUA",
+    "numeroSerie": "sdfghjkakk233",
     "fechaCreacion": "2026-04-12T00:00:00",
     "usuarioCreacionId": 1,
     "fechaModificacion": null,
@@ -12,5 +12,10 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/api/v1/meters?q=GENERAL_ELECTRICIDAD
+GET http://localhost:8080/api/v1/units/2/meters?q=
+Content-Type: application/json
+
+###
+
+GET http://localhost:8080/api/v1/units/2/meters/12
 Content-Type: application/json
