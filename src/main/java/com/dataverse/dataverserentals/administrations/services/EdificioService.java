@@ -25,33 +25,31 @@ public class EdificioService {
     private final EdificioRepository edificioRepository;
 
     public Page<Edificio> findAll(Pageable pageable, String q) {
+        log.info("Búsqueda paginada de edificios [filtro: '{}', pageable: {}]", q, pageable);
         return edificioRepository.findByNombreContaining(pageable, q);
     }
 
     public Long create(@Valid CreateEdificioDto payload) throws ConflictException {
-
-        log.info("Proceso de creación del edificio iniciado con payload: {}", payload);
-
+        log.info("Registrando nuevo edificio con los siguientes datos: {}", payload);
         if (edificioRepository.existsByNombre(payload.nombre())) {
-            throw new ConflictException(String.format("Ya existe un edificio con el nombre: ", payload.nombre()));
+            throw new ConflictException(String.format("Ya existe un edificio con el nombre: %s", payload.nombre()));
         }
-
         Edificio edificio = Edificio.from(payload);
         return edificioRepository.save(edificio).getId();
     }
 
     public Edificio findById(Long id) throws RecordNotFoundException {
+        log.info("Recuperando datos del edificio con identificador: {}", id);
         return edificioRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(
                 String.format("El edificio solicitado con el id: %s no se encuentra registrado.", id)));
     }
 
     public void update(Long id, @Valid UpdateEdificioDto payload) throws RecordNotFoundException, ConflictException {
+        log.info("Iniciando actualización del edificio con ID: {}. Datos recibidos: {}", id, payload);
         Edificio edificio = findById(id);
-
         if (edificioRepository.existsByNombre(payload.nombre())) {
             throw new ConflictException(String.format("Ya existe un edificio con el nombre: %s", payload.nombre()));
         }
-
         edificio.updateWith(payload);
         edificioRepository.save(edificio);
     }

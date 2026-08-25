@@ -37,7 +37,7 @@ public class EdificioController {
 
     @GetMapping
     public ResponseEntity<Page<EdificioPaginaDto>> findAll(Pageable pageable, @RequestParam String q) {
-
+        log.info("Listando edificios con filtro '{}' y parámetros: {}", q, pageable);
         org.springframework.data.domain.Page<EdificioPaginaDto> edificioPage = edificioService.findAll(pageable, q)
                 .map(EdificioPaginaDto::fromEntity);
         return ResponseEntity.ok(PageFactory.from(edificioPage));
@@ -45,16 +45,14 @@ public class EdificioController {
 
     @PostMapping
     public ResponseEntity<CreateResponse> create(@RequestBody CreateEdificioDto request) throws ConflictException {
-
-        log.info("Creando un nuevo edificio con request: {}", request);
-
+        log.info("Iniciando la creación de una nuevo edificio: {}", request);
         Long id = edificioService.create(request);
-
         return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<DetailEdificioDto> findById(@PathVariable Long id) throws RecordNotFoundException {
+        log.info("Consultando detalles del edificio con ID: {}", id);
         Edificio edificio = edificioService.findById(id);
         DetailEdificioDto detailEdificioDto = DetailEdificioDto.fromEntity(edificio);
         return new ResponseEntity<>(detailEdificioDto, HttpStatus.OK);
@@ -63,8 +61,7 @@ public class EdificioController {
     @PutMapping("{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UpdateEdificioDto request)
             throws RecordNotFoundException, ConflictException {
-
-        log.info("actualizando el edificio con request: {}", request);
+        log.info("Iniciando actualización del edificio: {}", request);
         edificioService.update(id, request);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
