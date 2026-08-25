@@ -6,12 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateMedidorDto;
+import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdateMedidorDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.response.DetailMedidorDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.response.MedidorPaginaDto;
 import com.dataverse.dataverserentals.administrations.entities.Medidor;
@@ -53,6 +55,14 @@ public class MedidorController {
         Medidor medidor = medidorService.findById(medidorId);
         DetailMedidorDto detailMedidorDto = DetailMedidorDto.fromEntity(medidor);
         return new ResponseEntity<>(detailMedidorDto, HttpStatus.OK);
+    }
+
+    @PutMapping("{medidorId}")
+    public ResponseEntity<Void> update(@PathVariable Long unidadId, @PathVariable Long medidorId,
+            @RequestBody UpdateMedidorDto request) throws RecordNotFoundException {
+        log.info("actualizando el medidor con request: {}", request);
+        medidorService.update(request, unidadId, medidorId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

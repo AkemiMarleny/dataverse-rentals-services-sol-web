@@ -3,6 +3,7 @@ package com.dataverse.dataverserentals.administrations.entities;
 import java.time.LocalDateTime;
 
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateMedidorDto;
+import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdateMedidorDto;
 import com.dataverse.dataverserentals.administrations.enums.TipoMedidor;
 
 import jakarta.persistence.Column;
@@ -22,7 +23,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "meters", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_unidad_tipo_medidor", columnNames = { "unidad_id", "tipo_codigo" })
+        @UniqueConstraint(name = "uk_unidad_tipo_medidor", columnNames = { "unidad_id", "tipo_medidor_code" })
 })
 @Getter
 @Setter
@@ -76,6 +77,15 @@ public class Medidor {
         medidor.setFechaModificacion(request.fechaModificacion());
         medidor.setUsuarioModificacionId(request.usuarioModificacionId());
         return medidor;
+    }
+
+    public void updateWith(UpdateMedidorDto request) {
+        this.tipoMedidorCode = request.tipoMedidorCode();
+        this.numeroSerie = request.numeroSerie();
+        this.fechaCreacion = request.fechaCreacion();
+        this.usuarioCreacionId = request.usuarioCreacionId();
+        this.fechaModificacion = request.fechaModificacion();
+        this.usuarioModificacionId = request.usuarioModificacionId();
     }
 
 }

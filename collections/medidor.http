@@ -19,3 +19,17 @@ Content-Type: application/json
 
 GET http://localhost:8080/api/v1/units/2/meters/12
 Content-Type: application/json
+
+###
+
+PUT http://localhost:8080/api/v1/units/2/meters/2
+Content-Type: application/json 
+
+{
+    "tipoMedidorCode": "ELECTRICIDAD",
+    "numeroSerie": "sdfghjkakk233",
+    "fechaCreacion": "2026-04-12T00:00:00",
+    "usuarioCreacionId": 1,
+    "fechaModificacion": null,
+    "usuarioModificacionId": null
+}

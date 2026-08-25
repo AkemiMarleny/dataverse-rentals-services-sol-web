@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateMedidorDto;
+import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdateMedidorDto;
 import com.dataverse.dataverserentals.administrations.entities.Medidor;
 import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
 import com.dataverse.dataverserentals.administrations.exceptions.RecordNotFoundException;
@@ -53,8 +54,18 @@ public class MedidorService {
     }
 
     public Medidor findById(Long medidorId) throws RecordNotFoundException {
+
         return medidorRepository.findById(medidorId).orElseThrow(() -> new RecordNotFoundException(
                 String.format("El medidor solictado con el id: %s no se encuentra registrado.", medidorId)));
+    }
+
+    public void update(@Valid UpdateMedidorDto payload, Long unidadId, Long medidorId) throws RecordNotFoundException {
+        Medidor medidor = medidorRepository.findByUnidadIdAndId(unidadId, medidorId)
+                .orElseThrow(() -> new RecordNotFoundException(String.format("", unidadId, medidorId)));
+
+        medidor.updateWith(payload);
+        medidorRepository.save(medidor);
+
     }
 
 }
