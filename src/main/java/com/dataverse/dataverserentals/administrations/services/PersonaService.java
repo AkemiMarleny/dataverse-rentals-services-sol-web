@@ -27,16 +27,17 @@ public class PersonaService {
     private final PersonaRepository personaRepository;
 
     public Page<Persona> findAll(Pageable pageable, String q) {
+        log.info("Búsqueda paginada de personas [filtro: '{}', pageable: {}]", q, pageable);
         return personaRepository.findAll(PersonaSpecifications.nombresOrApellidosOrNumeroDocumentoContains(q),
                 pageable);
     }
 
     public Long create(@Valid CreatePersonDto payload) throws ConflictException, FieldConstraintException {
-        log.info("Proceso de creación de la persona iniciado con la solicitud: {}", payload);
+        log.info("Registrando nueva persona con los siguientes datos: {}", payload);
         if (personaRepository.existsByTipoDocumentoCodeAndNumeroDocumento(payload.tipoDocumentoCode(),
                 payload.numeroDocumento())) {
             throw new ConflictException(
-                    String.format("El tipo y el número de documento ya han sido registrados anteriormente.",
+                    String.format("El documento de identidad %s: %s ya se encuentra vinculado a otra persona.",
                             payload.tipoDocumentoCode(), payload.numeroDocumento()));
         }
         Persona persona = Persona.from(payload);
@@ -45,13 +46,23 @@ public class PersonaService {
     }
 
     public Persona findById(Long id) throws RecordNotFoundException {
+        log.info("Recuperando datos de la persona con identificador: {}", id);
         return personaRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(
-                String.format("La persona solicitada con el id: %s no se encuentra registrada.", id)));
+                String.format("La persona con el ID %s no existe en nuestros registros.", id)));
     }
 
-    public void update(Long id, @Valid UpdatePersonDto payload) throws RecordNotFoundException {
-
+    public void update(Long id, @Valid UpdatePersonDto payload) throws RecordNotFoundException, ConflictException {
+        log.info("Iniciando actualización de la persona con ID: {}. Datos recibidos: {}", id, payload);
         Persona persona = findById(id);
+        Long cantidadDocumentosDuplicados = personaRepository.countByTipoDocumentoCodeAndNumeroDocumentoAndIdNot(
+                payload.tipoDocumentoCode(), payload.numeroDocumento(), id);
+        if (cantidadDocumentosDuplicados > 0) {
+            log.info("Validación fallida: Documento duplicado detectado para Tipo: {} y Número: {}. Payload: {}",
+                    payload);
+            throw new ConflictException(
+                    String.format("El documento de identidad %s: %s ya se encuentra vinculado a otra persona.",
+                            payload.tipoDocumentoCode(), payload.numeroDocumento()));
+        }
         persona.updateWith(payload);
         personaRepository.save(persona);
     }

@@ -10,4 +10,7 @@ public interface PersonaRepository extends JpaRepository<Persona, Long>, JpaSpec
 
     boolean existsByTipoDocumentoCodeAndNumeroDocumento(TipoDocumento tipoDocumentoCode, String numeroDocumento);
 
+    Long countByTipoDocumentoCodeAndNumeroDocumentoAndIdNot(TipoDocumento tipoDocumentoCode, String numeroDocumento,
+            Long id);
+
 }

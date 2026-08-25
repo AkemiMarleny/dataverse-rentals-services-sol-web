@@ -2,10 +2,10 @@ POST http://localhost:8080/api/v1/people
 Content-Type: application/json
 
 {
-    "nombres": "trixie",
+    "nombres": "yamilet",
     "apellidos": "cabanillas correa",
     "tipoDocumentoCode": "DNI",
-    "numeroDocumento": "34340034",
+    "numeroDocumento": "81226582",
     "generoCode": "FEMENINO",
     "estadoCivilCode": "SOLTERA",
     "fechaNacimiento": "1969-01-14",
@@ -25,14 +25,14 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:8080/api/v1/people/12
+PUT http://localhost:8080/api/v1/people/2
 Content-Type: application/json
 
 {
-    "nombres": "elisa marina",
-    "apellidos": "rojas vega",
+    "nombres": "yamilet",
+    "apellidos": "cabanillas correa",
     "tipoDocumentoCode": "DNI",
-    "numeroDocumento": "25690012",
+    "numeroDocumento": "34340034",
     "generoCode": "FEMENINO",
     "estadoCivilCode": "CASADA",
     "fechaNacimiento": "1969-01-14",
