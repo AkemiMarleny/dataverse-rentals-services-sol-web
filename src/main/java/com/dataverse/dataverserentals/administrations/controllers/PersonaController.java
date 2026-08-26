@@ -37,6 +37,7 @@ public class PersonaController {
 
     @GetMapping
     public ResponseEntity<Page<PersonaPaginaDto>> findAll(Pageable pageable, @RequestParam String q) {
+
         log.info("Listando personas con filtro '{}' y parámetros: {}", q, pageable);
         org.springframework.data.domain.Page<PersonaPaginaDto> personaPage = personaService.findAll(pageable, q)
                 .map(PersonaPaginaDto::fromEntity);
@@ -48,14 +49,13 @@ public class PersonaController {
             throws Exception {
 
         log.info("Iniciando la creación de una nueva persona: {}", request);
-
         Long id = personaService.create(request);
-
         return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<DetailPersonaDto> findById(@PathVariable Long id) throws RecordNotFoundException {
+
         log.info("Consultando detalles de la persona con ID: {}", id);
         Persona persona = personaService.findById(id);
         DetailPersonaDto detailPersonaDto = DetailPersonaDto.fromEntity(persona);
@@ -68,7 +68,6 @@ public class PersonaController {
 
         log.info("Iniciando actualización de persona: {}", request);
         personaService.update(id, request);
-
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

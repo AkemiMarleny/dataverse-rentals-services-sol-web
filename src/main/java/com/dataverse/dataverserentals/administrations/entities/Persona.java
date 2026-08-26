@@ -7,6 +7,7 @@ import com.dataverse.dataverserentals.administrations.controllers.dtos.request.U
 import com.dataverse.dataverserentals.administrations.enums.EstadoCivil;
 import com.dataverse.dataverserentals.administrations.enums.Genero;
 import com.dataverse.dataverserentals.administrations.enums.TipoDocumento;
+import com.dataverse.dataverserentals.administrations.valueobjects.PersonaChecksum;
 import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
 
 import jakarta.persistence.Column;
@@ -62,6 +63,8 @@ public class Persona {
     @Column(nullable = false, length = 100, unique = true)
     private String correo;
 
+    private String checksum;
+
     public static Persona from(CreatePersonDto request) throws FieldConstraintException {
         Persona persona = new Persona();
         persona.setNombres(request.nombres());
@@ -73,6 +76,9 @@ public class Persona {
         persona.setFechaNacimiento(request.fechaNacimiento());
         persona.setNumeroCelular(request.numero_celular());
         persona.setCorreo(request.correo());
+        String personaChecksum = PersonaChecksum.fromRaw(request.nombres(), request.apellidos(),
+                request.tipoDocumentoCode(), request.numeroDocumento(), request.fechaNacimiento()).get();
+        persona.setChecksum(personaChecksum);
         return persona;
     }
 

@@ -8,6 +8,8 @@ import com.dataverse.dataverserentals.administrations.enums.TipoDocumento;
 
 public interface PersonaRepository extends JpaRepository<Persona, Long>, JpaSpecificationExecutor<Persona> {
 
+    Long countByChecksum(String checksum);
+
     boolean existsByTipoDocumentoCodeAndNumeroDocumento(TipoDocumento tipoDocumentoCode, String numeroDocumento);
 
     Long countByTipoDocumentoCodeAndNumeroDocumentoAndIdNot(TipoDocumento tipoDocumentoCode, String numeroDocumento,
