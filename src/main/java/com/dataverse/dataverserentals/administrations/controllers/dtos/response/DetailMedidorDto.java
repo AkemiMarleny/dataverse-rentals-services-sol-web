@@ -7,11 +7,7 @@ import com.dataverse.dataverserentals.administrations.enums.TipoMedidor;
 
 public record DetailMedidorDto(
         Long id,
-        Long edificioId,
-        String nombreEdificio,
         Long unidadId,
-        Integer numeroPisoUnidad,
-        String numeroPuertaUnidad,
         TipoMedidor tipoMedidorCode,
         String numeroSerie,
         LocalDateTime fechaCreacion,
@@ -22,11 +18,7 @@ public record DetailMedidorDto(
     public static DetailMedidorDto fromEntity(Medidor medidor) {
         return new DetailMedidorDto(
                 medidor.getId(),
-                medidor.getUnidad().getEdificioId(),
-                medidor.getUnidad().getEdificio().getNombre(),
                 medidor.getUnidadId(),
-                medidor.getUnidad().getNumeroPiso(),
-                medidor.getUnidad().getNumeroPuerta(),
                 medidor.getTipoMedidorCode(),
                 medidor.getNumeroSerie(),
                 medidor.getFechaCreacion(),
@@ -34,5 +26,4 @@ public record DetailMedidorDto(
                 medidor.getFechaModificacion(),
                 medidor.getUsuarioModificacionId());
     }
-
 }
