@@ -21,7 +21,7 @@ public record UpdatePersonDto(
         @NotNull Genero generoCode,
         @NotNull EstadoCivil estadoCivilCode,
         @NotNull LocalDate fechaNacimiento,
-        @NotBlank @Pattern(regexp = "^\\(\\+51\\) [0-9]{9}$", message = "Formato de teléfono incorrecto") String numero_celular,
+        @NotBlank @Pattern(regexp = "^\\(\\+51\\) [0-9]{9}$", message = "Formato de teléfono incorrecto") String numeroCelular,
         @NotBlank @Email String correo) {
 
 }

@@ -39,8 +39,9 @@ public class PersonaService {
         Persona persona = Persona.from(payload);
         Long personaRepetida = personaRepository.countByChecksum(persona.getChecksum());
         if (personaRepetida > 0) {
-            log.info("Esta persona ya fue registrada previamente.", payload);
-            throw new ConflictException("Esta persona ya fue registrada previamente.");
+            log.info("Intento de registro duplicado: Persona con checksum {} ya existe. Payload: {}",
+                    persona.getChecksum(), payload);
+            throw new ConflictException("Ya existe otra persona registrada con los mismos datos (checksum duplicado).");
         }
 
         if (personaRepository.existsByTipoDocumentoCodeAndNumeroDocumento(payload.tipoDocumentoCode(),
@@ -63,6 +64,16 @@ public class PersonaService {
 
         log.info("Iniciando actualización de la persona con ID: {}. Datos recibidos: {}", id, payload);
         Persona persona = findById(id);
+
+        persona.updateWith(payload);
+
+        Long personaRepetida = personaRepository.countByChecksumAndIdNot(persona.getChecksum(), id);
+        if (personaRepetida > 0) {
+            log.info("Intento de registro duplicado: Persona con checksum {} ya existe. Payload: {}",
+                    persona.getChecksum(), payload);
+            throw new ConflictException("Ya existe otra persona registrada con los mismos datos (checksum duplicado).");
+        }
+
         Long cantidadDocumentosDuplicados = personaRepository.countByTipoDocumentoCodeAndNumeroDocumentoAndIdNot(
                 payload.tipoDocumentoCode(), payload.numeroDocumento(), id);
         if (cantidadDocumentosDuplicados > 0) {
@@ -72,7 +83,22 @@ public class PersonaService {
                     String.format("El documento de identidad %s: %s ya se encuentra vinculado a otra persona.",
                             payload.tipoDocumentoCode(), payload.numeroDocumento()));
         }
-        persona.updateWith(payload);
+
+        Long cantidadCelularesDuplicados = personaRepository.countByNumeroCelularAndIdNot(payload.numeroCelular(), id);
+        if (cantidadCelularesDuplicados > 0) {
+            log.info(
+                    "Validación fallida: El número celular [{}] ya está vinculado a otra persona (ID origen: {}).",
+                    payload.numeroCelular(), id);
+            throw new ConflictException(
+                    String.format("El número celular %s ya está registrado.", payload.numeroCelular()));
+        }
+
+        Long cantidadCorreosDuplicados = personaRepository.countByCorreoAndIdNot(payload.correo(), id);
+        if (cantidadCorreosDuplicados > 0) {
+            log.info("Validación fallida: Correo {} ya está en uso. Payload: {}", payload.correo(), payload);
+            throw new ConflictException(
+                    String.format("El correo %s ya se encuentra registrado en el sistema.", payload.correo()));
+        }
         personaRepository.save(persona);
     }
 }

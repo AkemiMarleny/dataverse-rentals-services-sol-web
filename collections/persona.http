@@ -2,15 +2,15 @@ POST http://localhost:8080/api/v1/people
 Content-Type: application/json
 
 {
-    "nombres": "yamilet",
-    "apellidos": "cabanillas correa",
+    "nombres": "akemi marleny",
+    "apellidos": "correa angulo",
     "tipoDocumentoCode": "DNI",
-    "numeroDocumento": "81226582",
+    "numeroDocumento": "47076250",
     "generoCode": "FEMENINO",
-    "estadoCivilCode": "SOLTERA",
-    "fechaNacimiento": "1969-01-14",
-    "numero_celular": "(+51) 987654100",
-    "correo": "trixie@example.com"
+    "estadoCivilCode": "CASADA",
+    "fechaNacimiento": "1991-11-09",
+    "numeroCelular": "(+51) 900011819",
+    "correo": "akemi@example.com"
 }
 
 ###
@@ -29,13 +29,13 @@ PUT http://localhost:8080/api/v1/people/2
 Content-Type: application/json
 
 {
-    "nombres": "yamilet",
+   "nombres": "yamilet",
     "apellidos": "cabanillas correa",
     "tipoDocumentoCode": "DNI",
-    "numeroDocumento": "34340034",
+    "numeroDocumento": "81226582",
     "generoCode": "FEMENINO",
-    "estadoCivilCode": "CASADA",
-    "fechaNacimiento": "1969-01-14",
-    "numero_celular": "(+51) 987654309",
-    "correo": "elisa@example.com"
+    "estadoCivilCode": "SOLTERA",
+    "fechaNacimiento": "2013-04-03T05:00:00.000Z",
+    "numeroCelular": "(+51) 987654200",
+    "correo": "yami@example.com"
 }

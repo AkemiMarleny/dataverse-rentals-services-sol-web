@@ -12,7 +12,13 @@ public interface PersonaRepository extends JpaRepository<Persona, Long>, JpaSpec
 
     boolean existsByTipoDocumentoCodeAndNumeroDocumento(TipoDocumento tipoDocumentoCode, String numeroDocumento);
 
+    Long countByChecksumAndIdNot(String checksum, Long id);
+
     Long countByTipoDocumentoCodeAndNumeroDocumentoAndIdNot(TipoDocumento tipoDocumentoCode, String numeroDocumento,
             Long id);
+
+    Long countByNumeroCelularAndIdNot(String numeroCelular, Long id);
+
+    Long countByCorreoAndIdNot(String correo, Long id);
 
 }

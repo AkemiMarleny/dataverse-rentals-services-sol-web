@@ -57,7 +57,7 @@ public class Persona {
     @Column(nullable = false)
     private LocalDate fechaNacimiento;
 
-    @Column(nullable = false, length = 15)
+    @Column(nullable = false, length = 15, unique = true)
     private String numeroCelular;
 
     @Column(nullable = false, length = 100, unique = true)
@@ -90,8 +90,13 @@ public class Persona {
         this.generoCode = request.generoCode();
         this.estadoCivilCode = request.estadoCivilCode();
         this.fechaNacimiento = request.fechaNacimiento();
-        this.numeroCelular = request.numero_celular();
+        this.numeroCelular = request.numeroCelular();
         this.correo = request.correo();
+        String personaChecksum = PersonaChecksum
+                .fromRaw(request.nombres(), request.apellidos(), request.tipoDocumentoCode(), request.numeroDocumento(),
+                        request.fechaNacimiento())
+                .get();
+        this.checksum = personaChecksum;
     }
 
 }
