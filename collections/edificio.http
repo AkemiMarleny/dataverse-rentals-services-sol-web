@@ -2,8 +2,8 @@ POST http://localhost:8080/api/v1/buildings
 Content-Type: application/json 
 
 {
-    "nombre": "Residencial Misky",
-    "direccion": "Calle Los Pinos 128, Miraflores",
+    "nombre": "Residencial Los Incas",
+    "direccion": "Calle Los Cipreses 128, Miraflores",
     "numeroPisos": 10
 }
 
@@ -23,7 +23,7 @@ PUT http://localhost:8080/api/v1/buildings/2
 Content-Type: application/json
 
 {
-    "nombre": "Residencial Artemisa",
+    "nombre": "Residencial Misky",
     "direccion": "Calle Los Pinos 128, Miraflores",
     "numeroPisos": 10
 }

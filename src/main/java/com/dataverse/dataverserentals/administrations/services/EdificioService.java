@@ -47,9 +47,15 @@ public class EdificioService {
     public void update(Long id, @Valid UpdateEdificioDto payload) throws RecordNotFoundException, ConflictException {
         log.info("Iniciando actualización del edificio con ID: {}. Datos recibidos: {}", id, payload);
         Edificio edificio = findById(id);
-        if (edificioRepository.existsByNombre(payload.nombre())) {
-            throw new ConflictException(String.format("Ya existe un edificio con el nombre: %s", payload.nombre()));
+
+        Long cantidadEdificiosDuplicados = edificioRepository.countByNombreAndIdNot(payload.nombre(), id);
+        if (cantidadEdificiosDuplicados > 0) {
+            log.info("Validación fallida: Ya existe otro edificio con el mismo nombre: {}", payload.nombre());
+            throw new ConflictException(
+                    String.format("No se puede actualizar: ya existe este nombre registrado: %s",
+                            payload.nombre()));
         }
+
         edificio.updateWith(payload);
         edificioRepository.save(edificio);
     }

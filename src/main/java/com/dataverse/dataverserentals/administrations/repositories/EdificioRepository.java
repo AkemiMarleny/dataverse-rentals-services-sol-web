@@ -12,4 +12,6 @@ public interface EdificioRepository extends JpaRepository<Edificio, Long> {
 
     Page<Edificio> findByNombreContaining(Pageable pageable, String q);
 
+    Long countByNombreAndIdNot(String nombre, Long id);
+
 }
