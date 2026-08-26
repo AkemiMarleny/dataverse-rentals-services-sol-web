@@ -1,9 +1,9 @@
-POST http://localhost:8080/api/v1/units/2/meters
+POST http://localhost:8080/api/v1/units/1/meters
 Content-Type: application/json
 
 {
-    "tipoMedidorCode": "GENERAL_AGUA",
-    "numeroSerie": "sdfghjkakk233",
+    "tipoMedidorCode": "GENERAL_ELECTRICIDAD",
+    "numeroSerie": "sdfghjkakk234",
     "fechaCreacion": "2026-04-12T00:00:00",
     "usuarioCreacionId": 1,
     "fechaModificacion": null,
@@ -22,12 +22,12 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:8080/api/v1/units/2/meters/2
+PUT http://localhost:8080/api/v1/units/1/meters/3
 Content-Type: application/json 
 
 {
     "tipoMedidorCode": "ELECTRICIDAD",
-    "numeroSerie": "sdfghjkakk233",
+    "numeroSerie": "sdfghjkakk",
     "fechaCreacion": "2026-04-12T00:00:00",
     "usuarioCreacionId": 1,
     "fechaModificacion": null,

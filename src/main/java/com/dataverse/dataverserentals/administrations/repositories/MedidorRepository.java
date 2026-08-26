@@ -16,4 +16,8 @@ public interface MedidorRepository extends JpaRepository<Medidor, Long>, JpaSpec
 
     Optional<Medidor> findByUnidadIdAndId(Long unidadId, Long id);
 
+    Long countByUnidadIdAndTipoMedidorCodeAndIdNot(Long unidadId, TipoMedidor tipoMedidorCode, Long id);
+
+    Long countByNumeroSerieAndIdNot(String numeroSerie, Long id);
+
 }
