@@ -17,10 +17,10 @@ import com.dataverse.dataverserentals.administrations.controllers.dtos.request.U
 import com.dataverse.dataverserentals.administrations.controllers.dtos.response.DetailMedidorDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.response.MedidorPaginaDto;
 import com.dataverse.dataverserentals.administrations.entities.Medidor;
-import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
-import com.dataverse.dataverserentals.administrations.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.administrations.services.MedidorService;
 import com.dataverse.dataverserentals.common.dto.Page;
+import com.dataverse.dataverserentals.common.exceptions.ConflictException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
 import com.dataverse.dataverserentals.core.dto.CreateResponse;
 

@@ -1,4 +1,4 @@
-package com.dataverse.dataverserentals.administrations.exceptions;
+package com.dataverse.dataverserentals.common.exceptions;
 
 import lombok.Getter;
 

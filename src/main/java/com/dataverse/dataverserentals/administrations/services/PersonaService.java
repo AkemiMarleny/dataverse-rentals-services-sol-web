@@ -8,11 +8,11 @@ import org.springframework.validation.annotation.Validated;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreatePersonDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdatePersonDto;
 import com.dataverse.dataverserentals.administrations.entities.Persona;
-import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
-import com.dataverse.dataverserentals.administrations.exceptions.FieldConstraintException;
-import com.dataverse.dataverserentals.administrations.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.administrations.repositories.PersonaRepository;
 import com.dataverse.dataverserentals.administrations.repositories.specifications.PersonaSpecifications;
+import com.dataverse.dataverserentals.common.exceptions.ConflictException;
+import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

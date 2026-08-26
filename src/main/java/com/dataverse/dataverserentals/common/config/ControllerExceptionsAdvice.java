@@ -13,12 +13,12 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
-import com.dataverse.dataverserentals.administrations.exceptions.FieldConstraintException;
-import com.dataverse.dataverserentals.administrations.exceptions.RecordNotFoundException;
-import com.dataverse.dataverserentals.administrations.exceptions.UnprocesableEntity;
 import com.dataverse.dataverserentals.common.dto.ErrorResponse;
 import com.dataverse.dataverserentals.common.dto.FieldError;
+import com.dataverse.dataverserentals.common.exceptions.ConflictException;
+import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
+import com.dataverse.dataverserentals.common.exceptions.UnprocesableEntity;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

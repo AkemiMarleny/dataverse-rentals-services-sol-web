@@ -17,10 +17,10 @@ import com.dataverse.dataverserentals.administrations.controllers.dtos.request.U
 import com.dataverse.dataverserentals.administrations.controllers.dtos.response.DetailEdificioDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.response.EdificioPaginaDto;
 import com.dataverse.dataverserentals.administrations.entities.Edificio;
-import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
-import com.dataverse.dataverserentals.administrations.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.administrations.services.EdificioService;
 import com.dataverse.dataverserentals.common.dto.Page;
+import com.dataverse.dataverserentals.common.exceptions.ConflictException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
 import com.dataverse.dataverserentals.core.dto.CreateResponse;
 

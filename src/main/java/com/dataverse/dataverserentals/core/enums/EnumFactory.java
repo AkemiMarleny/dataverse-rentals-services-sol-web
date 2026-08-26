@@ -3,7 +3,7 @@ package com.dataverse.dataverserentals.core.enums;
 import java.util.Arrays;
 import java.util.Optional;
 
-import com.dataverse.dataverserentals.administrations.exceptions.FieldConstraintException;
+import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
 
 public class EnumFactory {
 

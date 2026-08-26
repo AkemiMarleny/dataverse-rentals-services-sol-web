@@ -7,7 +7,7 @@ import com.dataverse.dataverserentals.administrations.controllers.dtos.request.U
 import com.dataverse.dataverserentals.administrations.enums.EstadoCivil;
 import com.dataverse.dataverserentals.administrations.enums.Genero;
 import com.dataverse.dataverserentals.administrations.enums.TipoDocumento;
-import com.dataverse.dataverserentals.administrations.exceptions.FieldConstraintException;
+import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

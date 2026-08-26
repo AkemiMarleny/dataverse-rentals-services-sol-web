@@ -8,11 +8,11 @@ import org.springframework.validation.annotation.Validated;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateMedidorDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdateMedidorDto;
 import com.dataverse.dataverserentals.administrations.entities.Medidor;
-import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
-import com.dataverse.dataverserentals.administrations.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.administrations.repositories.MedidorRepository;
 import com.dataverse.dataverserentals.administrations.repositories.UnidadRepository;
 import com.dataverse.dataverserentals.administrations.repositories.specifications.MedidorSpecifications;
+import com.dataverse.dataverserentals.common.exceptions.ConflictException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

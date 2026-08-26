@@ -1,6 +1,5 @@
 package com.dataverse.dataverserentals.administrations.services;
 
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -9,10 +8,10 @@ import org.springframework.validation.annotation.Validated;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateUnidadDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdateUnidadDto;
 import com.dataverse.dataverserentals.administrations.entities.Unidad;
-import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
-import com.dataverse.dataverserentals.administrations.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.administrations.repositories.EdificioRepository;
 import com.dataverse.dataverserentals.administrations.repositories.UnidadRepository;
+import com.dataverse.dataverserentals.common.exceptions.ConflictException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

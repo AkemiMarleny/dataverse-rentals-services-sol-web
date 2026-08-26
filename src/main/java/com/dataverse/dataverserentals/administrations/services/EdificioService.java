@@ -8,9 +8,9 @@ import org.springframework.validation.annotation.Validated;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.CreateEdificioDto;
 import com.dataverse.dataverserentals.administrations.controllers.dtos.request.UpdateEdificioDto;
 import com.dataverse.dataverserentals.administrations.entities.Edificio;
-import com.dataverse.dataverserentals.administrations.exceptions.ConflictException;
-import com.dataverse.dataverserentals.administrations.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.administrations.repositories.EdificioRepository;
+import com.dataverse.dataverserentals.common.exceptions.ConflictException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
