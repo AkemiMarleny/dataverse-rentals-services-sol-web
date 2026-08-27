@@ -2,14 +2,14 @@ POST http://localhost:8080/api/v1/people
 Content-Type: application/json
 
 {
-    "nombres": "akemi marleny",
-    "apellidos": "correa angulo",
+    "nombres": "elisa marina",
+    "apellidos": "rojas vega",
     "tipoDocumentoCode": "DNI",
-    "numeroDocumento": "47076250",
+    "numeroDocumento": "25507800",
     "generoCode": "FEMENINO",
     "estadoCivilCode": "CASADA",
-    "fechaNacimiento": "1991-11-09",
-    "numeroCelular": "(+51) 900011819",
+    "fechaNacimiento": "1930-06-07",
+    "numeroCelular": "(+51) 987654200",
     "correo": "akemi@example.com"
 }
 

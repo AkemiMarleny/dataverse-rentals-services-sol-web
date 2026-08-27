@@ -74,7 +74,7 @@ public class Persona {
         persona.setGeneroCode(request.generoCode());
         persona.setEstadoCivilCode(request.estadoCivilCode());
         persona.setFechaNacimiento(request.fechaNacimiento());
-        persona.setNumeroCelular(request.numero_celular());
+        persona.setNumeroCelular(request.numeroCelular());
         persona.setCorreo(request.correo());
         String personaChecksum = PersonaChecksum.fromRaw(request.nombres(), request.apellidos(),
                 request.tipoDocumentoCode(), request.numeroDocumento(), request.fechaNacimiento()).get();

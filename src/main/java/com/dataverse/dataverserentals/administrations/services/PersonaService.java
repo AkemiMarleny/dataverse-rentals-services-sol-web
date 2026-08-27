@@ -37,8 +37,8 @@ public class PersonaService {
 
         log.info("Registrando nueva persona con los siguientes datos: {}", payload);
         Persona persona = Persona.from(payload);
-        Long personaRepetida = personaRepository.countByChecksum(persona.getChecksum());
-        if (personaRepetida > 0) {
+
+        if (personaRepository.existsByChecksum(persona.getChecksum())) {
             log.info("Intento de registro duplicado: Persona con checksum {} ya existe. Payload: {}",
                     persona.getChecksum(), payload);
             throw new ConflictException("Ya existe otra persona registrada con los mismos datos (checksum duplicado).");
@@ -49,6 +49,16 @@ public class PersonaService {
             throw new ConflictException(
                     String.format("El documento de identidad %s: %s ya se encuentra vinculado a otra persona.",
                             payload.tipoDocumentoCode(), payload.numeroDocumento()));
+        }
+
+        if (personaRepository.existsByNumeroCelular(payload.numeroCelular())) {
+            throw new ConflictException(
+                    String.format("El número de celular %s ya está registrado.", payload.numeroCelular()));
+        }
+
+        if (personaRepository.existsByCorreo(payload.correo())) {
+            throw new ConflictException(
+                    String.format("El correo %s ya se encuentra registrado en el sistema.", payload.correo()));
         }
         return personaRepository.save(persona).getId();
     }
@@ -90,7 +100,7 @@ public class PersonaService {
                     "Validación fallida: El número celular [{}] ya está vinculado a otra persona (ID origen: {}).",
                     payload.numeroCelular(), id);
             throw new ConflictException(
-                    String.format("El número celular %s ya está registrado.", payload.numeroCelular()));
+                    String.format("El número de celular %s ya está registrado.", payload.numeroCelular()));
         }
 
         Long cantidadCorreosDuplicados = personaRepository.countByCorreoAndIdNot(payload.correo(), id);
