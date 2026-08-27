@@ -13,6 +13,7 @@ import com.dataverse.dataverserentals.administrations.repositories.specification
 import com.dataverse.dataverserentals.common.exceptions.ConflictException;
 import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
+import com.dataverse.dataverserentals.common.validators.DocumentValidatorFactory;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PersonaService {
 
     private final PersonaRepository personaRepository;
+    private final DocumentValidatorFactory documentValidatorFactory;
 
     public Page<Persona> findAll(Pageable pageable, String q) {
 
@@ -36,6 +38,10 @@ public class PersonaService {
     public Long create(@Valid CreatePersonDto payload) throws ConflictException, FieldConstraintException {
 
         log.info("Registrando nueva persona con los siguientes datos: {}", payload);
+
+        documentValidatorFactory.getValidator(payload.tipoDocumentoCode())
+                .validate(payload.numeroDocumento());
+
         Persona persona = Persona.from(payload);
 
         if (personaRepository.existsByChecksum(persona.getChecksum())) {
@@ -70,9 +76,14 @@ public class PersonaService {
                 String.format("La persona con el ID %s no existe en nuestros registros.", id)));
     }
 
-    public void update(Long id, @Valid UpdatePersonDto payload) throws RecordNotFoundException, ConflictException {
+    public void update(Long id, @Valid UpdatePersonDto payload)
+            throws RecordNotFoundException, ConflictException, FieldConstraintException {
 
         log.info("Iniciando actualización de la persona con ID: {}. Datos recibidos: {}", id, payload);
+
+        documentValidatorFactory.getValidator(payload.tipoDocumentoCode())
+                .validate(payload.numeroDocumento());
+
         Persona persona = findById(id);
 
         persona.updateWith(payload);

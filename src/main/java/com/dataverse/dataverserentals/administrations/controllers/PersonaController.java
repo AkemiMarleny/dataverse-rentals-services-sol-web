@@ -20,6 +20,7 @@ import com.dataverse.dataverserentals.administrations.entities.Persona;
 import com.dataverse.dataverserentals.administrations.services.PersonaService;
 import com.dataverse.dataverserentals.common.dto.Page;
 import com.dataverse.dataverserentals.common.exceptions.ConflictException;
+import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
 import com.dataverse.dataverserentals.core.dto.CreateResponse;
@@ -64,7 +65,7 @@ public class PersonaController {
 
     @PutMapping("{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UpdatePersonDto request)
-            throws RecordNotFoundException, ConflictException {
+            throws RecordNotFoundException, ConflictException, FieldConstraintException {
 
         log.info("Iniciando actualización de persona: {}", request);
         personaService.update(id, request);
