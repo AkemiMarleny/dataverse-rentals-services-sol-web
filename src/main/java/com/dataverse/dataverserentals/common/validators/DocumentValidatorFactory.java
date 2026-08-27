@@ -2,7 +2,7 @@ package com.dataverse.dataverserentals.common.validators;
 
 import org.springframework.stereotype.Component;
 
-import com.dataverse.dataverserentals.administrations.enums.TipoDocumento;
+import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoDocumento;
 
 import lombok.RequiredArgsConstructor;
 
