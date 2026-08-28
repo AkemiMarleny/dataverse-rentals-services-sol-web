@@ -1,13 +1,13 @@
-package com.dataverse.dataverserentals.gestionadministrativa.services;
+package com.dataverse.dataverserentals.gestioncampo.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
-import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateLecturaHistoricaDto;
-import com.dataverse.dataverserentals.gestionadministrativa.entities.LecturaHistorica;
-import com.dataverse.dataverserentals.gestionadministrativa.repositories.LecturaHistoricaRepository;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.MedidorRepository;
+import com.dataverse.dataverserentals.gestioncampo.controllers.dtos.request.CreateLecturaHistoricaDto;
+import com.dataverse.dataverserentals.gestioncampo.entities.LecturaHistorica;
+import com.dataverse.dataverserentals.gestioncampo.repositories.LecturaHistoricaRepository;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

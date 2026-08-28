@@ -1,4 +1,4 @@
-package com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request;
+package com.dataverse.dataverserentals.gestioncampo.controllers.dtos.request;
 
 import java.math.BigDecimal;
 

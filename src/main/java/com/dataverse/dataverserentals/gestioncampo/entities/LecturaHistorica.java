@@ -1,9 +1,11 @@
-package com.dataverse.dataverserentals.gestionadministrativa.entities;
+package com.dataverse.dataverserentals.gestioncampo.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateLecturaHistoricaDto;
+import com.dataverse.dataverserentals.gestionadministrativa.entities.Medidor;
+import com.dataverse.dataverserentals.gestionadministrativa.entities.Persona;
+import com.dataverse.dataverserentals.gestioncampo.controllers.dtos.request.CreateLecturaHistoricaDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

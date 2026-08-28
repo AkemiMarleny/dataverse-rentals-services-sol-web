@@ -1,4 +1,4 @@
-package com.dataverse.dataverserentals.gestionadministrativa.controllers;
+package com.dataverse.dataverserentals.gestioncampo.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dataverse.dataverserentals.common.dto.CreateResponse;
 import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
-import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateLecturaHistoricaDto;
-import com.dataverse.dataverserentals.gestionadministrativa.services.LecturaHistoricaService;
+import com.dataverse.dataverserentals.gestioncampo.controllers.dtos.request.CreateLecturaHistoricaDto;
+import com.dataverse.dataverserentals.gestioncampo.services.LecturaHistoricaService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
