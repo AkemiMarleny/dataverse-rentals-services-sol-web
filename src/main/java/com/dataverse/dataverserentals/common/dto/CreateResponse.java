@@ -1,4 +1,4 @@
-package com.dataverse.dataverserentals.core.dto;
+package com.dataverse.dataverserentals.common.dto;
 
 public record CreateResponse(
         Long id) {

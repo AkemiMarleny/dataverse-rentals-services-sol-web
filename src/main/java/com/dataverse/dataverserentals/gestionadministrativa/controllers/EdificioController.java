@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dataverse.dataverserentals.common.dto.CreateResponse;
+import com.dataverse.dataverserentals.common.dto.Page;
+import com.dataverse.dataverserentals.common.exceptions.ConflictException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
+import com.dataverse.dataverserentals.common.factories.PageFactory;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateEdificioDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.UpdateEdificioDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.response.DetailEdificioDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.response.EdificioPaginaDto;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Edificio;
 import com.dataverse.dataverserentals.gestionadministrativa.services.EdificioService;
-import com.dataverse.dataverserentals.common.dto.Page;
-import com.dataverse.dataverserentals.common.exceptions.ConflictException;
-import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
-import com.dataverse.dataverserentals.common.factories.PageFactory;
-import com.dataverse.dataverserentals.core.dto.CreateResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

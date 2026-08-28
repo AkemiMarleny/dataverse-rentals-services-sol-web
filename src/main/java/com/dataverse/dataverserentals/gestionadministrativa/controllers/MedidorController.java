@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dataverse.dataverserentals.common.dto.CreateResponse;
+import com.dataverse.dataverserentals.common.dto.Page;
+import com.dataverse.dataverserentals.common.exceptions.ConflictException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
+import com.dataverse.dataverserentals.common.factories.PageFactory;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateMedidorDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.UpdateMedidorDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.response.DetailMedidorDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.response.MedidorPaginaDto;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Medidor;
 import com.dataverse.dataverserentals.gestionadministrativa.services.MedidorService;
-import com.dataverse.dataverserentals.common.dto.Page;
-import com.dataverse.dataverserentals.common.exceptions.ConflictException;
-import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
-import com.dataverse.dataverserentals.common.factories.PageFactory;
-import com.dataverse.dataverserentals.core.dto.CreateResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
