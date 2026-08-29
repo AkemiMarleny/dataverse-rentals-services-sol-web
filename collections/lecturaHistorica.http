@@ -1,14 +1,19 @@
-POST http://localhost:8080/api/v1/medidores/1/lecturas-historicas
+POST http://localhost:8080/api/v1/medidores/2/lecturas-historicas
 Content-Type: application/json
 
 {
-    "valorLectura": 1253440.75,
+    "valorLectura": 1254090.75,
     "usuarioCreacionId": 1
 }
 
 ###
 
-GET http://localhost:8080/api/v1/medidores/1/lecturas-historicas
+GET http://localhost:8080/api/v1/medidores/2/lecturas-historicas?q=11
+Content-Type: application/json
+
+###
+
+GET http://localhost:8080/api/v1/medidores/2/lecturas-historicas/12
 Content-Type: application/json
 
 

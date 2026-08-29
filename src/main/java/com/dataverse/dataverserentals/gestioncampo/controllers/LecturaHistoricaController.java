@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dataverse.dataverserentals.common.dto.CreateResponse;
 import com.dataverse.dataverserentals.common.dto.Page;
 import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
 import com.dataverse.dataverserentals.gestioncampo.controllers.dtos.request.CreateLecturaHistoricaDto;
+import com.dataverse.dataverserentals.gestioncampo.controllers.dtos.response.DetailLecturaHistoricaDto;
 import com.dataverse.dataverserentals.gestioncampo.controllers.dtos.response.LecturaHistoricaPaginaDto;
+import com.dataverse.dataverserentals.gestioncampo.entities.LecturaHistorica;
 import com.dataverse.dataverserentals.gestioncampo.services.LecturaHistoricaService;
 
 import lombok.RequiredArgsConstructor;
@@ -50,6 +53,17 @@ public class LecturaHistoricaController {
 
         Long lecturaHistoricaId = lecturaHistoricaService.create(medidorId, request);
         return new ResponseEntity<>(new CreateResponse(lecturaHistoricaId), HttpStatus.CREATED);
+    }
+
+    @GetMapping("{lecturaHistoricaId}")
+    public ResponseEntity<DetailLecturaHistoricaDto> findById(@PathVariable Long lecturaHistoricaId)
+            throws RecordNotFoundException {
+
+        log.info("Detalles de lectura histórica recuperados exitosamente para el ID: {}", lecturaHistoricaId);
+
+        LecturaHistorica lecturaHistorica = lecturaHistoricaService.findById(lecturaHistoricaId);
+        DetailLecturaHistoricaDto detailLecturaHistoricaDto = DetailLecturaHistoricaDto.fromEntity(lecturaHistorica);
+        return new ResponseEntity<>(detailLecturaHistoricaDto, HttpStatus.OK);
     }
 
 }

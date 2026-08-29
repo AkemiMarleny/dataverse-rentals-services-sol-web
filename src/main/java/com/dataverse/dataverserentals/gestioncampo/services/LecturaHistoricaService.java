@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.MedidorRepository;
 import com.dataverse.dataverserentals.gestioncampo.controllers.dtos.request.CreateLecturaHistoricaDto;
 import com.dataverse.dataverserentals.gestioncampo.entities.LecturaHistorica;
@@ -41,6 +42,14 @@ public class LecturaHistoricaService {
 
         LecturaHistorica lecturaHistorica = LecturaHistorica.from(medidorId, payload);
         return lecturaHistoricaRepository.save(lecturaHistorica).getId();
+    }
+
+    public LecturaHistorica findById(Long lecturaHistoricaId) throws RecordNotFoundException {
+
+        log.info("Recuperando el registro específico de la lectura histórica con ID: {}", lecturaHistoricaId);
+        return lecturaHistoricaRepository.findById(lecturaHistoricaId)
+                .orElseThrow(() -> new RecordNotFoundException(
+                        String.format("No se encontró la lectura histórica con ID: %d", lecturaHistoricaId)));
     }
 
 }
