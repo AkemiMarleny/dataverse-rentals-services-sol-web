@@ -9,6 +9,7 @@ import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.MedidorRepository;
 import com.dataverse.dataverserentals.gestioncampo.controllers.dtos.request.CreateLecturaHistoricaDto;
+import com.dataverse.dataverserentals.gestioncampo.controllers.dtos.request.UpdateLecturaHistoricaDto;
 import com.dataverse.dataverserentals.gestioncampo.entities.LecturaHistorica;
 import com.dataverse.dataverserentals.gestioncampo.repositories.LecturaHistoricaRepository;
 
@@ -50,6 +51,23 @@ public class LecturaHistoricaService {
         return lecturaHistoricaRepository.findById(lecturaHistoricaId)
                 .orElseThrow(() -> new RecordNotFoundException(
                         String.format("No se encontró la lectura histórica con ID: %d", lecturaHistoricaId)));
+    }
+
+    public void update(Long medidorId, Long lecturaHistoricaId, @Valid UpdateLecturaHistoricaDto payload)
+            throws RecordNotFoundException {
+
+        log.info("Iniciando actualización de la lectura histórica con ID: {}. Datos: {}", lecturaHistoricaId, payload);
+        medidorRepository.findById(medidorId)
+                .orElseThrow(() -> new FieldConstraintException("medidorId",
+                        String.format("El medidor solicitado con el id: %s no se encuentra registrado.",
+                                medidorId)));
+        LecturaHistorica lecturaHistorica = lecturaHistoricaRepository
+                .findByMedidorIdAndId(medidorId, lecturaHistoricaId)
+                .orElseThrow(() -> new RecordNotFoundException(
+                        String.format("No se encontró la lectura histórica con ID: %d asociada al medidor con ID: %d",
+                                lecturaHistoricaId, medidorId)));
+        lecturaHistorica.updateWith(payload);
+        lecturaHistoricaRepository.save(lecturaHistorica);
     }
 
 }

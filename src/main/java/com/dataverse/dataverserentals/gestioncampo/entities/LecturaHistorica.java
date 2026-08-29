@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Medidor;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Persona;
 import com.dataverse.dataverserentals.gestioncampo.controllers.dtos.request.CreateLecturaHistoricaDto;
+import com.dataverse.dataverserentals.gestioncampo.controllers.dtos.request.UpdateLecturaHistoricaDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -72,4 +73,10 @@ public class LecturaHistorica {
         return lecturaHistorica;
     }
 
+    public void updateWith(UpdateLecturaHistoricaDto request) {
+        this.fechaLectura = LocalDateTime.now();
+        this.valorLectura = request.valorLectura();
+        this.usuarioModificacionId = request.usuarioModificacionId();
+        this.fechaModificacion = LocalDateTime.now();
+    }
 }
