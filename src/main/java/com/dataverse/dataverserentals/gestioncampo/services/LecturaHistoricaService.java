@@ -30,16 +30,16 @@ public class LecturaHistoricaService {
         return lecturaHistoricaRepository.findByMedidorId(medidorId, pageable);
     }
 
-    public Long create(@Valid CreateLecturaHistoricaDto payload) throws FieldConstraintException {
+    public Long create(Long medidorId, @Valid CreateLecturaHistoricaDto payload) throws FieldConstraintException {
 
-        log.info("Procesando registro de lectura para Medidor ID: {}. Datos: {}", payload.medidorId(), payload);
+        log.info("Procesando registro de lectura para Medidor ID: {}. Datos: {}", medidorId, payload);
 
-        medidorRepository.findById(payload.medidorId())
+        medidorRepository.findById(medidorId)
                 .orElseThrow(() -> new FieldConstraintException("medidorId",
                         String.format("El medidor solicitado con el id: %s no se encuentra registrado.",
-                                payload.medidorId())));
+                                medidorId)));
 
-        LecturaHistorica lecturaHistorica = LecturaHistorica.from(payload);
+        LecturaHistorica lecturaHistorica = LecturaHistorica.from(medidorId, payload);
         return lecturaHistoricaRepository.save(lecturaHistorica).getId();
     }
 

@@ -2,8 +2,7 @@ POST http://localhost:8080/api/v1/medidores/1/lecturas-historicas
 Content-Type: application/json
 
 {
-    "medidorId": 1,
-    "valorLectura": 123456789.50,
+    "valorLectura": 1253440.75,
     "usuarioCreacionId": 1
 }
 

@@ -62,9 +62,9 @@ public class LecturaHistorica {
     @Column(name = "usuario_modificacion_id", nullable = true)
     private Long usuarioModificacionId;
 
-    public static LecturaHistorica from(CreateLecturaHistoricaDto request) {
+    public static LecturaHistorica from(Long medidorId, CreateLecturaHistoricaDto request) {
         LecturaHistorica lecturaHistorica = new LecturaHistorica();
-        lecturaHistorica.setMedidorId(request.medidorId());
+        lecturaHistorica.setMedidorId(medidorId);
         lecturaHistorica.setFechaLectura(LocalDateTime.now());
         lecturaHistorica.setValorLectura(request.valorLectura());
         lecturaHistorica.setUsuarioCreacionId(request.usuarioCreacionId());

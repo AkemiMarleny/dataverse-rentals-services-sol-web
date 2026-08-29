@@ -41,13 +41,14 @@ public class LecturaHistoricaController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponse> create(@RequestBody CreateLecturaHistoricaDto request)
+    public ResponseEntity<CreateResponse> create(@PathVariable Long medidorId,
+            @RequestBody CreateLecturaHistoricaDto request)
             throws FieldConstraintException {
 
         log.info("Creando una lectura histórica: medidorId={}, valor={}",
-                request.medidorId(), request.valorLectura());
+                medidorId, request.valorLectura());
 
-        Long lecturaHistoricaId = lecturaHistoricaService.create(request);
+        Long lecturaHistoricaId = lecturaHistoricaService.create(medidorId, request);
         return new ResponseEntity<>(new CreateResponse(lecturaHistoricaId), HttpStatus.CREATED);
     }
 
