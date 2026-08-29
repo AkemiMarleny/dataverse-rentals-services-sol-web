@@ -58,12 +58,13 @@ public class LecturaHistoricaController {
     }
 
     @GetMapping("{lecturaHistoricaId}")
-    public ResponseEntity<DetailLecturaHistoricaDto> findById(@PathVariable Long lecturaHistoricaId)
-            throws RecordNotFoundException {
+    public ResponseEntity<DetailLecturaHistoricaDto> findById(@PathVariable Long medidorId,
+            @PathVariable Long lecturaHistoricaId) throws RecordNotFoundException {
 
-        log.info("Detalles de lectura histórica recuperados exitosamente para el ID: {}", lecturaHistoricaId);
+        log.info("Detalles de lectura histórica recuperados exitosamente para el ID: {} del medidor ID: {}",
+                lecturaHistoricaId, medidorId);
 
-        LecturaHistorica lecturaHistorica = lecturaHistoricaService.findById(lecturaHistoricaId);
+        LecturaHistorica lecturaHistorica = lecturaHistoricaService.findById(medidorId, lecturaHistoricaId);
         DetailLecturaHistoricaDto detailLecturaHistoricaDto = DetailLecturaHistoricaDto.fromEntity(lecturaHistorica);
         return new ResponseEntity<>(detailLecturaHistoricaDto, HttpStatus.OK);
     }

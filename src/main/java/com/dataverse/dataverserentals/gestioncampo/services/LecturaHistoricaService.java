@@ -45,12 +45,13 @@ public class LecturaHistoricaService {
         return lecturaHistoricaRepository.save(lecturaHistorica).getId();
     }
 
-    public LecturaHistorica findById(Long lecturaHistoricaId) throws RecordNotFoundException {
+    public LecturaHistorica findById(Long medidorId, Long lecturaHistoricaId) throws RecordNotFoundException {
 
         log.info("Recuperando el registro específico de la lectura histórica con ID: {}", lecturaHistoricaId);
-        return lecturaHistoricaRepository.findById(lecturaHistoricaId)
+        return lecturaHistoricaRepository.findByMedidorIdAndId(medidorId, lecturaHistoricaId)
                 .orElseThrow(() -> new RecordNotFoundException(
-                        String.format("No se encontró la lectura histórica con ID: %d", lecturaHistoricaId)));
+                        String.format("No se encontró la lectura histórica con ID: %d asociada al medidor con ID: %d",
+                                lecturaHistoricaId, medidorId)));
     }
 
     public void update(Long medidorId, Long lecturaHistoricaId, @Valid UpdateLecturaHistoricaDto payload)

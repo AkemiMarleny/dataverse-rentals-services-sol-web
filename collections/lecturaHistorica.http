@@ -8,7 +8,7 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/api/v1/medidores/2/lecturas-historicas?q=11
+GET http://localhost:8080/api/v1/medidores/2/lecturas-historicas?q=
 Content-Type: application/json
 
 ###
