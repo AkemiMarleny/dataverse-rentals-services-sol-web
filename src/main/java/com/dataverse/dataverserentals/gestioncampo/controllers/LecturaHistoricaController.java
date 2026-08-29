@@ -1,5 +1,7 @@
 package com.dataverse.dataverserentals.gestioncampo.controllers;
 
+import java.time.LocalDate;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -37,9 +39,12 @@ public class LecturaHistoricaController {
     private final LecturaHistoricaService lecturaHistoricaService;
 
     @GetMapping
-    public ResponseEntity<Page<LecturaHistoricaPaginaDto>> findAll(@PathVariable Long medidorId, Pageable pageable,
-            @RequestParam(value = "fechaDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime fechaDesde,
-            @RequestParam(value = "fechaHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime fechaHasta) {
+    public ResponseEntity<Page<LecturaHistoricaPaginaDto>> findAll(
+            @PathVariable Long medidorId,
+            Pageable pageable,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
+
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
 
         log.info("Listando las lecturas históricas del medidor ID: {} con parámetros: {}", medidorId, pageable);
 
