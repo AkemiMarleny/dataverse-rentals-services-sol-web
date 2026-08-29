@@ -1,5 +1,7 @@
 package com.dataverse.dataverserentals.gestioncampo.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -21,6 +23,12 @@ public class LecturaHistoricaService {
 
     private final LecturaHistoricaRepository lecturaHistoricaRepository;
     private final MedidorRepository medidorRepository;
+
+    public Page<LecturaHistorica> findAll(Long medidorId, Pageable pageable) {
+
+        log.info("Buscando historial de lecturas para el Medidor ID: {}", medidorId);
+        return lecturaHistoricaRepository.findByMedidorId(medidorId, pageable);
+    }
 
     public Long create(@Valid CreateLecturaHistoricaDto payload) throws FieldConstraintException {
 
