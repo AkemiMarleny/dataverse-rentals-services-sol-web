@@ -1,5 +1,7 @@
 package com.dataverse.dataverserentals.gestioncampo.services;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,9 +28,16 @@ public class LecturaHistoricaService {
     private final LecturaHistoricaRepository lecturaHistoricaRepository;
     private final MedidorRepository medidorRepository;
 
-    public Page<LecturaHistorica> findAll(Long medidorId, Pageable pageable) {
+    public Page<LecturaHistorica> findAll(Long medidorId, Pageable pageable, 
+            LocalDateTime fechaDesde, LocalDateTime fechaHasta) {
 
         log.info("Buscando historial de lecturas para el Medidor ID: {}", medidorId);
+        
+        if (fechaDesde != null && fechaHasta != null) {
+            return lecturaHistoricaRepository.findByMedidorIdAndFechaLecturaBetween(
+                    medidorId, fechaDesde, fechaHasta, pageable);
+        }
+        
         return lecturaHistoricaRepository.findByMedidorId(medidorId, pageable);
     }
 

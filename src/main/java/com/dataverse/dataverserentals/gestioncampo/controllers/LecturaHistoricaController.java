@@ -1,6 +1,7 @@
 package com.dataverse.dataverserentals.gestioncampo.controllers;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dataverse.dataverserentals.common.dto.CreateResponse;
@@ -35,12 +37,14 @@ public class LecturaHistoricaController {
     private final LecturaHistoricaService lecturaHistoricaService;
 
     @GetMapping
-    public ResponseEntity<Page<LecturaHistoricaPaginaDto>> findAll(@PathVariable Long medidorId, Pageable pageable) {
+    public ResponseEntity<Page<LecturaHistoricaPaginaDto>> findAll(@PathVariable Long medidorId, Pageable pageable,
+            @RequestParam(value = "fechaDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime fechaDesde,
+            @RequestParam(value = "fechaHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime fechaHasta) {
 
         log.info("Listando las lecturas históricas del medidor ID: {} con parámetros: {}", medidorId, pageable);
 
         org.springframework.data.domain.Page<LecturaHistoricaPaginaDto> lecturaHistoricaPage = lecturaHistoricaService
-                .findAll(medidorId, pageable)
+                .findAll(medidorId, pageable, fechaDesde, fechaHasta)
                 .map(LecturaHistoricaPaginaDto::fromEntity);
         return ResponseEntity.ok(PageFactory.from(lecturaHistoricaPage));
     }
