@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dataverse.dataverserentals.common.dto.CreateResponse;
 import com.dataverse.dataverserentals.common.dto.Page;
 import com.dataverse.dataverserentals.common.exceptions.ConflictException;
-import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreatePersonDto;
@@ -54,21 +53,21 @@ public class PersonaController {
         return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<DetailPersonaDto> findById(@PathVariable Long id) throws RecordNotFoundException {
+    @GetMapping("{personaId}")
+    public ResponseEntity<DetailPersonaDto> findById(@PathVariable Long personaId) throws RecordNotFoundException {
 
-        log.info("Consultando detalles de la persona con ID: {}", id);
-        Persona persona = personaService.findById(id);
+        log.info("Consultando detalles de la persona con ID: {}", personaId);
+        Persona persona = personaService.findById(personaId);
         DetailPersonaDto detailPersonaDto = DetailPersonaDto.fromEntity(persona);
         return new ResponseEntity<>(detailPersonaDto, HttpStatus.OK);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UpdatePersonDto request)
-            throws RecordNotFoundException, ConflictException, FieldConstraintException {
+    @PutMapping("{personaId}")
+    public ResponseEntity<Void> update(@PathVariable Long personaId, @RequestBody UpdatePersonDto request)
+            throws RecordNotFoundException, ConflictException {
 
         log.info("Iniciando actualización de persona: {}", request);
-        personaService.update(id, request);
+        personaService.update(personaId, request);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
