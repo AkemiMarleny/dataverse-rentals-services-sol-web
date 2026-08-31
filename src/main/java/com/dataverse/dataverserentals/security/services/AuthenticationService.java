@@ -49,7 +49,7 @@ public class AuthenticationService {
         usuario.setFechaUltimoLogin(LocalDateTime.now());
         usuarioRepository.save(usuario);
 
-        String token = jwtService.generateToken(usuario.getNombreUsuario(), usuario.getRolCode());
+        String token = jwtService.tokenFrom(usuario);
 
         return new LoginResponse(token, jwtConfig.getTipo());
     }

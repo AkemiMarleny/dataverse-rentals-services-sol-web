@@ -1,6 +1,6 @@
 POST http://localhost:8080/api/v1/people
 Content-Type: application/json
-
+Authorization: Bearer 
 {
     "nombres": "Beatriz Elena",
     "apellidos": "Salazar Mendoza",

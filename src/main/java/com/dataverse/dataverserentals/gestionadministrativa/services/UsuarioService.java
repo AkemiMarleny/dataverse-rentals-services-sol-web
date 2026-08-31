@@ -12,6 +12,7 @@ import com.dataverse.dataverserentals.common.exceptions.UnprocesableEntity;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateUsuarioDto;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Persona;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
+import com.dataverse.dataverserentals.security.context.SecurityContext;
 import com.dataverse.dataverserentals.security.repositories.UsuarioRepository;
 
 import jakarta.validation.Valid;
@@ -27,6 +28,7 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PersonaService personaService;
     private final PasswordEncoder passwordEncoder;
+    private final SecurityContext securityContext;
 
     public Long create(@Valid CreateUsuarioDto payload)
             throws RecordNotFoundException, ConflictException, UnprocesableEntity {
@@ -53,7 +55,7 @@ public class UsuarioService {
                 .estadoCode(payload.estadoCode())
                 .fechaUltimoLogin(null)
                 .fechaCreacion(LocalDateTime.now())
-                .usuarioCreacionId(1L)
+                .usuarioCreacionId(securityContext.getUsuarioPrincipal().usuarioId())
                 .build();
 
         return usuarioRepository.save(usuario).getId();

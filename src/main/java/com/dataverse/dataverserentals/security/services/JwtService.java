@@ -6,8 +6,10 @@ import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Service;
 
+import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.RolUsuario;
 import com.dataverse.dataverserentals.security.config.JwtConfig;
+import com.dataverse.dataverserentals.security.context.UsuarioPrincipal;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -18,18 +20,23 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class JwtService {
+    private final String CLAIM_ROLE = "urol";
+    private final String CLAIM_USUARIO_ID = "uid";
+    private final String CLAIM_PROPIETARIO = "uown";
 
     private final JwtConfig jwtConfig;
 
-    public String generateToken(String nombreUsuario, RolUsuario rol) {
+    public String tokenFrom(Usuario usuario) {
         SecretKey key = Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes());
 
         Date now = new Date();
         Date expiry = new Date(now.getTime() + jwtConfig.getExpiration());
 
         return Jwts.builder()
-                .subject(nombreUsuario)
-                .claim("rol", rol.name())
+                .subject(usuario.getNombreUsuario())
+                .claim(CLAIM_ROLE, usuario.getRolCode())
+                .claim(CLAIM_USUARIO_ID, usuario.getId())
+                .claim(CLAIM_PROPIETARIO, usuario.getPersonaId())
                 .issuedAt(now)
                 .expiration(expiry)
                 .signWith(key)
@@ -49,14 +56,15 @@ public class JwtService {
         }
     }
 
-    public String getNombreUsuarioFromToken(String token) {
-        Claims claims = getTokenPayload(token);
-        return claims.getSubject();
-    }
+    public UsuarioPrincipal getUsuarioPrincipalFromToken(String token) {
 
-    public RolUsuario getRolFromToken(String token) {
         Claims claims = getTokenPayload(token);
-        return RolUsuario.valueOf(claims.get("rol", String.class));
+
+        String usuarioNombre = claims.getSubject();
+        Long usuarioId = claims.get(CLAIM_USUARIO_ID, Long.class);
+        RolUsuario usuarioRol = RolUsuario.valueOf(claims.get(CLAIM_ROLE, String.class));
+
+        return new UsuarioPrincipal(usuarioId, usuarioNombre, usuarioRol);
     }
 
     private Claims getTokenPayload(String token) {
