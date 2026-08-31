@@ -9,7 +9,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,7 +28,6 @@ public class Edificio {
     @Column(length = 200, nullable = false)
     private String direccion;
 
-    @Min(1)
     @Column(nullable = false)
     private Integer numeroPisos;
 
