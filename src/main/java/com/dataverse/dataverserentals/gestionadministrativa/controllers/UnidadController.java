@@ -37,6 +37,8 @@ public class UnidadController {
 
     @GetMapping
     public ResponseEntity<Page<UnidadPaginaDto>> findAll(Pageable pageable, @RequestParam String q) {
+
+        log.info("Listando unidades con filtro '{}' y parámetros: {}", q, pageable);
         org.springframework.data.domain.Page<UnidadPaginaDto> unidadPage = unidadService.findAll(pageable, q)
                 .map(UnidadPaginaDto::fromEntity);
 
@@ -46,25 +48,26 @@ public class UnidadController {
     @PostMapping
     public ResponseEntity<CreateResponse> create(@RequestBody CreateUnidadDto request) throws ConflictException {
 
-        log.info("Creando un nueva nueva con request: {}", request);
+        log.info("Iniciando la creación de una nueva unidad: {}", request);
         Long id = unidadService.create(request);
         return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<DetailUnidadDto> findById(@PathVariable Long id) throws RecordNotFoundException {
-        Unidad unidad = unidadService.findById(id);
+    @GetMapping("{unidadId}")
+    public ResponseEntity<DetailUnidadDto> findById(@PathVariable Long unidadId) throws RecordNotFoundException {
+
+        log.info("Consultando detalles de la unidad con ID: {}", unidadId);
+        Unidad unidad = unidadService.findById(unidadId);
         DetailUnidadDto detailUnidadDto = DetailUnidadDto.fromEntity(unidad);
         return new ResponseEntity<>(detailUnidadDto, HttpStatus.OK);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UpdateUnidadDto request)
+    @PutMapping("{unidadId}")
+    public ResponseEntity<Void> update(@PathVariable Long unidadId, @RequestBody UpdateUnidadDto request)
             throws ConflictException, RecordNotFoundException {
 
-        log.info("actualizando la unidad con request: {}", request);
-        unidadService.update(id, request);
+        log.info("Iniciando actualización de la unidad: {}", request);
+        unidadService.update(unidadId, request);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }
