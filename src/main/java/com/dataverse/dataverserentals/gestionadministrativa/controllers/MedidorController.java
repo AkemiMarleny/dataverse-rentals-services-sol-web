@@ -37,6 +37,7 @@ public class MedidorController {
 
     @GetMapping
     public ResponseEntity<Page<MedidorPaginaDto>> findAll(Pageable pageable, @RequestParam String q) {
+
         log.info("Listando medidores con filtro '{}' y parámetros: {}", q, pageable);
         org.springframework.data.domain.Page<MedidorPaginaDto> medidorPage = medidorService.findAll(pageable, q)
                 .map(MedidorPaginaDto::fromEntity);
@@ -45,7 +46,8 @@ public class MedidorController {
 
     @PostMapping
     public ResponseEntity<CreateResponse> create(@PathVariable Long unidadId, @RequestBody CreateMedidorDto request)
-            throws ConflictException {
+            throws ConflictException, RecordNotFoundException {
+
         log.info("Iniciando la creación de una nuevo medidor: {}", request);
         Long id = medidorService.create(request, unidadId);
         return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
@@ -53,6 +55,7 @@ public class MedidorController {
 
     @GetMapping("{medidorId}")
     public ResponseEntity<DetailMedidorDto> findById(@PathVariable Long medidorId) throws RecordNotFoundException {
+
         log.info("Consultando detalles del medidor con ID: {}", medidorId);
         Medidor medidor = medidorService.findById(medidorId);
         DetailMedidorDto detailMedidorDto = DetailMedidorDto.fromEntity(medidor);
@@ -62,6 +65,7 @@ public class MedidorController {
     @PutMapping("{medidorId}")
     public ResponseEntity<Void> update(@PathVariable Long unidadId, @PathVariable Long medidorId,
             @RequestBody UpdateMedidorDto request) throws RecordNotFoundException, ConflictException {
+
         log.info("Iniciando actualización del medidor: {}", request);
         medidorService.update(request, unidadId, medidorId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
