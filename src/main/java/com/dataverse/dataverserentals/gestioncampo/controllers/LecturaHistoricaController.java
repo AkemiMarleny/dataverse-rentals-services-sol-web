@@ -46,7 +46,7 @@ public class LecturaHistoricaController {
 
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
 
-        log.info("Listando las lecturas históricas del medidor ID: {} con parámetros: {}", medidorId, pageable);
+        log.info("Listando lecturas históricas con filtro '{}' y parámetros: {}", pageable, pageable);
 
         org.springframework.data.domain.Page<LecturaHistoricaPaginaDto> lecturaHistoricaPage = lecturaHistoricaService
                 .findAll(medidorId, pageable, fechaDesde, fechaHasta)
@@ -59,8 +59,7 @@ public class LecturaHistoricaController {
             @RequestBody CreateLecturaHistoricaDto request)
             throws FieldConstraintException {
 
-        log.info("Creando una lectura histórica: medidorId={}, valor={}",
-                medidorId, request.valorLectura());
+        log.info("Iniciando la creación de una nueva lectura histórica: {}", request);
 
         Long lecturaHistoricaId = lecturaHistoricaService.create(medidorId, request);
         return new ResponseEntity<>(new CreateResponse(lecturaHistoricaId), HttpStatus.CREATED);
@@ -70,8 +69,7 @@ public class LecturaHistoricaController {
     public ResponseEntity<DetailLecturaHistoricaDto> findById(@PathVariable Long medidorId,
             @PathVariable Long lecturaHistoricaId) throws RecordNotFoundException {
 
-        log.info("Detalles de lectura histórica recuperados exitosamente para el ID: {} del medidor ID: {}",
-                lecturaHistoricaId, medidorId);
+        log.info("Consultando detalles de la lectura histórica con ID: {}", lecturaHistoricaId);
 
         LecturaHistorica lecturaHistorica = lecturaHistoricaService.findById(medidorId, lecturaHistoricaId);
         DetailLecturaHistoricaDto detailLecturaHistoricaDto = DetailLecturaHistoricaDto.fromEntity(lecturaHistorica);
@@ -82,8 +80,7 @@ public class LecturaHistoricaController {
     public ResponseEntity<Void> update(@PathVariable Long medidorId, @PathVariable Long lecturaHistoricaId,
             @RequestBody UpdateLecturaHistoricaDto request) throws RecordNotFoundException {
 
-        log.info("Iniciando actualización de la lectura histórica con ID: {} del medidor ID: {}", lecturaHistoricaId,
-                medidorId);
+        log.info("Iniciando actualización de la lectura histórica: {}", request);
         lecturaHistoricaService.update(medidorId, lecturaHistoricaId, request);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

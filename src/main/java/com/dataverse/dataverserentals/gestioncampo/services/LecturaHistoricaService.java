@@ -32,7 +32,7 @@ public class LecturaHistoricaService {
     public Page<LecturaHistorica> findAll(Long medidorId, Pageable pageable,
             LocalDate fechaDesde, LocalDate fechaHasta) {
 
-        log.info("Buscando historial de lecturas para el Medidor ID: {}", medidorId);
+        log.info("Búsqueda paginada de lecturas históricas [filtro: '{}', pageable: {}]", medidorId, pageable);
 
         if (fechaDesde != null && fechaHasta != null) {
             return lecturaHistoricaRepository.findByMedidorIdAndFechaLecturaBetween(
@@ -44,7 +44,7 @@ public class LecturaHistoricaService {
 
     public Long create(Long medidorId, @Valid CreateLecturaHistoricaDto payload) throws FieldConstraintException {
 
-        log.info("Procesando registro de lectura para Medidor ID: {}. Datos: {}", medidorId, payload);
+        log.info("Registrando nueva lectura histórica con los siguientes datos: {}", payload);
 
         medidorRepository.findById(medidorId)
                 .orElseThrow(() -> new FieldConstraintException("medidorId",
@@ -57,7 +57,7 @@ public class LecturaHistoricaService {
 
     public LecturaHistorica findById(Long medidorId, Long lecturaHistoricaId) throws RecordNotFoundException {
 
-        log.info("Recuperando el registro específico de la lectura histórica con ID: {}", lecturaHistoricaId);
+        log.info("Recuperando datos de la lectura histórica con identificador: {}", lecturaHistoricaId);
         return lecturaHistoricaRepository.findByMedidorIdAndId(medidorId, lecturaHistoricaId)
                 .orElseThrow(() -> new RecordNotFoundException(
                         String.format("No se encontró la lectura histórica con ID: %d asociada al medidor con ID: %d",
@@ -67,7 +67,7 @@ public class LecturaHistoricaService {
     public void update(Long medidorId, Long lecturaHistoricaId, @Valid UpdateLecturaHistoricaDto payload)
             throws RecordNotFoundException {
 
-        log.info("Iniciando actualización de la lectura histórica con ID: {}. Datos: {}", lecturaHistoricaId, payload);
+        log.info("Iniciando actualización de la lectura histórica con ID: {}. Datos recibidos: {}", lecturaHistoricaId, payload);
         medidorRepository.findById(medidorId)
                 .orElseThrow(() -> new FieldConstraintException("medidorId",
                         String.format("El medidor solicitado con el id: %s no se encuentra registrado.",
