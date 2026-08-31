@@ -1,5 +1,7 @@
 package com.dataverse.dataverserentals.gestionadministrativa.repositories;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -11,6 +13,9 @@ public interface PersonaRepository extends JpaRepository<Persona, Long>, JpaSpec
     boolean existsByChecksum(String checksum);
 
     boolean existsByTipoDocumentoCodeAndNumeroDocumento(TipoDocumento tipoDocumentoCode, String numeroDocumento);
+
+    Optional<Persona> findByTipoDocumentoCodeAndNumeroDocumento(TipoDocumento tipoDocumentoCode,
+            String numeroDocumento);
 
     boolean existsByNumeroCelular(String numeroCelular);
 
