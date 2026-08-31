@@ -48,7 +48,6 @@ public class Unidad {
     private String numeroPuerta;
 
     @Column(precision = 10, scale = 2, nullable = false)
-    @Positive
     private BigDecimal areaMetrosCuadrados;
 
     @Column(nullable = false)
