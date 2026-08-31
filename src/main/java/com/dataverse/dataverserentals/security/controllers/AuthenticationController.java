@@ -32,4 +32,5 @@ public class AuthenticationController {
         LoginResponse response = authenticationService.authenticate(request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 }

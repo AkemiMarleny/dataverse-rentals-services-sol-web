@@ -13,6 +13,10 @@ public class SecurityContextImpl implements SecurityContext {
 
     @Override
     public UsuarioPrincipal getUsuarioPrincipal() {
-        return (UsuarioPrincipal) getAuthentication().getPrincipal();
+        Authentication auth = getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            return null;
+        }
+        return (UsuarioPrincipal) auth.getPrincipal();
     }
 }

@@ -6,10 +6,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoUsuario;
 import com.dataverse.dataverserentals.security.config.JwtConfig;
+import com.dataverse.dataverserentals.security.context.SecurityContextImpl;
 import com.dataverse.dataverserentals.security.controllers.dtos.request.LoginRequest;
+import com.dataverse.dataverserentals.security.controllers.dtos.response.CurrentUserResponse;
 import com.dataverse.dataverserentals.security.controllers.dtos.response.LoginResponse;
 import com.dataverse.dataverserentals.security.exceptions.CredencialesInvalidasException;
 import com.dataverse.dataverserentals.security.exceptions.UsuarioBloqueadoException;
@@ -27,6 +30,7 @@ public class AuthenticationService {
     private final UsuarioRepository usuarioRepository;
     private final JwtService jwtService;
     private final JwtConfig jwtConfig;
+    private final SecurityContextImpl securityContext;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public LoginResponse authenticate(@Valid LoginRequest request)
@@ -52,5 +56,18 @@ public class AuthenticationService {
         String token = jwtService.tokenFrom(usuario);
 
         return new LoginResponse(token, jwtConfig.getTipo());
+    }
+
+    public CurrentUserResponse getCurrentUser() throws RecordNotFoundException {
+        String nombreUsuario = securityContext.getUsuarioPrincipal().usuarioNombre();
+
+        Usuario usuario = usuarioRepository.findByNombreUsuario(nombreUsuario)
+                .orElseThrow(() -> new RecordNotFoundException("Usuario no encontrado"));
+
+        return new CurrentUserResponse(
+                usuario.getId(),
+                usuario.getPersonaId(),
+                usuario.getNombreUsuario(),
+                usuario.getRolCode());
     }
 }
