@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.dataverse.dataverserentals.common.dto.ErrorResponse;
 import com.dataverse.dataverserentals.common.dto.FieldError;
+import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
 import com.dataverse.dataverserentals.common.exceptions.ConflictException;
 import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
@@ -78,6 +79,12 @@ public class ControllerExceptionsAdvice {
         return new ResponseEntity<>(new ErrorResponse(
                 "Conflicto de actualización: el objeto que está intentando modificar ha sido actualizado por otro proceso. Por favor, recargue los datos e intente nuevamente."),
                 HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> accessDeniedException(AccessDeniedException e) {
+        log.warn("[FORBIDDEN] : {}", e.getMessage());
+        return new ResponseEntity<>(new ErrorResponse("Usuario no autorizado"), HttpStatus.FORBIDDEN);
     }
 
     private List<FieldError> buildFieldErrors(Set<ConstraintViolation<?>> constraintViolations) {

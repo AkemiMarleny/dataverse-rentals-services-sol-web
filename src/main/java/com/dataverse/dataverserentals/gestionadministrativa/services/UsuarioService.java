@@ -12,8 +12,8 @@ import com.dataverse.dataverserentals.common.exceptions.UnprocesableEntity;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateUsuarioDto;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Persona;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
-import com.dataverse.dataverserentals.security.context.SecurityContext;
-import com.dataverse.dataverserentals.security.repositories.UsuarioRepository;
+import com.dataverse.dataverserentals.gestionadministrativa.repositories.UsuarioRepository;
+import com.dataverse.dataverserentals.security.context.UsuarioPrincipal;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +28,8 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PersonaService personaService;
     private final PasswordEncoder passwordEncoder;
-    private final SecurityContext securityContext;
 
-    public Long create(@Valid CreateUsuarioDto payload)
+    public Long create(@Valid CreateUsuarioDto payload, UsuarioPrincipal usuarioPrincipal)
             throws RecordNotFoundException, ConflictException, UnprocesableEntity {
         log.info("Registrando nuevo usuario con los siguientes datos: nombreUsuario={}, personaId={}, rolCode={}",
                 payload.nombreUsuario(), payload.personaId(), payload.rolCode());
@@ -55,7 +54,7 @@ public class UsuarioService {
                 .estadoCode(payload.estadoCode())
                 .fechaUltimoLogin(null)
                 .fechaCreacion(LocalDateTime.now())
-                .usuarioCreacionId(securityContext.getUsuarioPrincipal().usuarioId())
+                .usuarioCreacionId(usuarioPrincipal.usuarioId())
                 .build();
 
         return usuarioRepository.save(usuario).getId();

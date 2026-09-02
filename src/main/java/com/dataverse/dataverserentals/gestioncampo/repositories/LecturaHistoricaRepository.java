@@ -18,4 +18,14 @@ public interface LecturaHistoricaRepository extends JpaRepository<LecturaHistori
 
     Optional<LecturaHistorica> findByMedidorIdAndId(Long medidorId, Long id);
 
+    Optional<LecturaHistorica> findFirstByMedidorIdAndFechaLecturaBetweenOrderByFechaLecturaAsc(
+            Long medidorId,
+            LocalDateTime fechaInicioPeriodo,
+            LocalDateTime fechaFinPeriodo);
+
+    Optional<LecturaHistorica> findFirstByMedidorIdAndFechaLecturaBetweenOrderByFechaLecturaDesc(
+            Long medidorId,
+            LocalDateTime fechaInicioPeriodo,
+            LocalDateTime fechaFinPeriodo);
+
 }

@@ -22,7 +22,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "meters", uniqueConstraints = {
+@Table(name = "medidores", uniqueConstraints = {
         @UniqueConstraint(name = "uk_unidad_tipo_medidor", columnNames = { "unidad_id", "tipo_medidor_code" })
 })
 @Getter

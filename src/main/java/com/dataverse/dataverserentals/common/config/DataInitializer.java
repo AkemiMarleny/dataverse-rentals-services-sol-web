@@ -20,9 +20,10 @@ import com.dataverse.dataverserentals.gestionadministrativa.enums.Genero;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.RolUsuario;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoDocumento;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.PersonaRepository;
+import com.dataverse.dataverserentals.gestionadministrativa.repositories.UsuarioRepository;
 import com.dataverse.dataverserentals.gestionadministrativa.services.PersonaService;
 import com.dataverse.dataverserentals.gestionadministrativa.services.UsuarioService;
-import com.dataverse.dataverserentals.security.repositories.UsuarioRepository;
+import com.dataverse.dataverserentals.security.context.UsuarioPrincipal;
 
 import lombok.RequiredArgsConstructor;
 
@@ -43,15 +44,24 @@ public class DataInitializer implements CommandLineRunner {
 
     private Long createDefaultUsuario(Long personaId)
             throws RecordNotFoundException, ConflictException, UnprocesableEntity {
-        Optional<Usuario> usuarioDefault = usuarioRepository.findByNombreUsuario("dataverse");
+        Optional<Usuario> usuarioDefault = usuarioRepository.findByNombreUsuario("dataversesys");
         if (usuarioDefault.isEmpty()) {
-            return usuarioService.create(new CreateUsuarioDto(
+            CreateUsuarioDto createUsuario = new CreateUsuarioDto(
                     personaId,
-                    "dataverse",
-                    "dataverse",
-                    "dataverse",
-                    RolUsuario.ADMINISTRADOR,
-                    EstadoUsuario.ACTIVO));
+                    "dataversesys",
+                    "dataversesys",
+                    "dataversesys",
+                    RolUsuario.SYSTEM,
+                    EstadoUsuario.ACTIVO);
+
+            UsuarioPrincipal usuarioPrincipal = new UsuarioPrincipal(
+                    1L,
+                    "Root",
+                    RolUsuario.SYSTEM);
+
+            return usuarioService.create(
+                    createUsuario,
+                    usuarioPrincipal);
         }
 
         return usuarioDefault.get().getId();
@@ -63,7 +73,7 @@ public class DataInitializer implements CommandLineRunner {
         if (personaDefault.isEmpty()) {
             return personaService.create(new CreatePersonDto(
                     "Dataverse",
-                    "Rentals",
+                    "Sys",
                     TipoDocumento.DNI,
                     "89876567",
                     Genero.FEMENINO,

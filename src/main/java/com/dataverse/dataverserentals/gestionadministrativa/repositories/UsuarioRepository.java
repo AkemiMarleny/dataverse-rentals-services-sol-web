@@ -1,4 +1,4 @@
-package com.dataverse.dataverserentals.security.repositories;
+package com.dataverse.dataverserentals.gestionadministrativa.repositories;
 
 import java.util.Optional;
 

@@ -4,5 +4,6 @@ public enum RolUsuario {
     ADMINISTRADOR,
     ANALISTA_FINANZAS,
     OPERARIO,
-    INQUILINO
+    INQUILINO,
+    SYSTEM
 }

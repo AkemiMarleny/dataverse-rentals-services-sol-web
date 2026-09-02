@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoUsuario;
+import com.dataverse.dataverserentals.gestionadministrativa.repositories.UsuarioRepository;
 import com.dataverse.dataverserentals.security.config.JwtConfig;
 import com.dataverse.dataverserentals.security.context.SecurityContextImpl;
 import com.dataverse.dataverserentals.security.controllers.dtos.request.LoginRequest;
@@ -17,7 +18,6 @@ import com.dataverse.dataverserentals.security.controllers.dtos.response.LoginRe
 import com.dataverse.dataverserentals.security.exceptions.CredencialesInvalidasException;
 import com.dataverse.dataverserentals.security.exceptions.UsuarioBloqueadoException;
 import com.dataverse.dataverserentals.security.exceptions.UsuarioInactivoException;
-import com.dataverse.dataverserentals.security.repositories.UsuarioRepository;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

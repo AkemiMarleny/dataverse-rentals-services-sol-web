@@ -13,6 +13,7 @@ import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.exceptions.UnprocesableEntity;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateUsuarioDto;
 import com.dataverse.dataverserentals.gestionadministrativa.services.UsuarioService;
+import com.dataverse.dataverserentals.security.context.SecurityContext;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +25,18 @@ import lombok.extern.slf4j.Slf4j;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+    private final SecurityContext securityContext;
 
     @PostMapping
     public ResponseEntity<CreateResponse> create(@RequestBody CreateUsuarioDto request)
             throws RecordNotFoundException, ConflictException, UnprocesableEntity {
 
         log.info("Iniciando el registro de un nuevo usuario: {}", request);
-        Long id = usuarioService.create(request);
-        return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
+        Long id = usuarioService.create(
+                request,
+                securityContext.getUsuarioPrincipal());
+
+        return new ResponseEntity<>(
+                new CreateResponse(id), HttpStatus.CREATED);
     }
 }
