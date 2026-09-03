@@ -1,16 +1,7 @@
-### Auth
-POST http://localhost:8080/api/v1/auth/login
-Content-Type: application/json
-
-{
-    "nombreUsuario": "dataversesys",
-    "contrasena": "dataversesys"
-}
-
 ### Propuestas
 POST http://localhost:8080/api/v1/propuestas
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjoxLCJ1b3duIjoxLCJpYXQiOjE3NzY4MTI3MjMsImV4cCI6MTc3Njg5OTEyM30.iGy_axzWTmSlsF5TxRiORaMAp-fGKRZt4ODJlBGCKBo6X-kF1QtHOG1wPahlvBTE7uFEHUoFm8e-gdl-iiqGsA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjoxLCJ1b3duIjoxLCJpYXQiOjE3NzY5NzkyODYsImV4cCI6MTc3NzA2NTY4Nn0.VsHoImSPK3dZaigY6VSMYE-9GpXxCwT1nDD0OeXSeCWhSsMw2cZtTP3DfRPhmPXxzckLpM3ZywFYK8c5b9t2yQ
 
 {
 

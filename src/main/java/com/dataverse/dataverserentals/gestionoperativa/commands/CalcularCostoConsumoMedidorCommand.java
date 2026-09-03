@@ -25,6 +25,11 @@ public class CalcularCostoConsumoMedidorCommand {
             LocalDateTime fechaInicioPeriodo,
             LocalDateTime fechaFinPeriodo) {
 
+        log.info("calculando costo consumo medidor [medidorId={}] [fechaInicioPeriodo={}] [fechaFinPeriodo={}]",
+                medidor.getId(),
+                fechaInicioPeriodo,
+                fechaFinPeriodo);
+
         BigDecimal primeraLecturaDeMedidor = lecturaHistoricaRepository
                 .findFirstByMedidorIdAndFechaLecturaBetweenOrderByFechaLecturaAsc(
                         medidor.getId(),
@@ -32,6 +37,11 @@ public class CalcularCostoConsumoMedidorCommand {
                         fechaFinPeriodo)
                 .map(lectura -> lectura.getValorLectura())
                 .orElse(BigDecimal.valueOf(0.0D));
+        log.info("[primeraLecturaDeMedidor={}] [medidorId={}] [fechaInicioPeriodo={}] [fechaFinPeriodo={}]",
+                primeraLecturaDeMedidor,
+                medidor.getId(),
+                fechaInicioPeriodo,
+                fechaFinPeriodo);
 
         BigDecimal ultimaLecturaDeMedidor = lecturaHistoricaRepository
                 .findFirstByMedidorIdAndFechaLecturaBetweenOrderByFechaLecturaDesc(
@@ -40,11 +50,30 @@ public class CalcularCostoConsumoMedidorCommand {
                         fechaFinPeriodo)
                 .map(lectura -> lectura.getValorLectura())
                 .orElse(BigDecimal.valueOf(0.0D));
+        log.info("[ultimaLecturaDeMedidor={}] [medidorId={}] [fechaInicioPeriodo={}] [fechaFinPeriodo={}]",
+                ultimaLecturaDeMedidor,
+                medidor.getId(),
+                fechaInicioPeriodo,
+                fechaFinPeriodo);
 
         ConsumoKwh consumoKwh = ConsumoKwh.from(
                 primeraLecturaDeMedidor,
                 ultimaLecturaDeMedidor);
+        log.info("[consumoKwh={}] [medidorId={}] [fechaInicioPeriodo={}] [fechaFinPeriodo={}]",
+                consumoKwh.intoBigDeciaml(),
+                medidor.getId(),
+                fechaInicioPeriodo,
+                fechaFinPeriodo);
 
-        return CostoConsumoPeriodo.from(consumoKwh);
+        CostoConsumoPeriodo costoConsumoPeriodo = CostoConsumoPeriodo.from(consumoKwh);
+
+        log.info("[consumoKwh={}] [costoConsumoPeriodo={}] [medidorId={}] [fechaInicioPeriodo={}] [fechaFinPeriodo={}]",
+                consumoKwh.intoBigDeciaml(),
+                costoConsumoPeriodo.intoBigDecimal(),
+                medidor.getId(),
+                fechaInicioPeriodo,
+                fechaFinPeriodo);
+
+        return costoConsumoPeriodo;
     }
 }

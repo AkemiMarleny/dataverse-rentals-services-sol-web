@@ -279,5 +279,68 @@ values (
         '2026-04-22 10:10',
         1
     );
+-- A1
+insert into contratos(
+        unidad_id,
+        alquiler_mensual,
+        fecha_cierre,
+        fecha_creacion,
+        fecha_fin,
+        fecha_inicio,
+        pdf_url,
+        usuario_creacion_id
+    )
+values (
+        2,
+        255.0,
+        null,
+        '2026-01-01 10:10',
+        '2027-01-01 10:10',
+        '2026-01-01 10:10',
+        null,
+        1
+    );
+-- A2
+insert into contratos(
+        unidad_id,
+        alquiler_mensual,
+        fecha_cierre,
+        fecha_creacion,
+        fecha_fin,
+        fecha_inicio,
+        pdf_url,
+        usuario_creacion_id
+    )
+values (
+        3,
+        355.0,
+        null,
+        '2026-01-01 10:10',
+        '2027-01-01 10:10',
+        '2026-01-01 10:10',
+        null,
+        1
+    );
+-- A3
+insert into contratos(
+        unidad_id,
+        alquiler_mensual,
+        fecha_cierre,
+        fecha_creacion,
+        fecha_fin,
+        fecha_inicio,
+        pdf_url,
+        usuario_creacion_id
+    )
+values (
+        4,
+        455.0,
+        null,
+        '2026-01-01 10:10',
+        '2027-01-01 10:10',
+        '2026-01-01 10:10',
+        null,
+        1
+    );
 --
 COMMIT;

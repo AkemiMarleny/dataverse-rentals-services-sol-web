@@ -1,5 +1,8 @@
 package com.dataverse.dataverserentals.gestionadministrativa.repositories;
 
+import java.math.BigDecimal;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +22,11 @@ public interface UnidadRepository extends JpaRepository<Unidad, Long> {
     Page<Unidad> nombreEdificioOrNumeroPisoOrNumeroPuertaContains(@Param("q") String q, Pageable pageable);
 
     Long countByEdificioIdAndNumeroPuertaAndIdNot(Long edificioId, String numeroPuerta, Long id);
+
+    @Query("""
+            SELECT SUM(u.areaMetrosCuadrados)
+            FROM Unidad u
+            WHERE u.edificioId = :edificioId
+            """)
+    Optional<BigDecimal> sumAreaMetrosCuadradosByEdificio(Long edificioId);
 }

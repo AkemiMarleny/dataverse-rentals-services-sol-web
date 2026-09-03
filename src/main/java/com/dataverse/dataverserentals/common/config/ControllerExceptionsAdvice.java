@@ -31,6 +31,7 @@ public class ControllerExceptionsAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> generic(Exception e) {
+        e.printStackTrace();
         return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

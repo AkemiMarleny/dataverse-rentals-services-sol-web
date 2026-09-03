@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateUnidadDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.UpdateUnidadDto;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoAcabado;
+import com.dataverse.dataverserentals.gestionfinanciera.valueobjects.CoeficienteUnidad;
+import com.dataverse.dataverserentals.gestionfinanciera.valueobjects.MontoProrrateado;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,6 +22,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Table(name = "units", uniqueConstraints = {
@@ -27,6 +30,7 @@ import lombok.Setter;
 })
 @Getter
 @Setter
+@Slf4j
 public class Unidad {
 
     @Id
@@ -69,6 +73,30 @@ public class Unidad {
         this.numeroPuerta = request.numeroPuerta();
         this.areaMetrosCuadrados = request.areaMetrosCuadrados();
         this.tipoAcabado = request.tipoAcabado();
+    }
+
+    public MontoProrrateado prorratearMonto(
+            BigDecimal areaArrendableEdificio,
+            BigDecimal montoAProrratear) {
+
+        BigDecimal areaMetrosCuadrados = this.getAreaMetrosCuadrados();
+
+        log.info(
+                "prorrateando monto [unidadId={}] [areaArrendableEdificio={}] [areaMetrosCuadrados={}] [montoAProrratear={}]",
+                this.getId(),
+                areaArrendableEdificio,
+                areaMetrosCuadrados,
+                montoAProrratear);
+
+        CoeficienteUnidad coeficienteUnidad = CoeficienteUnidad.from(
+                areaArrendableEdificio,
+                areaMetrosCuadrados);
+
+        MontoProrrateado montoGastosComunes = MontoProrrateado.from(
+                coeficienteUnidad,
+                montoAProrratear);
+
+        return montoGastosComunes;
     }
 
 }

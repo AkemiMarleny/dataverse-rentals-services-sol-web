@@ -19,6 +19,7 @@ import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoUsuario;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.Genero;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.RolUsuario;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoDocumento;
+import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoPersona;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.PersonaRepository;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.UsuarioRepository;
 import com.dataverse.dataverserentals.gestionadministrativa.services.PersonaService;
@@ -71,16 +72,20 @@ public class DataInitializer implements CommandLineRunner {
         Optional<Persona> personaDefault = personaRepository.findByTipoDocumentoCodeAndNumeroDocumento(
                 TipoDocumento.DNI, "89876567");
         if (personaDefault.isEmpty()) {
-            return personaService.create(new CreatePersonDto(
-                    "Dataverse",
-                    "Sys",
-                    TipoDocumento.DNI,
-                    "89876567",
-                    Genero.FEMENINO,
-                    EstadoCivil.SOLTERA,
-                    LocalDate.of(1990, 10, 10),
-                    "(+51) 987654212",
-                    "info@dataverse.com"));
+            return personaService.create(
+                    new CreatePersonDto(
+                            TipoPersona.NATURAL_SIN_NEGOCIO,
+                            TipoDocumento.DNI,
+                            "89876567",
+                            "(+51) 987654212",
+                            "info@dataverse.com",
+                            "Dataverse",
+                            "Sys",
+                            Genero.FEMENINO,
+                            EstadoCivil.SOLTERA,
+                            LocalDate.of(1990, 10, 10),
+                            null,
+                            null));
         }
 
         return personaDefault.get().getId();

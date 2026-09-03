@@ -44,4 +44,14 @@ public interface MedidorRepository extends JpaRepository<Medidor, Long>, JpaSpec
             Long edificioId,
             TipoMedidor tipoMedidor);
 
+    @Query("""
+            SELECT m
+            FROM Medidor m
+            WHERE m.unidadId = :unidadId
+            AND m.tipoMedidorCode = :tipoMedidor
+            """)
+    Optional<Medidor> findByUnidadAndTipoMedidor(
+            Long unidadId,
+            TipoMedidor tipoMedidor);
+
 }

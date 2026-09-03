@@ -3,6 +3,7 @@ package com.dataverse.dataverserentals.gestionoperativa.commands;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Edificio;
@@ -22,6 +23,7 @@ public class CalcularPropuestasCommand {
     private final EdificioRepository edificioRepository;
     private final CalcularPropuestaCommand calcularPropuestaCommand;
 
+    @Transactional(rollbackFor = Exception.class)
     public void execute() throws AccessDeniedException {
         log.info("generando propuestas de liquidacion");
 

@@ -1,0 +1,8 @@
+### Generar recibos
+POST http://localhost:8080/api/v1/recibos
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjoxLCJ1b3duIjoxLCJpYXQiOjE3NzY5NzEwNjQsImV4cCI6MTc3NzA1NzQ2NH0.BVB2qUI2-7u6Pa3wE81zy-kX7MjgSbbPqxo5wR1i946-L2VuuCZqoTOkxdHgo9S03LCapPR8K-8xY_7hGDM1xw
+
+{
+
+}
