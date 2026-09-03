@@ -10,7 +10,11 @@ import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoDocumento;
 
 public interface PersonaRepository extends JpaRepository<Persona, Long>, JpaSpecificationExecutor<Persona> {
 
-    boolean existsByChecksum(String checksum);
+    boolean existsByPersonaNaturalChecksum(String personaNaturalChecksum);
+
+    boolean existsByPersonaNaturalNegocioChecksum(String personaNaturalNegocioChecksum);
+
+    boolean existsByPersonaJuridicaChecksum(String personaJuridicaChecksum);
 
     boolean existsByTipoDocumentoCodeAndNumeroDocumento(TipoDocumento tipoDocumentoCode, String numeroDocumento);
 
@@ -21,7 +25,11 @@ public interface PersonaRepository extends JpaRepository<Persona, Long>, JpaSpec
 
     boolean existsByCorreo(String correo);
 
-    Long countByChecksumAndIdNot(String checksum, Long id);
+    Long countByPersonaNaturalChecksumAndIdNot(String personaNaturalChecksum, Long id);
+
+    Long countByPersonaNaturalNegocioChecksumAndIdNot(String personaNaturalNegocioChecksum, Long id);
+
+    Long countByPersonaJuridicaChecksumAndIdNot(String personaJuridicaChecksum, Long id);
 
     Long countByTipoDocumentoCodeAndNumeroDocumentoAndIdNot(TipoDocumento tipoDocumentoCode, String numeroDocumento,
             Long id);
@@ -29,5 +37,4 @@ public interface PersonaRepository extends JpaRepository<Persona, Long>, JpaSpec
     Long countByNumeroCelularAndIdNot(String numeroCelular, Long id);
 
     Long countByCorreoAndIdNot(String correo, Long id);
-
 }

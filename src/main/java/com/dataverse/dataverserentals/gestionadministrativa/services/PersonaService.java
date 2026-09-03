@@ -2,6 +2,7 @@ package com.dataverse.dataverserentals.gestionadministrativa.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -12,8 +13,11 @@ import com.dataverse.dataverserentals.common.validators.DocumentValidatorFactory
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreatePersonDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.UpdatePersonDto;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Persona;
+import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoPersona;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.PersonaRepository;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.specifications.PersonaSpecifications;
+import com.dataverse.dataverserentals.gestionadministrativa.validators.PersonaChecksumValidator;
+import com.dataverse.dataverserentals.gestionadministrativa.validators.PersonaValidator;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,25 +31,38 @@ public class PersonaService {
 
     private final PersonaRepository personaRepository;
     private final DocumentValidatorFactory documentValidatorFactory;
+    private final PersonaChecksumValidator personaChecksumValidator;
+    private final PersonaValidator personaValidator;
 
-    public Page<Persona> findAll(Pageable pageable, String q) {
+    public Page<Persona> findAll(Pageable pageable, String q, TipoPersona tipoPersonaCode) {
 
-        log.info("Búsqueda paginada de personas [filtro: '{}', pageable: {}]", q, pageable);
-        return personaRepository.findAll(PersonaSpecifications.nombresOrApellidosOrNumeroDocumentoContains(q),
-                pageable);
+        log.info("Búsqueda paginada de personas [filtro: '{}', tipo: {}, pageable: {}]", q, tipoPersonaCode, pageable);
+
+        Specification<Persona> specificationPersona = switch (tipoPersonaCode) {
+            case NATURAL_SIN_NEGOCIO ->
+                PersonaSpecifications.nombresOrApellidosOrNumeroDocumentoContains(q);
+            case NATURAL_CON_NEGOCIO ->
+                PersonaSpecifications.nombresOrApellidosOrNumeroDocumentoOrNombreComercialContains(q);
+            case JURIDICA ->
+                PersonaSpecifications.razonSocialOrNumeroDocumentoContains(q);
+        };
+
+        return personaRepository.findAll(specificationPersona, pageable);
     }
 
     public Long create(@Valid CreatePersonDto payload) throws ConflictException, FieldConstraintException {
 
         log.info("Registrando nueva persona con los siguientes datos: {}", payload);
+
+        personaValidator.validarConsistenciaDatos(payload);
+
         documentValidatorFactory.getValidator(payload.tipoDocumentoCode())
                 .validate(payload.numeroDocumento());
 
         Persona persona = Persona.from(payload);
 
-        if (personaRepository.existsByChecksum(persona.getChecksum())) {
-            log.info("Intento de registro duplicado: Persona con checksum {} ya existe. Payload: {}",
-                    persona.getChecksum(), payload);
+        if (personaChecksumValidator.existsByChecksum(persona)) {
+            log.info("Intento de registro duplicado: Checksum ya existe. Payload: {}", payload);
             throw new ConflictException("Ya existe otra persona registrada con los mismos datos (checksum duplicado).");
         }
 
@@ -79,25 +96,26 @@ public class PersonaService {
             throws RecordNotFoundException, ConflictException, FieldConstraintException {
 
         log.info("Iniciando actualización de la persona con ID: {}. Datos recibidos: {}", personaId, payload);
-        documentValidatorFactory.getValidator(payload.tipoDocumentoCode())
-                .validate(payload.numeroDocumento());
 
         Persona persona = findById(personaId);
 
+        personaValidator.validarConsistenciaDatos(payload);
+
+        documentValidatorFactory.getValidator(payload.tipoDocumentoCode())
+                .validate(payload.numeroDocumento());
+
         persona.updateWith(payload);
 
-        Long personaRepetida = personaRepository.countByChecksumAndIdNot(persona.getChecksum(), personaId);
-        if (personaRepetida > 0) {
-            log.info("Intento de registro duplicado: Persona con checksum {} ya existe. Payload: {}",
-                    persona.getChecksum(), payload);
+        if (personaChecksumValidator.countByChecksum(persona) > 0) {
+            log.info("Intento de registro duplicado: Checksum ya existe. Payload: {}", payload);
             throw new ConflictException("Ya existe otra persona registrada con los mismos datos (checksum duplicado).");
         }
 
         Long cantidadDocumentosDuplicados = personaRepository.countByTipoDocumentoCodeAndNumeroDocumentoAndIdNot(
                 payload.tipoDocumentoCode(), payload.numeroDocumento(), personaId);
         if (cantidadDocumentosDuplicados > 0) {
-            log.info("Validación fallida: Documento duplicado detectado para Tipo: {} y Número: {}. Payload: {}",
-                    payload);
+            log.info("Validación fallida: Documento duplicado detectado para Tipo: {} y Número: {}",
+                    payload.tipoDocumentoCode(), payload.numeroDocumento());
             throw new ConflictException(
                     String.format("El documento de identidad %s: %s ya se encuentra vinculado a otra persona.",
                             payload.tipoDocumentoCode(), payload.numeroDocumento()));
@@ -106,16 +124,15 @@ public class PersonaService {
         Long cantidadCelularesDuplicados = personaRepository.countByNumeroCelularAndIdNot(payload.numeroCelular(),
                 personaId);
         if (cantidadCelularesDuplicados > 0) {
-            log.info(
-                    "Validación fallida: El número celular [{}] ya está vinculado a otra persona (ID origen: {}).",
-                    payload.numeroCelular(), personaId);
+            log.info("Validación fallida: El número celular [{}] ya está vinculado a otra persona.",
+                    payload.numeroCelular());
             throw new ConflictException(
                     String.format("El número de celular %s ya está registrado.", payload.numeroCelular()));
         }
 
         Long cantidadCorreosDuplicados = personaRepository.countByCorreoAndIdNot(payload.correo(), personaId);
         if (cantidadCorreosDuplicados > 0) {
-            log.info("Validación fallida: Correo {} ya está en uso. Payload: {}", payload.correo(), payload);
+            log.info("Validación fallida: Correo {} ya está en uso.", payload.correo());
             throw new ConflictException(
                     String.format("El correo %s ya se encuentra registrado en el sistema.", payload.correo()));
         }

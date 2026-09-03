@@ -22,6 +22,7 @@ import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.req
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.response.DetailPersonaDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.response.PersonaPaginaDto;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Persona;
+import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoPersona;
 import com.dataverse.dataverserentals.gestionadministrativa.services.PersonaService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,17 +30,21 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/people")
+@RequestMapping("api/v1/personas")
 @Slf4j
 public class PersonaController {
 
     private final PersonaService personaService;
 
     @GetMapping
-    public ResponseEntity<Page<PersonaPaginaDto>> findAll(Pageable pageable, @RequestParam String q) {
+    public ResponseEntity<Page<PersonaPaginaDto>> findAll(
+            Pageable pageable,
+            @RequestParam String q,
+            @RequestParam TipoPersona tipoPersonaCode) {
 
-        log.info("Listando personas con filtro '{}' y parámetros: {}", q, pageable);
-        org.springframework.data.domain.Page<PersonaPaginaDto> personaPage = personaService.findAll(pageable, q)
+        log.info("Listando personas con filtro '{}', tipo: {} y parámetros: {}", q, tipoPersonaCode, pageable);
+        org.springframework.data.domain.Page<PersonaPaginaDto> personaPage = personaService
+                .findAll(pageable, q, tipoPersonaCode)
                 .map(PersonaPaginaDto::fromEntity);
         return ResponseEntity.ok(PageFactory.from(personaPage));
     }

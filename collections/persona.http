@@ -1,41 +1,144 @@
-POST http://localhost:8080/api/v1/people
+### ================================================
+### PERSONA NATURAL SIN NEGOCIO (RUC 10 / DNI)
+### ================================================
+
+### POST - Crear Persona Natural Sin Negocio
+POST http://localhost:8080/api/v1/personas
 Content-Type: application/json
 Authorization: Bearer 
+
 {
-    "nombres": "Beatriz Elena",
-    "apellidos": "Salazar Mendoza",
-    "tipoDocumentoCode": "CARNET_EXTRANJERIA",
-    "numeroDocumento": "004589213",
+    "tipoPersonaCode": "NATURAL_SIN_NEGOCIO",
+    "tipoDocumentoCode": "DNI",
+    "numeroDocumento": "72189034",
+    "numeroCelular": "(+51) 987654001",
+    "correo": "natural1@test.com",
+    "nombres": "Juan Carlos",
+    "apellidos": "Perez Rodriguez",
+    "generoCode": "MASCULINO",
+    "estadoCivilCode": "SOLTERO",
+    "fechaNacimiento": "1990-05-15"
+}
+
+### GET - Buscar Personas Naturales Sin Negocio
+GET http://localhost:8080/api/v1/personas?q=Juan&tipoPersonaCode=NATURAL_SIN_NEGOCIO
+Content-Type: application/json
+
+### PUT - Actualizar Persona Natural Sin Negocio
+PUT http://localhost:8080/api/v1/personas/1
+Content-Type: application/json
+Authorization: Bearer
+
+{
+    "tipoPersonaCode": "NATURAL_SIN_NEGOCIO",
+    "tipoDocumentoCode": "DNI",
+    "numeroDocumento": "72189034",
+    "numeroCelular": "(+51) 987654001",
+    "correo": "actualizado@test.com",
+    "nombres": "Juan Actualizado",
+    "apellidos": "Perez Rodriguez",
+    "generoCode": "MASCULINO",
+    "estadoCivilCode": "SOLTERO",
+    "fechaNacimiento": "1990-05-15"
+}
+
+### ================================================
+### PERSONA NATURAL CON NEGOCIO (RUC 10)
+### ================================================
+
+### POST - Crear Persona Natural Con Negocio
+POST http://localhost:8080/api/v1/personas
+Content-Type: application/json
+Authorization: Bearer 
+
+{
+    "tipoPersonaCode": "NATURAL_CON_NEGOCIO",
+    "tipoDocumentoCode": "RUC",
+    "numeroDocumento": "10456789013",
+    "numeroCelular": "(+51) 987654002",
+    "correo": "negocio1@test.com",
+    "nombres": "Maria Rosa",
+    "apellidos": "Garcia Lopez",
     "generoCode": "FEMENINO",
     "estadoCivilCode": "CASADA",
-    "fechaNacimiento": "1930-06-07",
-    "numeroCelular": "(+51) 987654212",
-    "correo": "beatriz@example.com"
+    "fechaNacimiento": "1985-03-20",
+    "nombreComercial": "Botica Maria Rosa"
 }
 
-###
-
-GET http://localhost:8080/api/v1/people?q=
+### GET - Buscar Personas Naturales Con Negocio
+GET http://localhost:8080/api/v1/personas?q=Botica&tipoPersonaCode=NATURAL_CON_NEGOCIO
 Content-Type: application/json
 
-###
-
-GET http://localhost:8080/api/v1/people/12
+### PUT - Actualizar Persona Natural Con Negocio
+PUT http://localhost:8080/api/v1/personas/2
 Content-Type: application/json
-
-###
-
-PUT http://localhost:8080/api/v1/people/1
-Content-Type: application/json
+Authorization: Bearer 
 
 {
-   "nombres": "yamilet",
-    "apellidos": "cabanillas correa",
-    "tipoDocumentoCode": "DNI",
-    "numeroDocumento": "8122658200",
+    "tipoPersonaCode": "NATURAL_CON_NEGOCIO",
+    "tipoDocumentoCode": "RUC",
+    "numeroDocumento": "10456789013",
+    "numeroCelular": "(+51) 987654002",
+    "correo": "negocioactualizado@test.com",
+    "nombres": "Maria Rosa",
+    "apellidos": "Garcia Lopez",
     "generoCode": "FEMENINO",
-    "estadoCivilCode": "SOLTERA",
-    "fechaNacimiento": "2013-04-03T05:00:00.000Z",
-    "numeroCelular": "(+51) 987654200",
-    "correo": "yami@example.com"
+    "estadoCivilCode": "CASADA",
+    "fechaNacimiento": "1985-03-20",
+    "nombreComercial": "Farmacia Maria Rosa"
 }
+
+### ================================================
+### PERSONA JURIDICA (RUC 20)
+### ================================================
+
+### POST - Crear Persona Juridica
+POST http://localhost:8080/api/v1/personas
+Content-Type: application/json
+Authorization: Bearer 
+
+{
+    "tipoPersonaCode": "JURIDICA",
+    "tipoDocumentoCode": "RUC",
+    "numeroDocumento": "20567890123",
+    "numeroCelular": "(+51) 987654003",
+    "correo": "empresa@test.com",
+    "razonSocial": "Dataverse Solutions S.A.C."
+}
+
+### GET - Buscar Personas Juridicas
+GET http://localhost:8080/api/v1/personas?q=Dataverse&tipoPersonaCode=JURIDICA
+Content-Type: application/json
+
+### PUT - Actualizar Persona Juridica
+PUT http://localhost:8080/api/v1/personas/3
+Content-Type: application/json
+Authorization: Bearer
+
+{
+    "tipoPersonaCode": "JURIDICA",
+    "tipoDocumentoCode": "RUC",
+    "numeroDocumento": "20567890123",
+    "numeroCelular": "(+51) 987654003",
+    "correo": "empresaactualizada@test.com",
+    "razonSocial": "Dataverse Peru S.A.C."
+}
+
+### ================================================
+### CONSULTAS GENERALES
+### ================================================
+
+### GET - Obtener Persona por ID
+GET http://localhost:8080/api/v1/personas/1
+Content-Type: application/json
+Authorization: Bearer
+
+### GET - Listar Todas las Personas Naturales
+GET http://localhost:8080/api/v1/personas?q=&tipoPersonaCode=NATURAL_SIN_NEGOCIO
+Content-Type: application/json
+Authorization: Bearer
+
+### GET - Listar Todas las Personas Juridicas
+GET http://localhost:8080/api/v1/personas?q=&tipoPersonaCode=JURIDICA
+Content-Type: application/json
+Authorization: Bearer

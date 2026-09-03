@@ -4,15 +4,14 @@ import com.dataverse.dataverserentals.common.helpers.Checksum;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoDocumento;
 
 public class PersonaJuridicaChecksum {
+    private final String value;
 
-    private final String contentCodificated;
-
-    private PersonaJuridicaChecksum(String content) {
-        this.contentCodificated = content;
+    private PersonaJuridicaChecksum(String value) {
+        this.value = value;
     }
 
     public String get() {
-        return contentCodificated;
+        return value;
     }
 
     public static PersonaJuridicaChecksum fromRaw(
@@ -20,10 +19,10 @@ public class PersonaJuridicaChecksum {
             TipoDocumento tipoDocumentoCode,
             String numeroDocumento) {
 
-        String contentCodificated = String.format("%s.%s.%s", 
-            razonSocial.trim().toLowerCase(), 
-            tipoDocumentoCode.name(),
-            numeroDocumento.trim().toLowerCase());
+        String contentCodificated = String.format("%s.%s.%s",
+                razonSocial.trim().toLowerCase(),
+                tipoDocumentoCode,
+                numeroDocumento.trim().toLowerCase());
 
         return new PersonaJuridicaChecksum(new Checksum(contentCodificated).get());
     }
