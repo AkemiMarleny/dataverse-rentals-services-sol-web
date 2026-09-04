@@ -53,30 +53,34 @@ public class LecturaHistorica {
     @Column(name = "usuario_creacion_id", nullable = false)
     private Long usuarioCreacionId;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private LocalDateTime fechaModificacion;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_modificacion_id", insertable = false, updatable = false)
     private Persona usuarioModificacion;
 
-    @Column(name = "usuario_modificacion_id", nullable = true)
+    @Column(name = "usuario_modificacion_id", nullable = false)
     private Long usuarioModificacionId;
 
-    public static LecturaHistorica from(Long medidorId, CreateLecturaHistoricaDto request) {
+    public static LecturaHistorica from(Long medidorId, CreateLecturaHistoricaDto request, Long usuarioCreacionId) {
         LecturaHistorica lecturaHistorica = new LecturaHistorica();
         lecturaHistorica.setMedidorId(medidorId);
         lecturaHistorica.setFechaLectura(LocalDateTime.now());
         lecturaHistorica.setValorLectura(request.valorLectura());
-        lecturaHistorica.setUsuarioCreacionId(request.usuarioCreacionId());
         lecturaHistorica.setFechaCreacion(LocalDateTime.now());
+        lecturaHistorica.setUsuarioCreacionId(usuarioCreacionId);
+        lecturaHistorica.setFechaModificacion(LocalDateTime.now());
+        lecturaHistorica.setUsuarioModificacionId(usuarioCreacionId);
+
         return lecturaHistorica;
     }
 
-    public void updateWith(UpdateLecturaHistoricaDto request) {
+    public void updateWith(UpdateLecturaHistoricaDto request, Long usuarioModificacionId) {
         this.fechaLectura = LocalDateTime.now();
         this.valorLectura = request.valorLectura();
-        this.usuarioModificacionId = request.usuarioModificacionId();
         this.fechaModificacion = LocalDateTime.now();
+        this.usuarioModificacionId = usuarioModificacionId;
+
     }
 }

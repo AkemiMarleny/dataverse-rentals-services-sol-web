@@ -26,6 +26,7 @@ import com.dataverse.dataverserentals.gestioncampo.controllers.dtos.response.Det
 import com.dataverse.dataverserentals.gestioncampo.controllers.dtos.response.LecturaHistoricaPaginaDto;
 import com.dataverse.dataverserentals.gestioncampo.entities.LecturaHistorica;
 import com.dataverse.dataverserentals.gestioncampo.services.LecturaHistoricaService;
+import com.dataverse.dataverserentals.security.context.SecurityContext;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LecturaHistoricaController {
 
     private final LecturaHistoricaService lecturaHistoricaService;
+    private final SecurityContext securityContext;
 
     @GetMapping
     public ResponseEntity<Page<LecturaHistoricaPaginaDto>> findAll(
@@ -60,8 +62,8 @@ public class LecturaHistoricaController {
             throws FieldConstraintException {
 
         log.info("Iniciando la creación de una nueva lectura histórica: {}", request);
-
-        Long lecturaHistoricaId = lecturaHistoricaService.create(medidorId, request);
+        Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
+        Long lecturaHistoricaId = lecturaHistoricaService.create(medidorId, request, usuarioId);
         return new ResponseEntity<>(new CreateResponse(lecturaHistoricaId), HttpStatus.CREATED);
     }
 
@@ -81,7 +83,8 @@ public class LecturaHistoricaController {
             @RequestBody UpdateLecturaHistoricaDto request) throws RecordNotFoundException {
 
         log.info("Iniciando actualización de la lectura histórica: {}", request);
-        lecturaHistoricaService.update(medidorId, lecturaHistoricaId, request);
+        Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
+        lecturaHistoricaService.update(medidorId, lecturaHistoricaId, request, usuarioId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
