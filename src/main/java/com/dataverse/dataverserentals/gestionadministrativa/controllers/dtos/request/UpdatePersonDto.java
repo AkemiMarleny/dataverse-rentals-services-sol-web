@@ -2,6 +2,7 @@ package com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.re
 
 import java.time.LocalDate;
 
+import com.dataverse.dataverserentals.common.annotations.ValidDocumentFormat;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoCivil;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.Genero;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoDocumento;
@@ -14,11 +15,11 @@ import jakarta.validation.constraints.Pattern;
 
 public record UpdatePersonDto(
 
-        @NotNull TipoPersona tipoPersonaCode,
+        @NotNull(message = "El tipo de persona es obligatorio") TipoPersona tipoPersonaCode,
 
         // Campos comunes
         @NotNull TipoDocumento tipoDocumentoCode,
-        @NotBlank @Pattern(regexp = "^[A-Za-z0-9]+$", message = "El número de documento no sigue el formato requerido") String numeroDocumento,
+        @NotBlank(message = "El número de documento es obligatorio") @ValidDocumentFormat String numeroDocumento,
         @NotBlank @Pattern(regexp = "^\\(\\+51\\) [0-9]{9}$", message = "Formato de teléfono incorrecto") String numeroCelular,
         @NotBlank @Email String correo,
 

@@ -5,40 +5,48 @@
 ### POST - Crear Persona Natural Sin Negocio
 POST http://localhost:8080/api/v1/personas
 Content-Type: application/json
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjozLCJ1b3duIjoxLCJpYXQiOjE3NzY5NjE4OTAsImV4cCI6MTc3NzA0ODI5MH0.wCYQm5rnQMIUEYOw-V3cNJPVJVmdEpfivArWCBdS5saGI4AcPbfJFlbLF2siG6VrwtWW1GF6AjvJfmE7v8vINw
 
 {
     "tipoPersonaCode": "NATURAL_SIN_NEGOCIO",
     "tipoDocumentoCode": "DNI",
     "numeroDocumento": "72189034",
-    "numeroCelular": "(+51) 987654001",
-    "correo": "natural1@test.com",
-    "nombres": "Juan Carlos",
-    "apellidos": "Perez Rodriguez",
-    "generoCode": "MASCULINO",
-    "estadoCivilCode": "SOLTERO",
+    "numeroCelular": "(+51) 900054001",
+    "correo": "trixie@test.com",
+    "nombres": "Trixie paulet3",
+    "apellidos": " diaz bernal",
+    "generoCode": "FEMENINO",
+    "estadoCivilCode": "CASADA",
     "fechaNacimiento": "1990-05-15"
 }
 
 ### GET - Buscar Personas Naturales Sin Negocio
-GET http://localhost:8080/api/v1/personas?q=Juan&tipoPersonaCode=NATURAL_SIN_NEGOCIO
+GET http://localhost:8080/api/v1/personas?q=&tipoPersonaCode=NATURAL_SIN_NEGOCIO
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjozLCJ1b3duIjoxLCJpYXQiOjE3NzY5NjE4OTAsImV4cCI6MTc3NzA0ODI5MH0.wCYQm5rnQMIUEYOw-V3cNJPVJVmdEpfivArWCBdS5saGI4AcPbfJFlbLF2siG6VrwtWW1GF6AjvJfmE7v8vINw
+
+
+### GET - Obtener Persona Natural por ID
+GET http://localhost:8080/api/v1/personas/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjozLCJ1b3duIjoxLCJpYXQiOjE3NzY5NjE4OTAsImV4cCI6MTc3NzA0ODI5MH0.wCYQm5rnQMIUEYOw-V3cNJPVJVmdEpfivArWCBdS5saGI4AcPbfJFlbLF2siG6VrwtWW1GF6AjvJfmE7v8vINw
+
 
 ### PUT - Actualizar Persona Natural Sin Negocio
-PUT http://localhost:8080/api/v1/personas/1
+PUT http://localhost:8080/api/v1/personas/13
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjozLCJ1b3duIjoxLCJpYXQiOjE3NzY5NjE4OTAsImV4cCI6MTc3NzA0ODI5MH0.wCYQm5rnQMIUEYOw-V3cNJPVJVmdEpfivArWCBdS5saGI4AcPbfJFlbLF2siG6VrwtWW1GF6AjvJfmE7v8vINw
 
 {
     "tipoPersonaCode": "NATURAL_SIN_NEGOCIO",
     "tipoDocumentoCode": "DNI",
-    "numeroDocumento": "72189034",
-    "numeroCelular": "(+51) 987654001",
-    "correo": "actualizado@test.com",
-    "nombres": "Juan Actualizado",
-    "apellidos": "Perez Rodriguez",
-    "generoCode": "MASCULINO",
-    "estadoCivilCode": "SOLTERO",
+    "numeroDocumento": "89876567",
+    "numeroCelular": "(+51) 900054001",
+    "correo": "trixie@test.com",
+    "nombres": "Trixie paulina",
+    "apellidos": "Diaz Bernal",
+    "generoCode": "FEMENINO",
+    "estadoCivilCode": "SOLTERA",
     "fechaNacimiento": "1990-05-15"
 }
 
@@ -49,96 +57,96 @@ Authorization: Bearer
 ### POST - Crear Persona Natural Con Negocio
 POST http://localhost:8080/api/v1/personas
 Content-Type: application/json
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjozLCJ1b3duIjoxLCJpYXQiOjE3NzY5NjE4OTAsImV4cCI6MTc3NzA0ODI5MH0.wCYQm5rnQMIUEYOw-V3cNJPVJVmdEpfivArWCBdS5saGI4AcPbfJFlbLF2siG6VrwtWW1GF6AjvJfmE7v8vINw
 
 {
     "tipoPersonaCode": "NATURAL_CON_NEGOCIO",
     "tipoDocumentoCode": "RUC",
-    "numeroDocumento": "10456789013",
-    "numeroCelular": "(+51) 987654002",
-    "correo": "negocio1@test.com",
-    "nombres": "Maria Rosa",
-    "apellidos": "Garcia Lopez",
-    "generoCode": "FEMENINO",
-    "estadoCivilCode": "CASADA",
+    "numeroDocumento": "10770772502",
+    "numeroCelular": "(+51) 937660000",
+    "correo": "negocio11@test.com",
+    "nombres": "jose eduardo23",
+    "apellidos": "del rio velasquez",
+    "generoCode": "MASCULINO",
+    "estadoCivilCode": "SOLTERO",
     "fechaNacimiento": "1985-03-20",
-    "nombreComercial": "Botica Maria Rosa"
+    "nombreComercial": "café@ eduardo"
 }
 
 ### GET - Buscar Personas Naturales Con Negocio
-GET http://localhost:8080/api/v1/personas?q=Botica&tipoPersonaCode=NATURAL_CON_NEGOCIO
+GET http://localhost:8080/api/v1/personas?q=&tipoPersonaCode=NATURAL_CON_NEGOCIO
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjozLCJ1b3duIjoxLCJpYXQiOjE3NzY5NjE4OTAsImV4cCI6MTc3NzA0ODI5MH0.wCYQm5rnQMIUEYOw-V3cNJPVJVmdEpfivArWCBdS5saGI4AcPbfJFlbLF2siG6VrwtWW1GF6AjvJfmE7v8vINw
+
+
+### GET - Obtener Persona Naturales Con Negocio por ID
+GET http://localhost:8080/api/v1/personas/3
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjozLCJ1b3duIjoxLCJpYXQiOjE3NzY5NjE4OTAsImV4cCI6MTc3NzA0ODI5MH0.wCYQm5rnQMIUEYOw-V3cNJPVJVmdEpfivArWCBdS5saGI4AcPbfJFlbLF2siG6VrwtWW1GF6AjvJfmE7v8vINw
+
 
 ### PUT - Actualizar Persona Natural Con Negocio
-PUT http://localhost:8080/api/v1/personas/2
+PUT http://localhost:8080/api/v1/personas/6
 Content-Type: application/json
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjozLCJ1b3duIjoxLCJpYXQiOjE3NzY5NjE4OTAsImV4cCI6MTc3NzA0ODI5MH0.wCYQm5rnQMIUEYOw-V3cNJPVJVmdEpfivArWCBdS5saGI4AcPbfJFlbLF2siG6VrwtWW1GF6AjvJfmE7v8vINw
 
 {
     "tipoPersonaCode": "NATURAL_CON_NEGOCIO",
     "tipoDocumentoCode": "RUC",
-    "numeroDocumento": "10456789013",
-    "numeroCelular": "(+51) 987654002",
-    "correo": "negocioactualizado@test.com",
-    "nombres": "Maria Rosa",
-    "apellidos": "Garcia Lopez",
+    "numeroDocumento": "10470762502",
+    "numeroCelular": "(+51) 917654006",
+    "correo": "nnegocio4@test.com",
+    "nombres": "elizabeth dayana@..",
+    "apellidos": "Martinez Terronelozas",
     "generoCode": "FEMENINO",
     "estadoCivilCode": "CASADA",
     "fechaNacimiento": "1985-03-20",
-    "nombreComercial": "Farmacia Maria Rosa"
+    "nombreComercial": "martinez asociados.."
 }
 
 ### ================================================
-### PERSONA JURIDICA (RUC 20)
+### PERSONA JURIDICA (RUC 10 o 20)
 ### ================================================
 
-### POST - Crear Persona Juridica
+### POST - Crear Persona Jurídica
 POST http://localhost:8080/api/v1/personas
 Content-Type: application/json
-Authorization: Bearer 
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjozLCJ1b3duIjoxLCJpYXQiOjE3NzY5NjE4OTAsImV4cCI6MTc3NzA0ODI5MH0.wCYQm5rnQMIUEYOw-V3cNJPVJVmdEpfivArWCBdS5saGI4AcPbfJFlbLF2siG6VrwtWW1GF6AjvJfmE7v8vINw
+
 
 {
     "tipoPersonaCode": "JURIDICA",
     "tipoDocumentoCode": "RUC",
-    "numeroDocumento": "20567890123",
-    "numeroCelular": "(+51) 987654003",
-    "correo": "empresa@test.com",
-    "razonSocial": "Dataverse Solutions S.A.C."
+    "numeroDocumento": "20167800123",
+    "numeroCelular": "(+51) 937500510",
+    "correo": "negocio18@test.com",
+    "razonSocial": "EL JACAL S.A.C."
 }
 
 ### GET - Buscar Personas Juridicas
-GET http://localhost:8080/api/v1/personas?q=Dataverse&tipoPersonaCode=JURIDICA
+GET http://localhost:8080/api/v1/personas?q=&tipoPersonaCode=JURIDICA
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjozLCJ1b3duIjoxLCJpYXQiOjE3NzY5NjE4OTAsImV4cCI6MTc3NzA0ODI5MH0.wCYQm5rnQMIUEYOw-V3cNJPVJVmdEpfivArWCBdS5saGI4AcPbfJFlbLF2siG6VrwtWW1GF6AjvJfmE7v8vINw
+
+
+### GET - Obtener Persona Jurídica por ID
+GET http://localhost:8080/api/v1/personas/9
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjozLCJ1b3duIjoxLCJpYXQiOjE3NzY5NjE4OTAsImV4cCI6MTc3NzA0ODI5MH0.wCYQm5rnQMIUEYOw-V3cNJPVJVmdEpfivArWCBdS5saGI4AcPbfJFlbLF2siG6VrwtWW1GF6AjvJfmE7v8vINw
+
 
 ### PUT - Actualizar Persona Juridica
-PUT http://localhost:8080/api/v1/personas/3
+PUT http://localhost:8080/api/v1/personas/12
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjozLCJ1b3duIjoxLCJpYXQiOjE3NzY5NjE4OTAsImV4cCI6MTc3NzA0ODI5MH0.wCYQm5rnQMIUEYOw-V3cNJPVJVmdEpfivArWCBdS5saGI4AcPbfJFlbLF2siG6VrwtWW1GF6AjvJfmE7v8vINw
+
 
 {
     "tipoPersonaCode": "JURIDICA",
     "tipoDocumentoCode": "RUC",
-    "numeroDocumento": "20567890123",
-    "numeroCelular": "(+51) 987654003",
-    "correo": "empresaactualizada@test.com",
-    "razonSocial": "Dataverse Peru S.A.C."
+    "numeroDocumento": "20167800123",
+    "numeroCelular": "(+51) 937500510",
+    "correo": "negocio18@test.com",
+    "razonSocial": "trixie @solutions. eirl"
 }
 
-### ================================================
-### CONSULTAS GENERALES
-### ================================================
-
-### GET - Obtener Persona por ID
-GET http://localhost:8080/api/v1/personas/1
-Content-Type: application/json
-Authorization: Bearer
-
-### GET - Listar Todas las Personas Naturales
-GET http://localhost:8080/api/v1/personas?q=&tipoPersonaCode=NATURAL_SIN_NEGOCIO
-Content-Type: application/json
-Authorization: Bearer
-
-### GET - Listar Todas las Personas Juridicas
-GET http://localhost:8080/api/v1/personas?q=&tipoPersonaCode=JURIDICA
-Content-Type: application/json
-Authorization: Bearer

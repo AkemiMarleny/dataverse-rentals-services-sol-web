@@ -1,6 +1,6 @@
 package com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.response;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Persona;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoCivil;
@@ -10,7 +10,7 @@ import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoPersona;
 
 public record PersonaPaginaDto(
         Long id,
-        TipoPersona tipoPersona,
+        TipoPersona tipoPersonaCode,
         TipoDocumento tipoDocumentoCode,
         String numeroDocumento,
         String numeroCelular,
@@ -21,7 +21,10 @@ public record PersonaPaginaDto(
         String apellidos,
         Genero generoCode,
         EstadoCivil estadoCivilCode,
-        Timestamp fechaNacimiento,
+        LocalDate fechaNacimiento,
+
+        // Campo para persona natural con negocio
+        String nombreComercial,
 
         // Campos para persona jurídica
         String razonSocial) {
@@ -38,8 +41,8 @@ public record PersonaPaginaDto(
                 persona.getApellidos(),
                 persona.getGeneroCode(),
                 persona.getEstadoCivilCode(),
-                persona.getFechaNacimiento() != null ? Timestamp.valueOf(persona.getFechaNacimiento().atStartOfDay())
-                        : null,
+                persona.getFechaNacimiento(),
+                persona.getNombreComercial(),
                 persona.getRazonSocial());
     }
 

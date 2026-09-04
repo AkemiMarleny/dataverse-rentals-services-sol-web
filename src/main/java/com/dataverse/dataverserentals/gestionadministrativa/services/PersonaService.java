@@ -1,5 +1,7 @@
 package com.dataverse.dataverserentals.gestionadministrativa.services;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -40,11 +42,11 @@ public class PersonaService {
 
         Specification<Persona> specificationPersona = switch (tipoPersonaCode) {
             case NATURAL_SIN_NEGOCIO ->
-                PersonaSpecifications.nombresOrApellidosOrNumeroDocumentoContains(q);
+                PersonaSpecifications.nombresOrApellidosOrNumeroDocumentoContains(q, tipoPersonaCode);
             case NATURAL_CON_NEGOCIO ->
-                PersonaSpecifications.nombresOrApellidosOrNumeroDocumentoOrNombreComercialContains(q);
+                PersonaSpecifications.nombresOrApellidosOrNumeroDocumentoOrNombreComercialContains(q, tipoPersonaCode);
             case JURIDICA ->
-                PersonaSpecifications.razonSocialOrNumeroDocumentoContains(q);
+                PersonaSpecifications.razonSocialOrNumeroDocumentoContains(q, tipoPersonaCode);
         };
 
         return personaRepository.findAll(specificationPersona, pageable);
@@ -63,7 +65,7 @@ public class PersonaService {
 
         if (personaChecksumValidator.existsByChecksum(persona)) {
             log.info("Intento de registro duplicado: Checksum ya existe. Payload: {}", payload);
-            throw new ConflictException("Ya existe otra persona registrada con los mismos datos (checksum duplicado).");
+            throw new ConflictException("Ya existe otra persona registrada con los mismos datos.");
         }
 
         if (personaRepository.existsByTipoDocumentoCodeAndNumeroDocumento(payload.tipoDocumentoCode(),
@@ -82,6 +84,23 @@ public class PersonaService {
             throw new ConflictException(
                     String.format("El correo %s ya se encuentra registrado en el sistema.", payload.correo()));
         }
+
+        Optional.ofNullable(persona.getNombreComercial())
+                .filter(nombreComercial -> payload.tipoPersonaCode() == TipoPersona.NATURAL_CON_NEGOCIO)
+                .filter(nombreComercial -> personaRepository.existsByNombreComercial(nombreComercial))
+                .ifPresent(nombreComercial -> {
+                    throw new ConflictException(
+                            String.format("El nombre comercial %s ya está registrado.", nombreComercial));
+                });
+
+        Optional.ofNullable(persona.getRazonSocial())
+                .filter(razonSocial -> payload.tipoPersonaCode() == TipoPersona.JURIDICA)
+                .filter(razonSocial -> personaRepository.existsByRazonSocial(razonSocial))
+                .ifPresent(razonSocial -> {
+                    throw new ConflictException(
+                            String.format("La razón social %s ya está registrada.", razonSocial));
+                });
+
         return personaRepository.save(persona).getId();
     }
 
@@ -136,6 +155,24 @@ public class PersonaService {
             throw new ConflictException(
                     String.format("El correo %s ya se encuentra registrado en el sistema.", payload.correo()));
         }
+
+        Optional.ofNullable(persona.getNombreComercial())
+                .filter(nombreComercial -> payload.tipoPersonaCode() == TipoPersona.NATURAL_CON_NEGOCIO)
+                .filter(nombreComercial -> personaRepository.countByNombreComercialAndIdNot(nombreComercial,
+                        personaId) > 0)
+                .ifPresent(nombreComercial -> {
+                    throw new ConflictException(
+                            String.format("El nombre comercial %s ya está registrado.", nombreComercial));
+                });
+
+        Optional.ofNullable(persona.getRazonSocial())
+                .filter(razonSocial -> payload.tipoPersonaCode() == TipoPersona.JURIDICA)
+                .filter(razonSocial -> personaRepository.countByRazonSocialAndIdNot(razonSocial, personaId) > 0)
+                .ifPresent(razonSocial -> {
+                    throw new ConflictException(
+                            String.format("La razón social %s ya está registrada.", razonSocial));
+                });
+
         personaRepository.save(persona);
     }
 }

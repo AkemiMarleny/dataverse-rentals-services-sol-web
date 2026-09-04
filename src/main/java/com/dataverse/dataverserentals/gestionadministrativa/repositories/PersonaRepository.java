@@ -37,4 +37,12 @@ public interface PersonaRepository extends JpaRepository<Persona, Long>, JpaSpec
     Long countByNumeroCelularAndIdNot(String numeroCelular, Long id);
 
     Long countByCorreoAndIdNot(String correo, Long id);
+
+    boolean existsByNombreComercial(String nombreComercial);
+
+    Long countByNombreComercialAndIdNot(String nombreComercial, Long id);
+
+    boolean existsByRazonSocial(String razonSocial);
+
+    Long countByRazonSocialAndIdNot(String razonSocial, Long id);
 }
