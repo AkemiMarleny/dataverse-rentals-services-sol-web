@@ -23,17 +23,19 @@ import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.res
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.response.UnidadPaginaDto;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Unidad;
 import com.dataverse.dataverserentals.gestionadministrativa.services.UnidadService;
+import com.dataverse.dataverserentals.security.context.SecurityContext;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/units")
+@RequestMapping("api/v1/unidades")
 @Slf4j
 public class UnidadController {
 
     private final UnidadService unidadService;
+    private final SecurityContext securityContext;
 
     @GetMapping
     public ResponseEntity<Page<UnidadPaginaDto>> findAll(Pageable pageable, @RequestParam String q) {
@@ -49,7 +51,8 @@ public class UnidadController {
     public ResponseEntity<CreateResponse> create(@RequestBody CreateUnidadDto request) throws ConflictException {
 
         log.info("Iniciando la creación de una nueva unidad: {}", request);
-        Long id = unidadService.create(request);
+        Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
+        Long id = unidadService.create(request, usuarioId);
         return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
     }
 
@@ -67,7 +70,8 @@ public class UnidadController {
             throws ConflictException, RecordNotFoundException {
 
         log.info("Iniciando actualización de la unidad: {}", request);
-        unidadService.update(unidadId, request);
+        Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
+        unidadService.update(unidadId, request, usuarioId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

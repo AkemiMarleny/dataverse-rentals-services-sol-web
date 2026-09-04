@@ -1,6 +1,7 @@
 package com.dataverse.dataverserentals.gestionadministrativa.entities;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateUnidadDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.UpdateUnidadDto;
@@ -25,7 +26,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Entity
-@Table(name = "units", uniqueConstraints = {
+@Table(name = "unidades", uniqueConstraints = {
         @UniqueConstraint(name = "uk_units_edificio_puerta", columnNames = { "edificio_id", "numero_puerta" })
 })
 @Getter
@@ -57,22 +58,48 @@ public class Unidad {
     @Enumerated(EnumType.STRING)
     private TipoAcabado tipoAcabado;
 
-    public static Unidad from(CreateUnidadDto request) {
+    @Column(nullable = false)
+    private LocalDateTime fechaCreacion;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "usuario_creacion_id", insertable = false, updatable = false)
+    private Usuario usuarioCreacion;
+
+    @Column(name = "usuario_creacion_id", nullable = false)
+    private Long usuarioCreacionId;
+
+    @Column(nullable = false)
+    private LocalDateTime fechaModificacion;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "usuario_modificacion_id", insertable = false, updatable = false)
+    private Usuario usuarioModificacion;
+
+    @Column(name = "usuario_modificacion_id", nullable = false)
+    private Long usuarioModificacionId;
+
+    public static Unidad from(CreateUnidadDto request, Long usuarioCreacionId) {
         Unidad unidad = new Unidad();
         unidad.setEdificioId(request.edificioId());
         unidad.setNumeroPiso(request.numeroPiso());
         unidad.setNumeroPuerta(request.numeroPuerta());
         unidad.setAreaMetrosCuadrados(request.areaMetrosCuadrados());
         unidad.setTipoAcabado(request.tipoAcabado());
+        unidad.setFechaCreacion(LocalDateTime.now());
+        unidad.setUsuarioCreacionId(usuarioCreacionId);
+        unidad.setFechaModificacion(LocalDateTime.now());
+        unidad.setUsuarioModificacionId(usuarioCreacionId);
         return unidad;
     }
 
-    public void updateWith(UpdateUnidadDto request) {
+    public void updateWith(UpdateUnidadDto request, Long usuarioModificacionId) {
         this.edificioId = request.edificioId();
         this.numeroPiso = request.numeroPiso();
         this.numeroPuerta = request.numeroPuerta();
         this.areaMetrosCuadrados = request.areaMetrosCuadrados();
         this.tipoAcabado = request.tipoAcabado();
+        this.fechaModificacion = LocalDateTime.now();
+        this.usuarioModificacionId = usuarioModificacionId;
     }
 
     public MontoProrrateado prorratearMonto(

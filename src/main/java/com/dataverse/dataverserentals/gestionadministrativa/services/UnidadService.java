@@ -33,7 +33,7 @@ public class UnidadService {
         return unidadRepository.nombreEdificioOrNumeroPisoOrNumeroPuertaContains(q, pageable);
     }
 
-    public Long create(@Valid CreateUnidadDto payload) throws ConflictException {
+    public Long create(@Valid CreateUnidadDto payload, Long usuarioId) throws ConflictException {
 
         log.info("Registrando nueva unidad con los siguientes datos: {}", payload);
         edificioRepository.findById(payload.edificioId())
@@ -45,7 +45,7 @@ public class UnidadService {
             throw new ConflictException(String.format("La puerta %s ya se encuentra registrada en este edificio.",
                     payload.numeroPuerta()));
         }
-        Unidad unidad = Unidad.from(payload);
+        Unidad unidad = Unidad.from(payload, usuarioId);
         return unidadRepository.save(unidad).getId();
     }
 
@@ -56,7 +56,7 @@ public class UnidadService {
                 String.format("La unidad solicitada con el id: %s no se encuentra registrada.", unidadId)));
     }
 
-    public void update(Long unidadId, @Valid UpdateUnidadDto payload)
+    public void update(Long unidadId, @Valid UpdateUnidadDto payload, Long usuarioId)
             throws ConflictException, RecordNotFoundException {
 
         log.info("Iniciando actualización de la unidad con ID: {}. Datos recibidos: {}", unidadId, payload);
@@ -74,7 +74,7 @@ public class UnidadService {
             throw new ConflictException(String.format("La puerta %s ya se encuentra registrada en este edificio.",
                     payload.numeroPuerta()));
         }
-        unidad.updateWith(payload);
+        unidad.updateWith(payload, usuarioId);
         unidadRepository.save(unidad);
     }
 }
