@@ -14,6 +14,7 @@ import com.dataverse.dataverserentals.gestionoperativa.entities.PropuestaLiquida
 import com.dataverse.dataverserentals.gestionoperativa.enums.EstadoPropuesta;
 import com.dataverse.dataverserentals.gestionoperativa.repositories.DetallePropuestaLiquidacionRepository;
 import com.dataverse.dataverserentals.gestionoperativa.repositories.PropuestaLiquidacionRepository;
+import com.dataverse.dataverserentals.gestionoperativa.valueobjects.CodigoPropuestaLiquidacion;
 import com.dataverse.dataverserentals.security.context.SecurityContext;
 import com.dataverse.dataverserentals.security.context.UsuarioPrincipal;
 
@@ -46,8 +47,12 @@ public class CalcularPropuestaCommand {
         LocalDateTime fechaInicioPeriodo = fechaCalculo.with(TemporalAdjusters.firstDayOfMonth());
         LocalDateTime fechaFinPeriodo = fechaCalculo.with(TemporalAdjusters.lastDayOfMonth());
 
+        String propuestaCodigo = CodigoPropuestaLiquidacion.from(
+                edificio.getId(), fechaCalculo).intoString();
+
         PropuestaLiquidacion propuesta = PropuestaLiquidacion
                 .builder()
+                .codigo(propuestaCodigo)
                 .edificioId(edificio.getId())
                 .fechaCalculo(fechaCalculo)
                 .montoTotal(new BigDecimal(0.0))

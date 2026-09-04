@@ -39,6 +39,9 @@ public class PropuestaLiquidacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false, length = 30)
+    private String codigo;
+
     @Column(name = "edificio_id", nullable = false)
     private Long edificioId;
 
