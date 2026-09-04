@@ -1,6 +1,7 @@
 package com.dataverse.dataverserentals.gestionadministrativa.entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.dataverse.dataverserentals.common.helpers.NombreCapitalizar;
 import com.dataverse.dataverserentals.common.helpers.Normalizar;
@@ -22,12 +23,16 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "personas")
+@Table(name = "personas", indexes = {
+        @Index(name = "idx_personas_usuario_creacion", columnList = "usuarioCreacionId"),
+        @Index(name = "idx_personas_usuario_modificacion", columnList = "usuarioModificacionId"),
+})
 @Getter
 @Setter
 public class Persona {
@@ -73,6 +78,18 @@ public class Persona {
     @Column(length = 200)
     private String razonSocial;
 
+    @Column(nullable = false)
+    private LocalDateTime fechaCreacion;
+
+    @Column(name = "usuario_creacion_id", nullable = false)
+    private Long usuarioCreacionId;
+
+    @Column(nullable = false)
+    private LocalDateTime fechaModificacion;
+
+    @Column(name = "usuario_modificacion_id", nullable = false)
+    private Long usuarioModificacionId;
+
     @Column(length = 64)
     private String personaNaturalChecksum;
 
@@ -82,13 +99,17 @@ public class Persona {
     @Column(length = 64)
     private String personaJuridicaChecksum;
 
-    public static Persona from(CreatePersonDto request) {
+    public static Persona from(CreatePersonDto request, Long usuarioCreacionId) {
         Persona persona = new Persona();
         persona.setTipoPersonaCode(request.tipoPersonaCode());
         persona.setTipoDocumentoCode(request.tipoDocumentoCode());
         persona.setNumeroDocumento(request.numeroDocumento());
         persona.setNumeroCelular(request.numeroCelular());
         persona.setCorreo(request.correo());
+        persona.setFechaCreacion(LocalDateTime.now());
+        persona.setUsuarioCreacionId(usuarioCreacionId);
+        persona.setFechaModificacion(LocalDateTime.now());
+        persona.setUsuarioModificacionId(usuarioCreacionId);
 
         if (request.tipoPersonaCode() == TipoPersona.NATURAL_SIN_NEGOCIO
                 || request.tipoPersonaCode() == TipoPersona.NATURAL_CON_NEGOCIO) {
@@ -129,12 +150,14 @@ public class Persona {
         return persona;
     }
 
-    public void updateWith(UpdatePersonDto request) {
+    public void updateWith(UpdatePersonDto request, Long usuarioModificacionId) {
         this.tipoPersonaCode = request.tipoPersonaCode();
         this.tipoDocumentoCode = request.tipoDocumentoCode();
         this.numeroDocumento = request.numeroDocumento();
         this.numeroCelular = request.numeroCelular();
         this.correo = request.correo();
+        this.fechaModificacion = LocalDateTime.now();
+        this.usuarioModificacionId = usuarioModificacionId;
 
         if (request.tipoPersonaCode() == TipoPersona.NATURAL_SIN_NEGOCIO
                 || request.tipoPersonaCode() == TipoPersona.NATURAL_CON_NEGOCIO) {

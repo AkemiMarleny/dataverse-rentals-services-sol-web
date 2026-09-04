@@ -24,6 +24,7 @@ import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.res
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Persona;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoPersona;
 import com.dataverse.dataverserentals.gestionadministrativa.services.PersonaService;
+import com.dataverse.dataverserentals.security.context.SecurityContext;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PersonaController {
 
     private final PersonaService personaService;
+    private final SecurityContext securityContext;
 
     @GetMapping
     public ResponseEntity<Page<PersonaPaginaDto>> findAll(
@@ -54,7 +56,8 @@ public class PersonaController {
             throws Exception {
 
         log.info("Iniciando la creación de una nueva persona: {}", request);
-        Long id = personaService.create(request);
+        Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
+        Long id = personaService.create(request, usuarioId);
         return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
     }
 
@@ -72,7 +75,8 @@ public class PersonaController {
             throws RecordNotFoundException, ConflictException {
 
         log.info("Iniciando actualización de persona: {}", request);
-        personaService.update(personaId, request);
+        Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
+        personaService.update(personaId, request, usuarioId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

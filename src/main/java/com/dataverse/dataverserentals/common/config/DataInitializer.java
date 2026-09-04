@@ -39,11 +39,15 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Long personaId = createDefaultPersona();
-        createDefaultUsuario(personaId);
+        UsuarioPrincipal usuarioPrincipal = new UsuarioPrincipal(
+                1L,
+                "Root",
+                RolUsuario.SYSTEM);
+        Long personaId = createDefaultPersona(usuarioPrincipal);
+        createDefaultUsuario(personaId, usuarioPrincipal);
     }
 
-    private Long createDefaultUsuario(Long personaId)
+    private Long createDefaultUsuario(Long personaId, UsuarioPrincipal usuarioPrincipal)
             throws RecordNotFoundException, ConflictException, UnprocesableEntity {
         Optional<Usuario> usuarioDefault = usuarioRepository.findByNombreUsuario("dataversesys");
         if (usuarioDefault.isEmpty()) {
@@ -55,11 +59,6 @@ public class DataInitializer implements CommandLineRunner {
                     RolUsuario.SYSTEM,
                     EstadoUsuario.ACTIVO);
 
-            UsuarioPrincipal usuarioPrincipal = new UsuarioPrincipal(
-                    1L,
-                    "Root",
-                    RolUsuario.SYSTEM);
-
             return usuarioService.create(
                     createUsuario,
                     usuarioPrincipal);
@@ -68,7 +67,8 @@ public class DataInitializer implements CommandLineRunner {
         return usuarioDefault.get().getId();
     }
 
-    private Long createDefaultPersona() throws FieldConstraintException, ConflictException {
+    private Long createDefaultPersona(UsuarioPrincipal usuarioPrincipal)
+            throws FieldConstraintException, ConflictException {
         Optional<Persona> personaDefault = personaRepository.findByTipoDocumentoCodeAndNumeroDocumento(
                 TipoDocumento.DNI, "89876567");
         if (personaDefault.isEmpty()) {
@@ -85,7 +85,8 @@ public class DataInitializer implements CommandLineRunner {
                             EstadoCivil.SOLTERA,
                             LocalDate.of(1990, 10, 10),
                             null,
-                            null));
+                            null),
+                    usuarioPrincipal.usuarioId());
         }
 
         return personaDefault.get().getId();

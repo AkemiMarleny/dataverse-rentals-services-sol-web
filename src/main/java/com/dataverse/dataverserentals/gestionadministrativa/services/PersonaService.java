@@ -52,7 +52,7 @@ public class PersonaService {
         return personaRepository.findAll(specificationPersona, pageable);
     }
 
-    public Long create(@Valid CreatePersonDto payload) throws ConflictException, FieldConstraintException {
+    public Long create(@Valid CreatePersonDto payload, Long usuarioId) throws ConflictException, FieldConstraintException {
 
         log.info("Registrando nueva persona con los siguientes datos: {}", payload);
 
@@ -61,7 +61,7 @@ public class PersonaService {
         documentValidatorFactory.getValidator(payload.tipoDocumentoCode())
                 .validate(payload.numeroDocumento());
 
-        Persona persona = Persona.from(payload);
+        Persona persona = Persona.from(payload, usuarioId);
 
         if (personaChecksumValidator.existsByChecksum(persona)) {
             log.info("Intento de registro duplicado: Checksum ya existe. Payload: {}", payload);
@@ -111,7 +111,7 @@ public class PersonaService {
                 String.format("La persona con el ID %s no existe en nuestros registros.", personaId)));
     }
 
-    public void update(Long personaId, @Valid UpdatePersonDto payload)
+    public void update(Long personaId, @Valid UpdatePersonDto payload, Long usuarioId)
             throws RecordNotFoundException, ConflictException, FieldConstraintException {
 
         log.info("Iniciando actualización de la persona con ID: {}. Datos recibidos: {}", personaId, payload);
@@ -123,7 +123,7 @@ public class PersonaService {
         documentValidatorFactory.getValidator(payload.tipoDocumentoCode())
                 .validate(payload.numeroDocumento());
 
-        persona.updateWith(payload);
+        persona.updateWith(payload, usuarioId);
 
         if (personaChecksumValidator.countByChecksum(persona) > 0) {
             log.info("Intento de registro duplicado: Checksum ya existe. Payload: {}", payload);
