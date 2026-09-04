@@ -48,14 +48,14 @@ public class Edificio {
     @Column(name = "usuario_creacion_id", nullable = false)
     private Long usuarioCreacionId;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private LocalDateTime fechaModificacion;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_modificacion_id", insertable = false, updatable = false)
     private Usuario usuarioModificacion;
 
-    @Column(name = "usuario_modificacion_id", nullable = true)
+    @Column(name = "usuario_modificacion_id", nullable = false)
     private Long usuarioModificacionId;
 
     public static Edificio from(CreateEdificioDto request, Long usuarioCreacionId) {
