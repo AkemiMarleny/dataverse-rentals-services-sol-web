@@ -30,13 +30,13 @@ public class EdificioService {
         return edificioRepository.findByNombreContaining(pageable, q);
     }
 
-    public Long create(@Valid CreateEdificioDto payload) throws ConflictException {
+    public Long create(@Valid CreateEdificioDto payload, Long usuarioId) throws ConflictException {
 
         log.info("Registrando nuevo edificio con los siguientes datos: {}", payload);
         if (edificioRepository.existsByNombre(payload.nombre())) {
             throw new ConflictException(String.format("Ya existe un edificio con el nombre: %s", payload.nombre()));
         }
-        Edificio edificio = Edificio.from(payload);
+        Edificio edificio = Edificio.from(payload, usuarioId);
         return edificioRepository.save(edificio).getId();
     }
 
@@ -47,7 +47,7 @@ public class EdificioService {
                 String.format("El edificio solicitado con el id: %s no se encuentra registrado.", edificioId)));
     }
 
-    public void update(Long edificioId, @Valid UpdateEdificioDto payload)
+    public void update(Long edificioId, @Valid UpdateEdificioDto payload, Long usuarioId)
             throws RecordNotFoundException, ConflictException {
 
         log.info("Iniciando actualización del edificio con ID: {}. Datos recibidos: {}", edificioId, payload);
@@ -61,7 +61,7 @@ public class EdificioService {
                             payload.nombre()));
         }
 
-        edificio.updateWith(payload);
+        edificio.updateWith(payload, usuarioId);
         edificioRepository.save(edificio);
     }
 

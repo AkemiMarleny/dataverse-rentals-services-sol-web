@@ -23,17 +23,19 @@ import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.res
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.response.EdificioPaginaDto;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Edificio;
 import com.dataverse.dataverserentals.gestionadministrativa.services.EdificioService;
+import com.dataverse.dataverserentals.security.context.SecurityContext;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/buildings")
+@RequestMapping("api/v1/edificios")
 @Slf4j
 public class EdificioController {
 
     private final EdificioService edificioService;
+    private final SecurityContext securityContext;
 
     @GetMapping
     public ResponseEntity<Page<EdificioPaginaDto>> findAll(Pageable pageable, @RequestParam String q) {
@@ -48,7 +50,8 @@ public class EdificioController {
     public ResponseEntity<CreateResponse> create(@RequestBody CreateEdificioDto request) throws ConflictException {
 
         log.info("Iniciando la creación de una nuevo edificio: {}", request);
-        Long id = edificioService.create(request);
+        Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
+        Long id = edificioService.create(request, usuarioId);
         return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
     }
 
@@ -66,7 +69,8 @@ public class EdificioController {
             throws RecordNotFoundException, ConflictException {
 
         log.info("Iniciando actualización del edificio: {}", request);
-        edificioService.update(edificioId, request);
+        Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
+        edificioService.update(edificioId, request, usuarioId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
