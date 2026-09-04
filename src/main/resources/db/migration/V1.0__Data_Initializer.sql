@@ -1,7 +1,21 @@
 BEGIN;
 -- EA-01
-INSERT INTO buildings (direccion, nombre, numero_pisos)
-VALUES ('Av. Artemis 132', 'Edificio Artemis', 3);
+INSERT INTO edificios (
+        direccion,
+        nombre,
+        numero_pisos,
+        fecha_creacion,
+        usuario_creacion_id,
+        usuario_modificacion_id
+    )
+VALUES (
+        'Av. Artemis 132',
+        'Edificio Artemis',
+        3,
+        '2025-01-01 10:10',
+        1,
+        1
+    );
 -- zona medidores
 insert into units (
         edificio_id,
