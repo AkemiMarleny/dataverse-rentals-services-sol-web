@@ -17,6 +17,7 @@ import com.dataverse.dataverserentals.common.dto.Page;
 import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
+import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.response.DetallePropuestaLiquidacionPageDto;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.response.PropuestaLiquidacionDetailsDto;
 import com.dataverse.dataverserentals.gestionoperativa.entities.PropuestaLiquidacion;
 import com.dataverse.dataverserentals.gestionoperativa.services.PropuestaLiquidacionService;
@@ -58,6 +59,18 @@ public class PropuestaLiquidacionController {
                 .findPropuestaLiquidacionDetails(propuestaLiquidacionId);
 
         return ResponseEntity.ok(PropuestaLiquidacionDetailsDto.fromEntity(propuesta));
+    }
+
+    @GetMapping("{propuestaId}/detalles")
+    public ResponseEntity<Page<DetallePropuestaLiquidacionPageDto>> findDetalles(
+            @PathVariable Long propuestaId,
+            Pageable pageable) {
+        log.info("Listando detalles de propuesta de liquidación con propuestaId: {}", propuestaId);
+
+        var detallesPage = propuestaLiquidacionService.findDetallesByPropuestaId(propuestaId, pageable)
+                .map(DetallePropuestaLiquidacionPageDto::fromEntity);
+
+        return ResponseEntity.ok(PageFactory.from(detallesPage));
     }
 
     @PostMapping

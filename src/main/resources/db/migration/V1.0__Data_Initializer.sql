@@ -5,6 +5,7 @@ INSERT INTO edificios (
         nombre,
         numero_pisos,
         fecha_creacion,
+        fecha_modificacion,
         usuario_creacion_id,
         usuario_modificacion_id
     )
@@ -13,51 +14,168 @@ VALUES (
         'Edificio Artemis',
         3,
         '2025-01-01 10:10',
+        '2025-01-01 10:10',
         1,
         1
     );
 -- zona medidores
-insert into units (
+insert into unidades (
         edificio_id,
         area_metros_cuadrados,
         numero_piso,
         numero_puerta,
-        tipo_acabado
+        tipo_acabado,
+        fecha_creacion,
+        fecha_modificacion,
+        usuario_creacion_id,
+        usuario_modificacion_id
     )
-VALUES (1, 5, 0, 'A0', 'CASCO_GRIS');
+VALUES (
+        1,
+        5,
+        0,
+        'A0',
+        'CASCO_GRIS',
+        '2025-01-01 10:10',
+        '2025-01-01 10:10',
+        1,
+        1
+    );
 -- primer piso
-insert into units (
+insert into unidades (
         edificio_id,
         area_metros_cuadrados,
         numero_piso,
         numero_puerta,
-        tipo_acabado
+        tipo_acabado,
+        fecha_creacion,
+        fecha_modificacion,
+        usuario_creacion_id,
+        usuario_modificacion_id
     )
-VALUES (1, 40, 1, 'A1', 'BASICO'),
-    (1, 100, 1, 'A2', 'ESTANDAR'),
-    (1, 90, 1, 'A3', 'SEMI_LUJO');
+VALUES (
+        1,
+        40,
+        1,
+        'A1',
+        'BASICO',
+        '2025-01-01 10:10',
+        '2025-01-01 10:10',
+        1,
+        1
+    ),
+    (
+        1,
+        100,
+        1,
+        'A2',
+        'ESTANDAR',
+        '2025-01-01 10:10',
+        '2025-01-01 10:10',
+        1,
+        1
+    ),
+    (
+        1,
+        90,
+        1,
+        'A3',
+        'SEMI_LUJO',
+        '2025-01-01 10:10',
+        '2025-01-01 10:10',
+        1,
+        1
+    );
 -- segundo piso
-insert into units (
+insert into unidades (
         edificio_id,
         area_metros_cuadrados,
         numero_piso,
         numero_puerta,
-        tipo_acabado
+        tipo_acabado,
+        fecha_creacion,
+        fecha_modificacion,
+        usuario_creacion_id,
+        usuario_modificacion_id
     )
-VALUES (1, 40, 2, 'B1', 'BASICO'),
-    (1, 100, 2, 'B2', 'ESTANDAR'),
-    (1, 90, 2, 'B3', 'SEMI_LUJO');
+VALUES (
+        1,
+        40,
+        2,
+        'B1',
+        'BASICO',
+        '2025-01-01 10:10',
+        '2025-01-01 10:10',
+        1,
+        1
+    ),
+    (
+        1,
+        100,
+        2,
+        'B2',
+        'ESTANDAR',
+        '2025-01-01 10:10',
+        '2025-01-01 10:10',
+        1,
+        1
+    ),
+    (
+        1,
+        90,
+        2,
+        'B3',
+        'SEMI_LUJO',
+        '2025-01-01 10:10',
+        '2025-01-01 10:10',
+        1,
+        1
+    );
 -- tercer piso
-insert into units (
+insert into unidades (
         edificio_id,
         area_metros_cuadrados,
         numero_piso,
         numero_puerta,
-        tipo_acabado
+        tipo_acabado,
+        fecha_creacion,
+        fecha_modificacion,
+        usuario_creacion_id,
+        usuario_modificacion_id
     )
-VALUES (1, 40, 3, 'C1', 'BASICO'),
-    (1, 100, 3, 'C2', 'ESTANDAR'),
-    (1, 90, 3, 'C3', 'SEMI_LUJO');
+VALUES (
+        1,
+        40,
+        3,
+        'C1',
+        'BASICO',
+        '2025-01-01 10:10',
+        '2025-01-01 10:10',
+        1,
+        1
+    ),
+    (
+        1,
+        100,
+        3,
+        'C2',
+        'ESTANDAR',
+        '2025-01-01 10:10',
+        '2025-01-01 10:10',
+        1,
+        1
+    ),
+    (
+        1,
+        90,
+        3,
+        'C3',
+        'SEMI_LUJO',
+        '2025-01-01 10:10',
+        '2025-01-01 10:10',
+        1,
+        1
+    );
 --
 INSERT into medidores (unidad_id, fecha_creacion, fecha_modificacion, numero_serie, tipo_medidor_code, usuario_creacion_id, usuario_modificacion_id)
 VALUES -- medidores generales

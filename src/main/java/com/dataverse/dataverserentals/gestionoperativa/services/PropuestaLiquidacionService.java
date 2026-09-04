@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.gestionoperativa.commands.CalcularPropuestasCommand;
+import com.dataverse.dataverserentals.gestionoperativa.entities.DetallePropuestaLiquidacion;
 import com.dataverse.dataverserentals.gestionoperativa.entities.PropuestaLiquidacion;
+import com.dataverse.dataverserentals.gestionoperativa.repositories.DetallePropuestaLiquidacionRepository;
 import com.dataverse.dataverserentals.gestionoperativa.repositories.PropuestaLiquidacionRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class PropuestaLiquidacionService {
     private final CalcularPropuestasCommand calcularPropuestasCommand;
     private final PropuestaLiquidacionRepository propuestaLiquidacionRepository;
+    private final DetallePropuestaLiquidacionRepository detallePropuestaLiquidacionRepository;
 
     public void calcularPropuestas() throws AccessDeniedException {
         calcularPropuestasCommand.execute();
@@ -44,5 +47,11 @@ public class PropuestaLiquidacionService {
         return propuestaLiquidacionRepository.findById(propuestaLiquidacionId)
                 .orElseThrow(() -> new RecordNotFoundException(
                         "Propuesta de liquidación no encontrada con id: " + propuestaLiquidacionId));
+    }
+
+    public Page<DetallePropuestaLiquidacion> findDetallesByPropuestaId(
+            Long propuestaLiquidacionId, Pageable pageable) {
+        return detallePropuestaLiquidacionRepository.findByPropuestaLiquidacionId(
+                propuestaLiquidacionId, pageable);
     }
 }
