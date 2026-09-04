@@ -33,7 +33,7 @@ public class MedidorService {
         return medidorRepository.findAll(MedidorSpecifications.tipoMedidorOrNumeroSerieContains(q), pageable);
     }
 
-    public Long create(@Valid CreateMedidorDto payload, Long unidadId)
+    public Long create(@Valid CreateMedidorDto payload, Long unidadId, Long usuarioId)
             throws ConflictException, RecordNotFoundException {
 
         log.info("Registrando nuevo medidor con los siguientes datos: {}", payload);
@@ -51,7 +51,7 @@ public class MedidorService {
                     "El número de serie %s ya está registrada en el sistema",
                     payload.numeroSerie()));
         }
-        Medidor medidor = Medidor.from(payload, unidadId);
+        Medidor medidor = Medidor.from(payload, unidadId, usuarioId);
         return medidorRepository.save(medidor).getId();
     }
 
@@ -62,7 +62,7 @@ public class MedidorService {
                 String.format("El medidor con el ID %s no existe en nuestros registros.", medidorId)));
     }
 
-    public void update(@Valid UpdateMedidorDto payload, Long unidadId, Long medidorId)
+    public void update(@Valid UpdateMedidorDto payload, Long unidadId, Long medidorId, Long usuarioId)
             throws RecordNotFoundException, ConflictException {
 
         log.info("Iniciando actualización del medidor con ID: {} para la unidad: {}. Datos: {}", medidorId, unidadId,
@@ -94,7 +94,7 @@ public class MedidorService {
                             payload.numeroSerie()));
         }
 
-        medidor.updateWith(payload);
+        medidor.updateWith(payload, usuarioId);
         medidorRepository.save(medidor);
     }
 

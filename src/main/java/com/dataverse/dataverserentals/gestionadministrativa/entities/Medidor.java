@@ -52,40 +52,38 @@ public class Medidor {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_creacion_id", insertable = false, updatable = false)
-    private Persona usuarioCreacion;
+    private Usuario usuarioCreacion;
 
     @Column(name = "usuario_creacion_id", nullable = false)
     private Long usuarioCreacionId;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private LocalDateTime fechaModificacion;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_modificacion_id", insertable = false, updatable = false)
-    private Persona usuarioModificacion;
+    private Usuario usuarioModificacion;
 
-    @Column(name = "usuario_modificacion_id", nullable = true)
+    @Column(name = "usuario_modificacion_id", nullable = false)
     private Long usuarioModificacionId;
 
-    public static Medidor from(CreateMedidorDto request, Long unidadId) {
+    public static Medidor from(CreateMedidorDto request, Long unidadId, Long usuarioCreacionId) {
         Medidor medidor = new Medidor();
         medidor.setUnidadId(unidadId);
         medidor.setTipoMedidorCode(request.tipoMedidorCode());
         medidor.setNumeroSerie(request.numeroSerie());
-        medidor.setFechaCreacion(request.fechaCreacion());
-        medidor.setUsuarioCreacionId(request.usuarioCreacionId());
-        medidor.setFechaModificacion(request.fechaModificacion());
-        medidor.setUsuarioModificacionId(request.usuarioModificacionId());
+        medidor.setFechaCreacion(LocalDateTime.now());
+        medidor.setUsuarioCreacionId(usuarioCreacionId);
+        medidor.setFechaModificacion(LocalDateTime.now());
+        medidor.setUsuarioModificacionId(usuarioCreacionId);
         return medidor;
     }
 
-    public void updateWith(UpdateMedidorDto request) {
+    public void updateWith(UpdateMedidorDto request, Long usuarioModificacionId) {
         this.tipoMedidorCode = request.tipoMedidorCode();
         this.numeroSerie = request.numeroSerie();
-        this.fechaCreacion = request.fechaCreacion();
-        this.usuarioCreacionId = request.usuarioCreacionId();
-        this.fechaModificacion = request.fechaModificacion();
-        this.usuarioModificacionId = request.usuarioModificacionId();
+        this.fechaModificacion = LocalDateTime.now();
+        this.usuarioModificacionId = usuarioModificacionId;
     }
 
 }

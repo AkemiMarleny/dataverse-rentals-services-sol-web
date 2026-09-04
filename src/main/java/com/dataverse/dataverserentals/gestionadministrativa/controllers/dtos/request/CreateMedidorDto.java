@@ -1,7 +1,5 @@
 package com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request;
 
-import java.time.LocalDateTime;
-
 import org.hibernate.validator.constraints.Length;
 
 import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoMedidor;
@@ -11,9 +9,5 @@ import jakarta.validation.constraints.NotNull;
 
 public record CreateMedidorDto(
         @NotNull TipoMedidor tipoMedidorCode,
-        @NotBlank @Length(min = 7) String numeroSerie,
-        @NotNull LocalDateTime fechaCreacion,
-        @NotNull Long usuarioCreacionId,
-        LocalDateTime fechaModificacion,
-        Long usuarioModificacionId) {
+        @NotBlank @Length(min = 7) String numeroSerie) {
 }

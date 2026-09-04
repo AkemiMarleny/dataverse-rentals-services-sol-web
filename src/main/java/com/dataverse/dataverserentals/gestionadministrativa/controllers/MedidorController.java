@@ -23,17 +23,19 @@ import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.res
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.response.MedidorPaginaDto;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Medidor;
 import com.dataverse.dataverserentals.gestionadministrativa.services.MedidorService;
+import com.dataverse.dataverserentals.security.context.SecurityContext;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/units/{unidadId}/meters")
+@RequestMapping("api/v1/unidades/{unidadId}/medidores")
 @Slf4j
 public class MedidorController {
 
     private final MedidorService medidorService;
+    private final SecurityContext securityContext;
 
     @GetMapping
     public ResponseEntity<Page<MedidorPaginaDto>> findAll(Pageable pageable, @RequestParam String q) {
@@ -49,7 +51,8 @@ public class MedidorController {
             throws ConflictException, RecordNotFoundException {
 
         log.info("Iniciando la creación de una nuevo medidor: {}", request);
-        Long id = medidorService.create(request, unidadId);
+        Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
+        Long id = medidorService.create(request, unidadId, usuarioId);
         return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
     }
 
@@ -67,7 +70,8 @@ public class MedidorController {
             @RequestBody UpdateMedidorDto request) throws RecordNotFoundException, ConflictException {
 
         log.info("Iniciando actualización del medidor: {}", request);
-        medidorService.update(request, unidadId, medidorId);
+        Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
+        medidorService.update(request, unidadId, medidorId, usuarioId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
