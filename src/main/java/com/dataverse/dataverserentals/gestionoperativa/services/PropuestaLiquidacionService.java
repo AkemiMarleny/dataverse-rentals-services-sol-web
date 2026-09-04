@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.gestionoperativa.commands.CalcularPropuestasCommand;
 import com.dataverse.dataverserentals.gestionoperativa.entities.PropuestaLiquidacion;
 import com.dataverse.dataverserentals.gestionoperativa.repositories.PropuestaLiquidacionRepository;
@@ -36,5 +37,12 @@ public class PropuestaLiquidacionService {
                 fechaDesde.map(desde -> desde.atTime(LocalTime.MIN)),
                 fechaHasta.map(hasta -> hasta.atTime(LocalTime.MAX)),
                 pageable);
+    }
+
+    public PropuestaLiquidacion findPropuestaLiquidacionDetails(Long propuestaLiquidacionId)
+            throws RecordNotFoundException {
+        return propuestaLiquidacionRepository.findById(propuestaLiquidacionId)
+                .orElseThrow(() -> new RecordNotFoundException(
+                        "Propuesta de liquidación no encontrada con id: " + propuestaLiquidacionId));
     }
 }
