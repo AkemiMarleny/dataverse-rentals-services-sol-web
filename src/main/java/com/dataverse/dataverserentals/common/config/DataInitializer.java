@@ -44,6 +44,9 @@ public class DataInitializer implements CommandLineRunner {
                 RolUsuario.SYSTEM);
         Long personaId = createDefaultPersona(usuarioPrincipal);
         createDefaultUsuario(personaId, usuarioPrincipal);
+
+        Long adminId = createDefaultAdminPersona(usuarioPrincipal);
+        createDefaultAdminUsuario(adminId, usuarioPrincipal);
     }
 
     private Long createDefaultUsuario(Long personaId, UsuarioPrincipal usuarioPrincipal)
@@ -90,4 +93,47 @@ public class DataInitializer implements CommandLineRunner {
         return personaDefault.get().getId();
     }
 
+    private Long createDefaultAdminPersona(UsuarioPrincipal usuarioPrincipal) {
+        Optional<Persona> personaDefault = personaRepository.findByTipoDocumentoCodeAndNumeroDocumento(
+                TipoDocumento.DNI, "12345678");
+        if (personaDefault.isEmpty()) {
+            return personaService.create(
+                    new CreatePersonDto(
+                            TipoPersona.NATURAL_SIN_NEGOCIO,
+                            TipoDocumento.DNI,
+                            "12345678",
+                            "(+51) 997654212",
+                            "admin@dataverse.com",
+                            "Dataverse",
+                            "Admin",
+                            Genero.FEMENINO,
+                            LocalDate.of(1990, 10, 10),
+                            null,
+                            null),
+                    usuarioPrincipal.usuarioId());
+        }
+
+        return personaDefault.get().getId();
+
+    }
+
+    private Long createDefaultAdminUsuario(Long personaId, UsuarioPrincipal usuarioPrincipal)
+            throws RecordNotFoundException, ConflictException, UnprocesableEntity {
+        Optional<Usuario> usuarioDefault = usuarioRepository.findByNombreUsuario("dataverseadmin");
+        if (usuarioDefault.isEmpty()) {
+            CreateUsuarioDto createUsuario = new CreateUsuarioDto(
+                    personaId,
+                    "dataverseadmin",
+                    "dataverseadmin",
+                    "dataverseadmin",
+                    RolUsuario.ADMINISTRADOR,
+                    EstadoUsuario.ACTIVO);
+
+            return usuarioService.create(
+                    createUsuario,
+                    usuarioPrincipal);
+        }
+
+        return usuarioDefault.get().getId();
+    }
 }

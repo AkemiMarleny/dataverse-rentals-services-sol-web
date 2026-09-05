@@ -8,6 +8,7 @@ import java.util.List;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Edificio;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
 import com.dataverse.dataverserentals.gestionoperativa.enums.EstadoPropuesta;
+import com.dataverse.dataverserentals.security.context.UsuarioPrincipal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -72,6 +73,9 @@ public class PropuestaLiquidacion {
     @JoinColumn(name = "aprobador_id", insertable = false, updatable = false)
     private Usuario aprobador;
 
+    @Column(name = "fecha_aprobacion", nullable = true)
+    private LocalDateTime fechaAprobacion;
+
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
 
@@ -90,5 +94,11 @@ public class PropuestaLiquidacion {
         this.montoTotal = this.montoTotal.add(detallePropuesta.getMonto());
 
         this.detalles.add(detallePropuesta);
+    }
+
+    public void aprobar(UsuarioPrincipal aprobador) {
+        this.setAprobadorId(aprobador.usuarioId());
+        this.setEstadoCode(EstadoPropuesta.APROBADO);
+        this.setFechaAprobacion(LocalDateTime.now());
     }
 }

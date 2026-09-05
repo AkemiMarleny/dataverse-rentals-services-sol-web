@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dataverse.dataverserentals.common.dto.Page;
 import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
+import com.dataverse.dataverserentals.common.exceptions.UnprocesableEntity;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.response.DetallePropuestaLiquidacionPageDto;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.response.PropuestaLiquidacionDetailsDto;
 import com.dataverse.dataverserentals.gestionoperativa.entities.PropuestaLiquidacion;
 import com.dataverse.dataverserentals.gestionoperativa.services.PropuestaLiquidacionService;
+import com.dataverse.dataverserentals.security.context.SecurityContext;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class PropuestaLiquidacionController {
 
+    private final SecurityContext securityContext;
     private final PropuestaLiquidacionService propuestaLiquidacionService;
 
     @GetMapping
@@ -38,7 +41,8 @@ public class PropuestaLiquidacionController {
             Pageable pageable,
             @RequestParam Optional<Long> edificioId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> fechaDesde,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> fechaHasta) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> fechaHasta)
+            throws AccessDeniedException {
         log.info(
                 "Listando propuestas de liquidación con filtros - edificioId: {}, fechaDesde: {}, fechaHasta: {}, pageable: {}",
                 edificioId, fechaDesde, fechaHasta, pageable);
@@ -52,7 +56,7 @@ public class PropuestaLiquidacionController {
 
     @GetMapping("{propuestaLiquidacionId}")
     public ResponseEntity<PropuestaLiquidacionDetailsDto> getById(@PathVariable Long propuestaLiquidacionId)
-            throws RecordNotFoundException {
+            throws RecordNotFoundException, AccessDeniedException {
         log.info("Obteniendo detalle de propuesta de liquidación con id: {}", propuestaLiquidacionId);
 
         PropuestaLiquidacion propuesta = propuestaLiquidacionService
@@ -64,7 +68,7 @@ public class PropuestaLiquidacionController {
     @GetMapping("{propuestaId}/detalles")
     public ResponseEntity<Page<DetallePropuestaLiquidacionPageDto>> findDetalles(
             @PathVariable Long propuestaId,
-            Pageable pageable) {
+            Pageable pageable) throws AccessDeniedException {
         log.info("Listando detalles de propuesta de liquidación con propuestaId: {}", propuestaId);
 
         var detallesPage = propuestaLiquidacionService.findDetallesByPropuestaId(propuestaId, pageable)
@@ -77,6 +81,18 @@ public class PropuestaLiquidacionController {
     ResponseEntity<Void> generarPropuestas() throws AccessDeniedException {
         log.info("Iniciando calculo de propuestas de liquidación");
         propuestaLiquidacionService.calcularPropuestas();
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("{propuestaLiquidacionId}/aprobados")
+    public ResponseEntity<Void> aprobar(
+            @PathVariable Long propuestaLiquidacionId)
+            throws RecordNotFoundException, UnprocesableEntity, AccessDeniedException {
+        log.info("Aprobando propuesta de liquidacion con id: {}", propuestaLiquidacionId);
+
+        propuestaLiquidacionService.aprobarPropuestaLiquidacion(
+                propuestaLiquidacionId, securityContext.getUsuarioPrincipal());
 
         return ResponseEntity.noContent().build();
     }
