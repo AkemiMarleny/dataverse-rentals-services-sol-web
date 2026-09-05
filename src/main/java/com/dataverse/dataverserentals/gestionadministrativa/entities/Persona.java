@@ -8,7 +8,6 @@ import com.dataverse.dataverserentals.common.helpers.Normalizar;
 import com.dataverse.dataverserentals.common.helpers.TiposEmpresaJoiner;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreatePersonDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.UpdatePersonDto;
-import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoCivil;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.Genero;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoDocumento;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoPersona;
@@ -67,9 +66,6 @@ public class Persona {
     @Enumerated(EnumType.STRING)
     private Genero generoCode;
 
-    @Enumerated(EnumType.STRING)
-    private EstadoCivil estadoCivilCode;
-
     private LocalDate fechaNacimiento;
 
     @Column(length = 100)
@@ -118,7 +114,6 @@ public class Persona {
             String apellidosNormalizado = new NombreCapitalizar(new Normalizar(request.apellidos()).get()).get();
             persona.setApellidos(apellidosNormalizado);
             persona.setGeneroCode(request.generoCode());
-            persona.setEstadoCivilCode(request.estadoCivilCode());
             persona.setFechaNacimiento(request.fechaNacimiento());
 
             if (request.tipoPersonaCode() == TipoPersona.NATURAL_SIN_NEGOCIO) {
@@ -166,7 +161,6 @@ public class Persona {
             String apellidosNormalizado = new NombreCapitalizar(new Normalizar(request.apellidos()).get()).get();
             this.apellidos = apellidosNormalizado;
             this.generoCode = request.generoCode();
-            this.estadoCivilCode = request.estadoCivilCode();
             this.fechaNacimiento = request.fechaNacimiento();
 
             if (request.tipoPersonaCode() == TipoPersona.NATURAL_SIN_NEGOCIO) {

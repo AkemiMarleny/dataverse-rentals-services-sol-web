@@ -3,7 +3,6 @@ package com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.re
 import java.time.LocalDate;
 
 import com.dataverse.dataverserentals.common.annotations.ValidDocumentFormat;
-import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoCivil;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.Genero;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoDocumento;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoPersona;
@@ -27,7 +26,6 @@ public record UpdatePersonDto(
         String nombres,
         String apellidos,
         Genero generoCode,
-        EstadoCivil estadoCivilCode,
         LocalDate fechaNacimiento,
 
         // Campo para persona natural con negocio

@@ -14,7 +14,6 @@ import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.req
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateUsuarioDto;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Persona;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
-import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoCivil;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoUsuario;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.Genero;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.RolUsuario;
@@ -82,7 +81,6 @@ public class DataInitializer implements CommandLineRunner {
                             "Dataverse",
                             "Sys",
                             Genero.FEMENINO,
-                            EstadoCivil.SOLTERA,
                             LocalDate.of(1990, 10, 10),
                             null,
                             null),
