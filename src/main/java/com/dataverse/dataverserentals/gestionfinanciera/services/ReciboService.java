@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.RolUsuario;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.ContratoRepository;
 import com.dataverse.dataverserentals.gestionfinanciera.commands.GenerarRecibosCommand;
@@ -62,6 +63,31 @@ public class ReciboService {
                     fechaHasta.map(hasta -> hasta.atTime(LocalTime.MAX)),
                     contratoIds,
                     pageable);
+        }
+
+        throw new AccessDeniedException(usuarioPrincipal);
+    }
+
+    public Recibo findReciboById(Long reciboId) throws AccessDeniedException, RecordNotFoundException {
+        UsuarioPrincipal usuarioPrincipal = securityContext.getUsuarioPrincipal();
+        RolUsuario rol = usuarioPrincipal.usuarioRol();
+
+        Recibo recibo = reciboRepository.findById(reciboId)
+                .orElseThrow(() -> new RecordNotFoundException("Recibo no encontrado con ID: " + reciboId));
+
+        if (RolUsuario.ADMINISTRADOR.equals(rol)) {
+            return recibo;
+        }
+
+        if (RolUsuario.INQUILINO.equals(rol)) {
+            Long inquilinoId = usuarioPrincipal.personaId();
+            List<Long> contratoIds = contratoRepository.findContratoIdsByPersonaId(inquilinoId);
+
+            if (!contratoIds.contains(recibo.getContratoId())) {
+                throw new AccessDeniedException(usuarioPrincipal);
+            }
+
+            return recibo;
         }
 
         throw new AccessDeniedException(usuarioPrincipal);
