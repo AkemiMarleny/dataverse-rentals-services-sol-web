@@ -17,4 +17,11 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
                 """)
     List<Contrato> findAllActivosNoVencidos(
             LocalDateTime fechaInicio);
+
+    @Query("""
+            SELECT c.id
+            FROM Contrato c
+            WHERE c.personaId = :personaId
+            """)
+    List<Long> findContratoIdsByPersonaId(Long personaId);
 }

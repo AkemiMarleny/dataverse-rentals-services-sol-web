@@ -38,6 +38,9 @@ public class Recibo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false, length = 30)
+    private String codigo;
+
     @Column(name = "contrato_id", nullable = false)
     private Long contratoId;
 

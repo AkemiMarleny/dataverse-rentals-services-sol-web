@@ -18,6 +18,7 @@ import com.dataverse.dataverserentals.gestionfinanciera.enums.EstadoRecibo;
 import com.dataverse.dataverserentals.gestionfinanciera.enums.TipoConceptoRecibo;
 import com.dataverse.dataverserentals.gestionfinanciera.repositories.DetalleReciboRepository;
 import com.dataverse.dataverserentals.gestionfinanciera.repositories.ReciboRepository;
+import com.dataverse.dataverserentals.gestionfinanciera.valueobjects.CodigoRecibo;
 import com.dataverse.dataverserentals.gestionfinanciera.valueobjects.MontoProrrateado;
 import com.dataverse.dataverserentals.gestionoperativa.commands.CalcularCostoConsumoMedidorUnidadCommand;
 import com.dataverse.dataverserentals.gestionoperativa.entities.DetallePropuestaLiquidacion;
@@ -71,6 +72,7 @@ public class GenerarReciboContratoCommand {
                 unidadContrato.getId());
 
         Recibo recibo = Recibo.builder()
+                .codigo(CodigoRecibo.from(contrato.getId(), fechaCalculo).intoString())
                 .contratoId(contrato.getId())
                 .fechaEmision(fechaCalculo)
                 .fechaVencimiento(fechaFinPeriodo)

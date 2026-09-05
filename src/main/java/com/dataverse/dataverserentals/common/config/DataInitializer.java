@@ -41,7 +41,8 @@ public class DataInitializer implements CommandLineRunner {
         UsuarioPrincipal usuarioPrincipal = new UsuarioPrincipal(
                 1L,
                 "Root",
-                RolUsuario.SYSTEM);
+                RolUsuario.SYSTEM,
+                1L);
         Long personaId = createDefaultPersona(usuarioPrincipal);
         createDefaultUsuario(personaId, usuarioPrincipal);
 

@@ -38,6 +38,13 @@ public class Contrato {
     @Column(name = "unidad_id", nullable = false)
     private Long unidadId;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "persona_id", insertable = false, updatable = false)
+    private Persona persona;
+
+    @Column(name = "persona_id", nullable = false)
+    private Long personaId;
+
     @Column(nullable = false)
     private LocalDateTime fechaInicio;
 

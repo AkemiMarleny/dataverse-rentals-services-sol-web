@@ -63,8 +63,9 @@ public class JwtService {
         String usuarioNombre = claims.getSubject();
         Long usuarioId = claims.get(CLAIM_USUARIO_ID, Long.class);
         RolUsuario usuarioRol = RolUsuario.valueOf(claims.get(CLAIM_ROLE, String.class));
+        Long personaId = claims.get(CLAIM_PROPIETARIO, Long.class);
 
-        return new UsuarioPrincipal(usuarioId, usuarioNombre, usuarioRol);
+        return new UsuarioPrincipal(usuarioId, usuarioNombre, usuarioRol, personaId);
     }
 
     private Claims getTokenPayload(String token) {

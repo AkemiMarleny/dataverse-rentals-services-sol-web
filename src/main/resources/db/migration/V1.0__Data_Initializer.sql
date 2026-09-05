@@ -414,6 +414,7 @@ values (
 -- A1
 insert into contratos(
         unidad_id,
+        persona_id,
         alquiler_mensual,
         fecha_cierre,
         fecha_creacion,
@@ -424,6 +425,7 @@ insert into contratos(
     )
 values (
         2,
+        1,
         255.0,
         null,
         '2026-01-01 10:10',
@@ -435,6 +437,7 @@ values (
 -- A2
 insert into contratos(
         unidad_id,
+        persona_id,
         alquiler_mensual,
         fecha_cierre,
         fecha_creacion,
@@ -445,6 +448,7 @@ insert into contratos(
     )
 values (
         3,
+        1,
         355.0,
         null,
         '2026-01-01 10:10',
@@ -456,6 +460,7 @@ values (
 -- A3
 insert into contratos(
         unidad_id,
+        persona_id,
         alquiler_mensual,
         fecha_cierre,
         fecha_creacion,
@@ -466,6 +471,7 @@ insert into contratos(
     )
 values (
         4,
+        1,
         455.0,
         null,
         '2026-01-01 10:10',

@@ -5,5 +5,6 @@ import com.dataverse.dataverserentals.gestionadministrativa.enums.RolUsuario;
 public record UsuarioPrincipal(
         Long usuarioId,
         String usuarioNombre,
-        RolUsuario usuarioRol) {
+        RolUsuario usuarioRol,
+        Long personaId) {
 }
