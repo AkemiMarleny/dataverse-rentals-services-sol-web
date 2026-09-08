@@ -10,7 +10,7 @@ public class Normalizar {
 
     public Normalizar(String texto) {
         this.valor = texto
-                .replaceAll("[^ A-Za-zÁÉÍÓÚáéíóúÑñ,-]", "")
+                .replaceAll("[^ A-Za-zÁÉÍÓÚáéíóúÑñ,&-]", "")
                 .replaceAll("\\s{2,}", " ")
                 .trim();
     }

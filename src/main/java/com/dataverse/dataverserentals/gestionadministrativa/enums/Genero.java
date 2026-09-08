@@ -7,4 +7,10 @@ public enum Genero {
     FEMENINO,
     MASCULINO;
 
+    public String intoString() {
+        return switch (this) {
+            case FEMENINO -> "Femenino";
+            case MASCULINO -> "Masculino";
+        };
+    }
 }

@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -36,23 +35,16 @@ public class PersonaService {
     private final PersonaChecksumValidator personaChecksumValidator;
     private final PersonaValidator personaValidator;
 
-    public Page<Persona> findAll(Pageable pageable, String q, TipoPersona tipoPersonaCode) {
+    public Page<Persona> findAll(Pageable pageable, String q, Optional<TipoPersona> tipoPersonaCode) {
 
         log.info("Búsqueda paginada de personas [filtro: '{}', tipo: {}, pageable: {}]", q, tipoPersonaCode, pageable);
 
-        Specification<Persona> specificationPersona = switch (tipoPersonaCode) {
-            case NATURAL_SIN_NEGOCIO ->
-                PersonaSpecifications.nombresOrApellidosOrNumeroDocumentoContains(q, tipoPersonaCode);
-            case NATURAL_CON_NEGOCIO ->
-                PersonaSpecifications.nombresOrApellidosOrNumeroDocumentoOrNombreComercialContains(q, tipoPersonaCode);
-            case JURIDICA ->
-                PersonaSpecifications.razonSocialOrNumeroDocumentoContains(q, tipoPersonaCode);
-        };
-
-        return personaRepository.findAll(specificationPersona, pageable);
+        return personaRepository.findAll(
+                PersonaSpecifications.byTipoPersona(q, tipoPersonaCode), pageable);
     }
 
-    public Long create(@Valid CreatePersonDto payload, Long usuarioId) throws ConflictException, FieldConstraintException {
+    public Long create(@Valid CreatePersonDto payload, Long usuarioId)
+            throws ConflictException, FieldConstraintException {
 
         log.info("Registrando nueva persona con los siguientes datos: {}", payload);
 

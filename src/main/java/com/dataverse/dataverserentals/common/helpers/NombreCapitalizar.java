@@ -28,10 +28,10 @@ public class NombreCapitalizar {
             String palabra = palabras[i];
             if (palabra.contains("-")) {
                 contenido.add(capitalizarPalabraCompuesta(palabra, "-", true));
-            } else if (i == 0) {
-                contenido.add(new CapitalizeWord(palabra).get());
             } else if (palabraEsPreposicion(palabra)) {
                 contenido.add(palabra);
+            } else if (i == 0) {
+                contenido.add(new CapitalizeWord(palabra).get());
             } else if (palabra.contains("/")) {
                 contenido.add(capitalizarPalabraCompuesta(palabra, "/", false));
             } else if (TiposEmpresaJoiner.esTipoEmpresa(palabra)) {

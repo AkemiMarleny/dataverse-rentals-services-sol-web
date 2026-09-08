@@ -57,21 +57,23 @@ public class Persona {
     @Column(length = 100, nullable = false, unique = true)
     private String correo;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = true)
     private String nombres;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = true)
     private String apellidos;
 
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     private Genero generoCode;
 
+    @Column(nullable = true)
     private LocalDate fechaNacimiento;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = true)
     private String nombreComercial;
 
-    @Column(length = 200)
+    @Column(length = 200, nullable = true)
     private String razonSocial;
 
     @Column(nullable = false)

@@ -1,5 +1,7 @@
 package com.dataverse.dataverserentals.gestionadministrativa.controllers;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +44,7 @@ public class PersonaController {
     public ResponseEntity<Page<PersonaPaginaDto>> findAll(
             Pageable pageable,
             @RequestParam String q,
-            @RequestParam TipoPersona tipoPersonaCode) {
+            @RequestParam Optional<TipoPersona> tipoPersonaCode) {
 
         log.info("Listando personas con filtro '{}', tipo: {} y parámetros: {}", q, tipoPersonaCode, pageable);
         org.springframework.data.domain.Page<PersonaPaginaDto> personaPage = personaService

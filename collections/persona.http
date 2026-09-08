@@ -23,8 +23,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sI
 ### GET - Buscar Personas Naturales Sin Negocio
 GET http://localhost:8080/api/v1/personas?q=&tipoPersonaCode=NATURAL_SIN_NEGOCIO
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjozLCJ1b3duIjoxLCJpYXQiOjE3NzY5NjE4OTAsImV4cCI6MTc3NzA0ODI5MH0.wCYQm5rnQMIUEYOw-V3cNJPVJVmdEpfivArWCBdS5saGI4AcPbfJFlbLF2siG6VrwtWW1GF6AjvJfmE7v8vINw
-
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjoxLCJ1b3duIjoxLCJpYXQiOjE3NzczMjU2NTksImV4cCI6MTc3NzQxMjA1OX0.ZD0VZ4C4i3UXuS1jEaUhFNEQ8RuJv0imI7TgA3OFe_Z3J6adHP1GWVwmeijTcUdjuXNGx4FvM5yghsL2V3SsuQ
 
 ### GET - Obtener Persona Natural por ID
 GET http://localhost:8080/api/v1/personas/2
@@ -76,7 +75,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sI
 ### GET - Buscar Personas Naturales Con Negocio
 GET http://localhost:8080/api/v1/personas?q=&tipoPersonaCode=NATURAL_CON_NEGOCIO
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjozLCJ1b3duIjoxLCJpYXQiOjE3NzY5NjE4OTAsImV4cCI6MTc3NzA0ODI5MH0.wCYQm5rnQMIUEYOw-V3cNJPVJVmdEpfivArWCBdS5saGI4AcPbfJFlbLF2siG6VrwtWW1GF6AjvJfmE7v8vINw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjoxLCJ1b3duIjoxLCJpYXQiOjE3NzczMjU2NTksImV4cCI6MTc3NzQxMjA1OX0.ZD0VZ4C4i3UXuS1jEaUhFNEQ8RuJv0imI7TgA3OFe_Z3J6adHP1GWVwmeijTcUdjuXNGx4FvM5yghsL2V3SsuQ
 
 
 ### GET - Obtener Persona Naturales Con Negocio por ID

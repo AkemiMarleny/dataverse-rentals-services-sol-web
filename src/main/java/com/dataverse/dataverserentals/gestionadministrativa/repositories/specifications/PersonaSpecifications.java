@@ -1,5 +1,7 @@
 package com.dataverse.dataverserentals.gestionadministrativa.repositories.specifications;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.domain.Specification;
 
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Persona;
@@ -10,6 +12,24 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PersonaSpecifications {
+
+    public static Specification<Persona> byTipoPersona(
+            String q,
+            Optional<TipoPersona> tipoPersona) {
+        if (tipoPersona.isEmpty()) {
+            return PersonaSpecifications.numeroDocumentoContains(q);
+        }
+
+        return switch (tipoPersona.get()) {
+            case NATURAL_SIN_NEGOCIO ->
+                PersonaSpecifications.nombresOrApellidosOrNumeroDocumentoContains(q, tipoPersona.get());
+            case NATURAL_CON_NEGOCIO ->
+                PersonaSpecifications.nombresOrApellidosOrNumeroDocumentoOrNombreComercialContains(q,
+                        tipoPersona.get());
+            case JURIDICA ->
+                PersonaSpecifications.razonSocialOrNumeroDocumentoContains(q, tipoPersona.get());
+        };
+    }
 
     public static Specification<Persona> nombresOrApellidosOrNumeroDocumentoContains(String q,
             TipoPersona tipoPersonaCode) {
@@ -51,6 +71,15 @@ public class PersonaSpecifications {
                             where.like(root.get("razonSocial"), queryWillcard),
                             where.like(root.get("numeroDocumento"), queryWillcard)));
 
+        };
+    }
+
+    public static Specification<Persona> numeroDocumentoContains(String q) {
+        String queryWillcard = "%" + q + "%";
+
+        return (root, query, where) -> {
+
+            return where.or(where.like(root.get("numeroDocumento"), queryWillcard));
         };
     }
 
