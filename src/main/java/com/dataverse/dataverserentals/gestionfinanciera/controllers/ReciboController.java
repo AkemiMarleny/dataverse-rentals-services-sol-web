@@ -17,9 +17,11 @@ import com.dataverse.dataverserentals.common.dto.Page;
 import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
+import com.dataverse.dataverserentals.gestionfinanciera.controllers.dtos.response.DetalleReciboDto;
 import com.dataverse.dataverserentals.gestionfinanciera.controllers.dtos.response.ReciboDetailDto;
 import com.dataverse.dataverserentals.gestionfinanciera.controllers.dtos.response.ReciboDto;
 import com.dataverse.dataverserentals.gestionfinanciera.enums.EstadoRecibo;
+import com.dataverse.dataverserentals.gestionfinanciera.services.DetalleReciboService;
 import com.dataverse.dataverserentals.gestionfinanciera.services.ReciboService;
 
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ReciboController {
 
     private final ReciboService reciboService;
+    private final DetalleReciboService detalleReciboService;
 
     @GetMapping
     public ResponseEntity<Page<ReciboDto>> findAll(
@@ -65,5 +68,17 @@ public class ReciboController {
         reciboService.generarRecibos();
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{reciboId}/detalles")
+    public ResponseEntity<Page<DetalleReciboDto>> findDetallesByReciboId(
+            @PathVariable Long reciboId,
+            Pageable pageable) throws AccessDeniedException, RecordNotFoundException {
+        log.info("Listando detalles del recibo con ID: {}", reciboId);
+
+        var detallesPage = detalleReciboService.findDetallesByReciboId(reciboId, pageable)
+                .map(DetalleReciboDto::fromEntity);
+
+        return ResponseEntity.ok(PageFactory.from(detallesPage));
     }
 }
