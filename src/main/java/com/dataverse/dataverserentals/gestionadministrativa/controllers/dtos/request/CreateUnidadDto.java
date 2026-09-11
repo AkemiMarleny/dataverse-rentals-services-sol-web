@@ -13,7 +13,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 public record CreateUnidadDto(
-        @NotNull Long edificioId,
         @NotNull @Min(-1) @Max(10) Integer numeroPiso,
         @NotBlank @Length(min = 1) String numeroPuerta,
         @NotNull @Positive BigDecimal areaMetrosCuadrados,

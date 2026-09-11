@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/unidades")
+@RequestMapping("api/v1/edificios/{edificioId}/unidades")
 @Slf4j
 public class UnidadController {
 
@@ -38,21 +38,25 @@ public class UnidadController {
     private final SecurityContext securityContext;
 
     @GetMapping
-    public ResponseEntity<Page<UnidadPaginaDto>> findAll(Pageable pageable, @RequestParam String q) {
+    public ResponseEntity<Page<UnidadPaginaDto>> findAll(
+            @PathVariable Long edificioId,
+            Pageable pageable, @RequestParam String q) {
 
         log.info("Listando unidades con filtro '{}' y parámetros: {}", q, pageable);
-        org.springframework.data.domain.Page<UnidadPaginaDto> unidadPage = unidadService.findAll(pageable, q)
+        org.springframework.data.domain.Page<UnidadPaginaDto> unidadPage = unidadService
+                .findAll(pageable, edificioId, q)
                 .map(UnidadPaginaDto::fromEntity);
 
         return ResponseEntity.ok(PageFactory.from(unidadPage));
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponse> create(@RequestBody CreateUnidadDto request) throws ConflictException {
+    public ResponseEntity<CreateResponse> create(@PathVariable Long edificioId, @RequestBody CreateUnidadDto request)
+            throws ConflictException {
 
         log.info("Iniciando la creación de una nueva unidad: {}", request);
         Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
-        Long id = unidadService.create(request, usuarioId);
+        Long id = unidadService.create(edificioId, request, usuarioId);
         return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
     }
 

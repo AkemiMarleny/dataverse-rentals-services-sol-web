@@ -78,9 +78,9 @@ public class Unidad {
     @Column(name = "usuario_modificacion_id", nullable = false)
     private Long usuarioModificacionId;
 
-    public static Unidad from(CreateUnidadDto request, Long usuarioCreacionId) {
+    public static Unidad from(Long edificioId, CreateUnidadDto request, Long usuarioCreacionId) {
         Unidad unidad = new Unidad();
-        unidad.setEdificioId(request.edificioId());
+        unidad.setEdificioId(edificioId);
         unidad.setNumeroPiso(request.numeroPiso());
         unidad.setNumeroPuerta(request.numeroPuerta());
         unidad.setAreaMetrosCuadrados(request.areaMetrosCuadrados());

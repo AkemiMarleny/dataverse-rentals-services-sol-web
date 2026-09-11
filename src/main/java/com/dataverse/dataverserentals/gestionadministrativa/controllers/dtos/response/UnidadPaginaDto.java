@@ -8,7 +8,6 @@ import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoAcabado;
 public record UnidadPaginaDto(
         Long id,
         Long edificioId,
-        String nombreEdificio,
         Integer numeroPiso,
         String numeroPuerta,
         BigDecimal areaMetrosCuadrados,
@@ -18,7 +17,6 @@ public record UnidadPaginaDto(
         return new UnidadPaginaDto(
                 unidad.getId(),
                 unidad.getEdificioId(),
-                unidad.getEdificio().getNombre(),
                 unidad.getNumeroPiso(),
                 unidad.getNumeroPuerta(),
                 unidad.getAreaMetrosCuadrados(),
