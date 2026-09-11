@@ -15,6 +15,7 @@ public record ReciboDetailDto(
         String contratoUnidadNumeroPuerta,
         LocalDateTime fechaEmision,
         LocalDateTime fechaVencimiento,
+        BigDecimal montoPagado,
         BigDecimal montoTotal,
         String estadoCode) {
 
@@ -29,6 +30,7 @@ public record ReciboDetailDto(
                 recibo.getContrato().getUnidad().getNumeroPuerta(),
                 recibo.getFechaEmision(),
                 recibo.getFechaVencimiento(),
+                recibo.getMontoPagado(),
                 recibo.getMontoTotal(),
                 recibo.getEstadoCode().name());
     }

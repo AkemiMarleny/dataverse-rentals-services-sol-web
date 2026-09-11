@@ -77,6 +77,7 @@ public class GenerarReciboContratoCommand {
                 .fechaEmision(fechaCalculo)
                 .fechaVencimiento(fechaFinPeriodo)
                 .montoTotal(BigDecimal.ZERO)
+                .montoPagado(BigDecimal.ZERO)
                 .estadoCode(EstadoRecibo.PENDIENTE)
                 .fechaCreacion(fechaCalculo)
                 .build();

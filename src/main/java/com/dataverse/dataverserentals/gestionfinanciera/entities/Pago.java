@@ -17,13 +17,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "pagos")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Pago {
 
     @Id
@@ -37,7 +43,7 @@ public class Pago {
     @JoinColumn(name = "recibo_id", insertable = false, updatable = false)
     private Recibo recibo;
 
-    @Column(name = "validador_id", nullable = false)
+    @Column(name = "validador_id", nullable = true)
     private Long validadorId;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dataverse.dataverserentals.common.exceptions.UnprocesableEntity;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Contrato;
 import com.dataverse.dataverserentals.gestionfinanciera.enums.EstadoRecibo;
 
@@ -25,7 +26,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Entity
 @Table(name = "recibos")
 @Getter
@@ -57,6 +60,9 @@ public class Recibo {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal montoTotal;
 
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal montoPagado;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private EstadoRecibo estadoCode;
@@ -72,5 +78,32 @@ public class Recibo {
         this.montoTotal = this.montoTotal.add(detalleRecibo.getMonto());
 
         this.detalles.add(detalleRecibo);
+    }
+
+    public void agregarPago(Pago pago) throws UnprocesableEntity {
+        var montoPagado = this.montoPagado.add(pago.getMontoPagado());
+        log.info("intentando realizar pago [montoPagar={}] [montoPagado={}] [montoTotal={}]",
+                pago.getMontoPagado(),
+                montoPagado,
+                this.getMontoTotal());
+
+        if (montoPagado.compareTo(this.montoTotal) < 0) {
+            var message = String.format(
+                    "El recibo no permite pagos superiores al monto total monto pagado: {}, monto total: {}",
+                    montoPagado,
+                    this.getMontoTotal());
+            throw new UnprocesableEntity(message);
+        }
+
+        this.montoPagado = montoPagado;
+        this.estadoCode = this.newEstadoPago();
+    }
+
+    private EstadoRecibo newEstadoPago() {
+        if (this.montoPagado.compareTo(this.montoTotal) == 0) {
+            return EstadoRecibo.ABONADO;
+        }
+
+        return EstadoRecibo.PARCIALMENTE_PAGADO;
     }
 }

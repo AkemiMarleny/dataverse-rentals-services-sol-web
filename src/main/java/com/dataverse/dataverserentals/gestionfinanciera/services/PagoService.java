@@ -1,16 +1,20 @@
 package com.dataverse.dataverserentals.gestionfinanciera.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.RolUsuario;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.ContratoRepository;
+import com.dataverse.dataverserentals.gestionfinanciera.controllers.dtos.request.CreatePagoDto;
 import com.dataverse.dataverserentals.gestionfinanciera.entities.Pago;
 import com.dataverse.dataverserentals.gestionfinanciera.entities.Recibo;
+import com.dataverse.dataverserentals.gestionfinanciera.enums.EstadoPago;
 import com.dataverse.dataverserentals.gestionfinanciera.repositories.PagoRepository;
 import com.dataverse.dataverserentals.gestionfinanciera.repositories.ReciboRepository;
 import com.dataverse.dataverserentals.security.context.UsuarioPrincipal;
@@ -44,6 +48,43 @@ public class PagoService {
         }
 
         throw new AccessDeniedException(usuarioPrincipal);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Long createPago(Long reciboId, CreatePagoDto request, UsuarioPrincipal usuarioPrincipal)
+            throws AccessDeniedException {
+        RolUsuario rol = usuarioPrincipal.usuarioRol();
+
+        if (RolUsuario.ADMINISTRADOR.equals(rol)) {
+            Recibo recibo = findReciboById(reciboId);
+            return createPagoInternal(recibo, request, usuarioPrincipal.usuarioId());
+        }
+
+        if (RolUsuario.INQUILINO.equals(rol)) {
+            Long personaId = usuarioPrincipal.personaId();
+            List<Long> contratoIds = findContratoIdsByPersonaId(personaId);
+            Recibo recibo = findReciboById(reciboId);
+
+            if (!contratoIds.contains(recibo.getContratoId())) {
+                throw new AccessDeniedException(usuarioPrincipal);
+            }
+
+            return createPagoInternal(recibo, request, usuarioPrincipal.usuarioId());
+        }
+
+        throw new AccessDeniedException(usuarioPrincipal);
+    }
+
+    private Long createPagoInternal(Recibo recibo, CreatePagoDto request, Long usuarioCreacionId) {
+        Pago pago = Pago.builder()
+                .reciboId(recibo.getId())
+                .montoPagado(request.montoPagado())
+                .observaciones(request.observaciones())
+                .estadoCodigo(EstadoPago.PENDIENTE)
+                .fechaCreacion(LocalDateTime.now())
+                .usuarioCreacionId(usuarioCreacionId)
+                .build();
+        return pagoRepository.save(pago).getId();
     }
 
     public Recibo findReciboById(Long reciboId) {
