@@ -11,4 +11,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByNombreUsuario(String nombreUsuario);
 
     boolean existsByNombreUsuario(String nombreUsuario);
+
+    java.util.List<Usuario> findAllByMfaSecretIsNotNullAndMfaEnabledIsTrue();
 }

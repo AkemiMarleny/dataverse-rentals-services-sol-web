@@ -24,6 +24,7 @@ import com.dataverse.dataverserentals.gestionadministrativa.repositories.Usuario
 import com.dataverse.dataverserentals.gestionadministrativa.services.PersonaService;
 import com.dataverse.dataverserentals.gestionadministrativa.services.UsuarioService;
 import com.dataverse.dataverserentals.security.context.UsuarioPrincipal;
+import com.dataverse.dataverserentals.security.enums.TokenScope;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,7 +43,8 @@ public class DataInitializer implements CommandLineRunner {
                 1L,
                 "Root",
                 RolUsuario.SYSTEM,
-                1L);
+                1L,
+                TokenScope.FULL_ACCESS);
         Long personaId = createDefaultPersona(usuarioPrincipal);
         createDefaultUsuario(personaId, usuarioPrincipal);
 

@@ -1,8 +1,10 @@
 package com.dataverse.dataverserentals.security.config;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -34,6 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith(jwtConfig.getTipo() + " ")) {
+            log.warn("auth header does not include a JWT token");
             filterChain.doFilter(request, response);
             return;
         }
@@ -42,19 +45,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             UsuarioPrincipal userPrincipal = jwtService.getUsuarioPrincipalFromToken(token);
+            log.info("usuario de token [usuarioId={}] [usuarioNombre={}] [scope={}] [usuarioRol={}]",
+                    userPrincipal.usuarioId(),
+                    userPrincipal.usuarioNombre(),
+                    userPrincipal.scope(),
+                    userPrincipal.usuarioRol());
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userPrincipal,
                     null,
-                    java.util.List.of(new SimpleGrantedAuthority("ROLE_" + userPrincipal.usuarioRol())));
+                    this.getAuthorities(userPrincipal));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.debug("Usuario autenticado: {} con rol: {}", userPrincipal.usuarioNombre(), userPrincipal.usuarioRol());
+            log.info("usuario autenticado [usuarioId={}] [usuarioNombre={}] [scope={}] [usuarioRol={}]",
+                    userPrincipal.usuarioId(),
+                    userPrincipal.usuarioNombre(),
+                    userPrincipal.scope(),
+                    userPrincipal.usuarioRol());
 
         } catch (JwtException e) {
             log.warn("Token JWT inválido: {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private List<GrantedAuthority> getAuthorities(UsuarioPrincipal userPrincipal) {
+        return List.of(new SimpleGrantedAuthority(userPrincipal.scope().asAuthority()));
     }
 }

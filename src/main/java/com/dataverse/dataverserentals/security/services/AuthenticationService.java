@@ -12,9 +12,11 @@ import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoUsuario;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.UsuarioRepository;
 import com.dataverse.dataverserentals.security.config.JwtConfig;
 import com.dataverse.dataverserentals.security.context.SecurityContextImpl;
+import com.dataverse.dataverserentals.security.context.UsuarioPrincipal;
 import com.dataverse.dataverserentals.security.controllers.dtos.request.LoginRequest;
 import com.dataverse.dataverserentals.security.controllers.dtos.response.CurrentUserResponse;
 import com.dataverse.dataverserentals.security.controllers.dtos.response.LoginResponse;
+import com.dataverse.dataverserentals.security.enums.TokenScope;
 import com.dataverse.dataverserentals.security.exceptions.CredencialesInvalidasException;
 import com.dataverse.dataverserentals.security.exceptions.UsuarioBloqueadoException;
 import com.dataverse.dataverserentals.security.exceptions.UsuarioInactivoException;
@@ -50,24 +52,40 @@ public class AuthenticationService {
             throw new CredencialesInvalidasException("Credenciales inválidas");
         }
 
+        if (usuario.getMfaSetupRequired() != null && usuario.getMfaSetupRequired()) {
+            String tempToken = jwtService.tokenForSetupMFA(usuario);
+            return new LoginResponse(tempToken, jwtConfig.getTipo(), "MFA_SETUP_REQUIRED");
+        }
+
+        if (usuario.getMfaEnabled() != null && usuario.getMfaEnabled()) {
+            String tempToken = jwtService.tokenForVerify(usuario);
+            return new LoginResponse(tempToken, jwtConfig.getTipo(), "MFA_REQUIRED");
+        }
+
         usuario.setFechaUltimoLogin(LocalDateTime.now());
         usuarioRepository.save(usuario);
 
-        String token = jwtService.tokenFrom(usuario);
-
-        return new LoginResponse(token, jwtConfig.getTipo());
+        String token = jwtService.tokenForRoleAssume(usuario);
+        return new LoginResponse(token, jwtConfig.getTipo(), "SUCCESS");
     }
 
     public CurrentUserResponse getCurrentUser() throws RecordNotFoundException {
-        String nombreUsuario = securityContext.getUsuarioPrincipal().usuarioNombre();
+        UsuarioPrincipal usuarioPrincipal = securityContext.getUsuarioPrincipal();
+        String nombreUsuario = usuarioPrincipal.usuarioNombre();
+        TokenScope tokenScope = usuarioPrincipal.scope();
 
         Usuario usuario = usuarioRepository.findByNombreUsuario(nombreUsuario)
                 .orElseThrow(() -> new RecordNotFoundException("Usuario no encontrado"));
+
+        var mfaVerified = TokenScope.FULL_ACCESS.equals(tokenScope);
 
         return new CurrentUserResponse(
                 usuario.getId(),
                 usuario.getPersonaId(),
                 usuario.getNombreUsuario(),
-                usuario.getRolCode());
+                usuario.getRolCode(),
+                usuario.getMfaEnabled(),
+                usuario.getMfaSetupRequired(),
+                mfaVerified);
     }
 }

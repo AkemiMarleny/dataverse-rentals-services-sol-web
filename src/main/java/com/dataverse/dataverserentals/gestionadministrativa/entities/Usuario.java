@@ -62,6 +62,20 @@ public class Usuario {
     @Column(nullable = true)
     private LocalDateTime fechaUltimoLogin;
 
+    @Column(nullable = true, length = 255)
+    private String mfaSecret;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean mfaEnabled = false;
+
+    @Column(nullable = true)
+    private String mfaBackupCodes;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean mfaSetupRequired = true;
+
     @Column(nullable = false)
     private LocalDateTime fechaCreacion;
 

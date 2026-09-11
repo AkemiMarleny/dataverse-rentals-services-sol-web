@@ -6,5 +6,8 @@ public record CurrentUserResponse(
         Long id,
         Long personaId,
         String nombreUsuario,
-        RolUsuario rolCode) {
+        RolUsuario rolCode,
+        Boolean mfaEnabled,
+        Boolean mfaSetupRequired,
+        Boolean mfaVerified) {
 }

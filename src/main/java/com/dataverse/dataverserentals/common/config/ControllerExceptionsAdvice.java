@@ -19,6 +19,7 @@ import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
 import com.dataverse.dataverserentals.common.exceptions.ConflictException;
 import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
+import com.dataverse.dataverserentals.common.exceptions.Unauthorized;
 import com.dataverse.dataverserentals.common.exceptions.UnprocesableEntity;
 
 import jakarta.validation.ConstraintViolation;
@@ -33,6 +34,13 @@ public class ControllerExceptionsAdvice {
     public ResponseEntity<ErrorResponse> generic(Exception e) {
         e.printStackTrace();
         return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(Unauthorized.class)
+    public ResponseEntity<ErrorResponse> unauthorized(Unauthorized e) {
+        return new ResponseEntity<>(
+                new ErrorResponse(e.getMessage()),
+                HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
