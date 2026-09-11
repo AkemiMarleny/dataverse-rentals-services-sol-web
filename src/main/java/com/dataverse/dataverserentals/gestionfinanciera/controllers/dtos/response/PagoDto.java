@@ -8,6 +8,7 @@ import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
 import com.dataverse.dataverserentals.gestionfinanciera.entities.Pago;
 
 public record PagoDto(
+        Long id,
         Long reciboId,
         Long validadorId,
         String validadorNombreUsuario,
@@ -24,6 +25,7 @@ public record PagoDto(
         var validador = Optional.ofNullable(pago.getValidador());
 
         return new PagoDto(
+                pago.getId(),
                 pago.getReciboId(),
                 pago.getValidadorId(),
                 validador.map(Usuario::getNombreUsuario).orElse(null),

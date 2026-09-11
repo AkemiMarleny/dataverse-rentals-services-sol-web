@@ -9,11 +9,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
+import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
+import com.dataverse.dataverserentals.common.exceptions.UnprocesableEntity;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.RolUsuario;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.ContratoRepository;
+import com.dataverse.dataverserentals.gestionfinanciera.controllers.dtos.request.AuditarPagoDto;
 import com.dataverse.dataverserentals.gestionfinanciera.controllers.dtos.request.CreatePagoDto;
 import com.dataverse.dataverserentals.gestionfinanciera.entities.Pago;
 import com.dataverse.dataverserentals.gestionfinanciera.entities.Recibo;
+import com.dataverse.dataverserentals.gestionfinanciera.enums.AccionAuditoria;
 import com.dataverse.dataverserentals.gestionfinanciera.enums.EstadoPago;
 import com.dataverse.dataverserentals.gestionfinanciera.repositories.PagoRepository;
 import com.dataverse.dataverserentals.gestionfinanciera.repositories.ReciboRepository;
@@ -92,7 +96,54 @@ public class PagoService {
                 .orElseThrow(() -> new IllegalArgumentException("Recibo no encontrado con id: " + reciboId));
     }
 
+    private Recibo findReciboByIdForUpdate(Long reciboId) {
+        return reciboRepository.findByIdForUpdate(reciboId)
+                .orElseThrow(() -> new IllegalArgumentException("Recibo no encontrado con id: " + reciboId));
+    }
+
     public List<Long> findContratoIdsByPersonaId(Long personaId) {
         return contratoRepository.findContratoIdsByPersonaId(personaId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void auditarPago(Long reciboId, Long pagoId, AuditarPagoDto request, UsuarioPrincipal usuarioPrincipal)
+            throws AccessDeniedException, UnprocesableEntity, FieldConstraintException {
+        if (!RolUsuario.ADMINISTRADOR.equals(usuarioPrincipal.usuarioRol())) {
+            throw new AccessDeniedException(usuarioPrincipal);
+        }
+
+        Pago pago = pagoRepository.findByIdForUpdate(pagoId)
+                .orElseThrow(() -> new IllegalArgumentException("Pago no encontrado con id: " + pagoId));
+
+        if (!pago.getReciboId().equals(reciboId)) {
+            throw new IllegalArgumentException("El pago no pertenece al recibo especificado");
+        }
+
+        if (!EstadoPago.PENDIENTE.equals(pago.getEstadoCodigo())) {
+            throw new IllegalStateException("Solo se pueden auditar pagos en estado PENDIENTE");
+        }
+
+        pago.setValidadorId(usuarioPrincipal.usuarioId());
+        LocalDateTime now = LocalDateTime.now();
+
+        if (AccionAuditoria.APROBAR.equals(request.accion())) {
+            pago.setEstadoCodigo(EstadoPago.APROBADO);
+            pago.setFechaAprobacion(now);
+
+            Recibo recibo = findReciboByIdForUpdate(reciboId);
+            recibo.agregarPago(pago);
+            reciboRepository.save(recibo);
+        } else if (AccionAuditoria.RECHAZAR.equals(request.accion())) {
+            if (request.motivoRechazo() == null || request.motivoRechazo().trim().isEmpty()) {
+                throw new FieldConstraintException(
+                        "motivo",
+                        "El motivo de rechazo es requerido");
+            }
+            pago.setEstadoCodigo(EstadoPago.RECHAZADO);
+            pago.setFechaRechazo(now);
+            pago.setMotivoRechazo(request.motivoRechazo());
+        }
+
+        pagoRepository.save(pago);
     }
 }

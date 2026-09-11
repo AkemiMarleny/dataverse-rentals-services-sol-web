@@ -87,9 +87,9 @@ public class Recibo {
                 montoPagado,
                 this.getMontoTotal());
 
-        if (montoPagado.compareTo(this.montoTotal) < 0) {
+        if (montoPagado.compareTo(this.montoTotal) > 0) {
             var message = String.format(
-                    "El recibo no permite pagos superiores al monto total monto pagado: {}, monto total: {}",
+                    "El recibo no permite pagos superiores al monto total. Monto pagado: %s, monto total: %s",
                     montoPagado,
                     this.getMontoTotal());
             throw new UnprocesableEntity(message);

@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,8 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.dataverse.dataverserentals.common.dto.CreateResponse;
 import com.dataverse.dataverserentals.common.dto.Page;
 import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
+import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
+import com.dataverse.dataverserentals.common.exceptions.UnprocesableEntity;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
+import com.dataverse.dataverserentals.gestionfinanciera.controllers.dtos.request.AuditarPagoDto;
 import com.dataverse.dataverserentals.gestionfinanciera.controllers.dtos.request.CreatePagoDto;
 import com.dataverse.dataverserentals.gestionfinanciera.controllers.dtos.response.PagoDto;
 import com.dataverse.dataverserentals.gestionfinanciera.services.PagoService;
@@ -64,5 +69,18 @@ public class PagoController {
         UsuarioPrincipal usuarioPrincipal = securityContext.getUsuarioPrincipal();
         Long pagoId = pagoService.createPago(reciboId, request, usuarioPrincipal);
         return new ResponseEntity<>(new CreateResponse(pagoId), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{pagoId}/auditar")
+    public ResponseEntity<Void> auditarPago(
+            @PathVariable Long reciboId,
+            @PathVariable Long pagoId,
+            @RequestBody @Valid AuditarPagoDto request)
+            throws FieldConstraintException, AccessDeniedException, UnprocesableEntity {
+        log.info("Auditando pago ID: {} del recibo ID: {}, accion: {}", pagoId, reciboId, request.accion());
+
+        UsuarioPrincipal usuarioPrincipal = securityContext.getUsuarioPrincipal();
+        pagoService.auditarPago(reciboId, pagoId, request, usuarioPrincipal);
+        return ResponseEntity.noContent().build();
     }
 }
