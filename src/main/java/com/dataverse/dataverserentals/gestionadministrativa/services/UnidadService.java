@@ -64,13 +64,14 @@ public class UnidadService {
             throws ConflictException, RecordNotFoundException {
 
         log.info("Iniciando actualización de la unidad con ID: {}. Datos recibidos: {}", unidadId, payload);
+
+        edificioRepository.findById(edificioId)
+                .orElseThrow(() -> new RecordNotFoundException(String.format(
+                        "El edificio solicitado con el id: %s no se encuentra registrado.", edificioId)));
+
         Unidad unidad = findById(edificioId, unidadId);
 
-        edificioRepository.findById(payload.edificioId())
-                .orElseThrow(() -> new FieldConstraintException("edificioId",
-                        "El edificio solicitado con el id: %s no se encuentra registrado."));
-
-        Long cantidadPuertasDuplicadas = unidadRepository.countByEdificioIdAndNumeroPuertaAndIdNot(payload.edificioId(),
+        Long cantidadPuertasDuplicadas = unidadRepository.countByEdificioIdAndNumeroPuertaAndIdNot(edificioId,
                 payload.numeroPuerta(), unidadId);
 
         if (cantidadPuertasDuplicadas > 0) {

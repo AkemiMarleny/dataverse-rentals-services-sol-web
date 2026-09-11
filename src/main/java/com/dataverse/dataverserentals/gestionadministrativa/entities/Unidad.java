@@ -93,11 +93,10 @@ public class Unidad {
     }
 
     public void updateWith(UpdateUnidadDto request, Long usuarioModificacionId) {
-        this.edificioId = request.edificioId();
         this.numeroPiso = request.numeroPiso();
         this.numeroPuerta = request.numeroPuerta();
         this.areaMetrosCuadrados = request.areaMetrosCuadrados();
-        this.tipoAcabadoCode = request.tipoAcabado();
+        this.tipoAcabadoCode = request.tipoAcabadoCode();
         this.fechaModificacion = LocalDateTime.now();
         this.usuarioModificacionId = usuarioModificacionId;
     }
