@@ -14,6 +14,7 @@ import com.dataverse.dataverserentals.common.exceptions.UnprocesableEntity;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.RolUsuario;
 import com.dataverse.dataverserentals.gestionoperativa.commands.AprobarPropuestaLiquidacionCommand;
 import com.dataverse.dataverserentals.gestionoperativa.commands.CalcularPropuestasCommand;
+import com.dataverse.dataverserentals.gestionoperativa.commands.RecalcularPropuestaCommand;
 import com.dataverse.dataverserentals.gestionoperativa.entities.DetallePropuestaLiquidacion;
 import com.dataverse.dataverserentals.gestionoperativa.entities.PropuestaLiquidacion;
 import com.dataverse.dataverserentals.gestionoperativa.repositories.DetallePropuestaLiquidacionRepository;
@@ -28,12 +29,21 @@ import lombok.RequiredArgsConstructor;
 public class PropuestaLiquidacionService {
     private final AprobarPropuestaLiquidacionCommand aprobarPropuestaLiquidacionCommand;
     private final CalcularPropuestasCommand calcularPropuestasCommand;
+    private final RecalcularPropuestaCommand recalcularPropuestaCommand;
     private final PropuestaLiquidacionRepository propuestaLiquidacionRepository;
     private final DetallePropuestaLiquidacionRepository detallePropuestaLiquidacionRepository;
     private final SecurityContext securityContext;
 
     public void calcularPropuestas() throws AccessDeniedException {
         calcularPropuestasCommand.execute();
+    }
+
+    public void recalcularPropuesta(Long propuestaId)
+            throws RecordNotFoundException, UnprocesableEntity, AccessDeniedException {
+        if (!RolUsuario.ADMINISTRADOR.equals(securityContext.getUsuarioPrincipal().usuarioRol())) {
+            throw new AccessDeniedException(securityContext.getUsuarioPrincipal());
+        }
+        recalcularPropuestaCommand.execute(propuestaId);
     }
 
     public Page<PropuestaLiquidacion> findAllPropuestasLiquidacion(

@@ -16,4 +16,6 @@ public interface DetallePropuestaLiquidacionRepository extends JpaRepository<Det
             TipoConceptoPropuesta tipoConceptoPropuesta);
 
     Page<DetallePropuestaLiquidacion> findByPropuestaLiquidacionId(Long propuestaLiquidacionId, Pageable pageable);
+
+    void deleteByPropuestaLiquidacionId(Long propuestaLiquidacionId);
 }
