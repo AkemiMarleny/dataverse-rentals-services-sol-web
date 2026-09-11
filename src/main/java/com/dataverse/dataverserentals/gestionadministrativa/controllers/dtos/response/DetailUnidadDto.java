@@ -8,20 +8,20 @@ import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoAcabado;
 public record DetailUnidadDto(
         Long id,
         Long edificioId,
-        String nombreEdificio,
         Integer numeroPiso,
         String numeroPuerta,
         BigDecimal areaMetrosCuadrados,
-        TipoAcabado tipoAcabado) {
+        TipoAcabado tipoAcabadoCode,
+        String tipoAcabadoNombre) {
 
     public static DetailUnidadDto fromEntity(Unidad unidad) {
         return new DetailUnidadDto(
                 unidad.getId(),
                 unidad.getEdificioId(),
-                unidad.getEdificio().getNombre(),
                 unidad.getNumeroPiso(),
                 unidad.getNumeroPuerta(),
                 unidad.getAreaMetrosCuadrados(),
-                unidad.getTipoAcabado());
+                unidad.getTipoAcabadoCode(),
+                unidad.getTipoAcabadoCode().intoString());
     }
 }

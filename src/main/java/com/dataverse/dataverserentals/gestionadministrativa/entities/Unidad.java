@@ -56,7 +56,7 @@ public class Unidad {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private TipoAcabado tipoAcabado;
+    private TipoAcabado tipoAcabadoCode;
 
     @Column(nullable = false)
     private LocalDateTime fechaCreacion;
@@ -84,7 +84,7 @@ public class Unidad {
         unidad.setNumeroPiso(request.numeroPiso());
         unidad.setNumeroPuerta(request.numeroPuerta());
         unidad.setAreaMetrosCuadrados(request.areaMetrosCuadrados());
-        unidad.setTipoAcabado(request.tipoAcabado());
+        unidad.setTipoAcabadoCode(request.tipoAcabadoCode());
         unidad.setFechaCreacion(LocalDateTime.now());
         unidad.setUsuarioCreacionId(usuarioCreacionId);
         unidad.setFechaModificacion(LocalDateTime.now());
@@ -97,7 +97,7 @@ public class Unidad {
         this.numeroPiso = request.numeroPiso();
         this.numeroPuerta = request.numeroPuerta();
         this.areaMetrosCuadrados = request.areaMetrosCuadrados();
-        this.tipoAcabado = request.tipoAcabado();
+        this.tipoAcabadoCode = request.tipoAcabado();
         this.fechaModificacion = LocalDateTime.now();
         this.usuarioModificacionId = usuarioModificacionId;
     }

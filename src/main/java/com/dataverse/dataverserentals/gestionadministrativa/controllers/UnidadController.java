@@ -61,21 +61,23 @@ public class UnidadController {
     }
 
     @GetMapping("{unidadId}")
-    public ResponseEntity<DetailUnidadDto> findById(@PathVariable Long unidadId) throws RecordNotFoundException {
+    public ResponseEntity<DetailUnidadDto> findById(@PathVariable Long edificioId, @PathVariable Long unidadId)
+            throws RecordNotFoundException {
 
         log.info("Consultando detalles de la unidad con ID: {}", unidadId);
-        Unidad unidad = unidadService.findById(unidadId);
+        Unidad unidad = unidadService.findById(edificioId, unidadId);
         DetailUnidadDto detailUnidadDto = DetailUnidadDto.fromEntity(unidad);
         return new ResponseEntity<>(detailUnidadDto, HttpStatus.OK);
     }
 
     @PutMapping("{unidadId}")
-    public ResponseEntity<Void> update(@PathVariable Long unidadId, @RequestBody UpdateUnidadDto request)
+    public ResponseEntity<Void> update(@PathVariable Long edificioId, @PathVariable Long unidadId,
+            @RequestBody UpdateUnidadDto request)
             throws ConflictException, RecordNotFoundException {
 
         log.info("Iniciando actualización de la unidad: {}", request);
         Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
-        unidadService.update(unidadId, request, usuarioId);
+        unidadService.update(edificioId, unidadId, request, usuarioId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

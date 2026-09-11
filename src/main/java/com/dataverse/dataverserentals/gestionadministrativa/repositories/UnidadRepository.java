@@ -15,6 +15,8 @@ public interface UnidadRepository extends JpaRepository<Unidad, Long>, JpaSpecif
 
     Long countByEdificioIdAndNumeroPuertaAndIdNot(Long edificioId, String numeroPuerta, Long id);
 
+    Optional<Unidad> findByEdificioIdAndId(Long edificioId, Long id);
+
     @Query("""
             SELECT SUM(u.areaMetrosCuadrados)
             FROM Unidad u

@@ -11,7 +11,8 @@ public record UnidadPaginaDto(
         Integer numeroPiso,
         String numeroPuerta,
         BigDecimal areaMetrosCuadrados,
-        TipoAcabado tipoAcabado) {
+        TipoAcabado tipoAcabadoCode,
+        String tipoAcabadoNombre) {
 
     public static UnidadPaginaDto fromEntity(Unidad unidad) {
         return new UnidadPaginaDto(
@@ -20,7 +21,8 @@ public record UnidadPaginaDto(
                 unidad.getNumeroPiso(),
                 unidad.getNumeroPuerta(),
                 unidad.getAreaMetrosCuadrados(),
-                unidad.getTipoAcabado());
+                unidad.getTipoAcabadoCode(),
+                unidad.getTipoAcabadoCode().intoString());
     }
 
 }

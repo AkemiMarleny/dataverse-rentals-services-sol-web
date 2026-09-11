@@ -51,18 +51,20 @@ public class UnidadService {
         return unidadRepository.save(unidad).getId();
     }
 
-    public Unidad findById(Long unidadId) throws RecordNotFoundException {
+    public Unidad findById(Long edificioId, Long unidadId) throws RecordNotFoundException {
 
-        log.info("Recuperando datos de la unidad con identificador: {}", unidadId);
-        return unidadRepository.findById(unidadId).orElseThrow(() -> new RecordNotFoundException(
-                String.format("La unidad solicitada con el id: %s no se encuentra registrada.", unidadId)));
+        log.info("Consultando detalles de la unidad con ID: {}", unidadId);
+        return unidadRepository.findByEdificioIdAndId(edificioId, unidadId)
+                .orElseThrow(() -> new RecordNotFoundException(
+                        String.format("No se encontró la unidad con ID: %s para el edificio con ID: %s.", unidadId,
+                                edificioId)));
     }
 
-    public void update(Long unidadId, @Valid UpdateUnidadDto payload, Long usuarioId)
+    public void update(Long edificioId, Long unidadId, @Valid UpdateUnidadDto payload, Long usuarioId)
             throws ConflictException, RecordNotFoundException {
 
         log.info("Iniciando actualización de la unidad con ID: {}. Datos recibidos: {}", unidadId, payload);
-        Unidad unidad = findById(unidadId);
+        Unidad unidad = findById(edificioId, unidadId);
 
         edificioRepository.findById(payload.edificioId())
                 .orElseThrow(() -> new FieldConstraintException("edificioId",

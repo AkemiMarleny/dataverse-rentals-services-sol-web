@@ -16,5 +16,5 @@ public record CreateUnidadDto(
         @NotNull @Min(-1) @Max(10) Integer numeroPiso,
         @NotBlank @Length(min = 1) String numeroPuerta,
         @NotNull @Positive BigDecimal areaMetrosCuadrados,
-        @NotNull TipoAcabado tipoAcabado) {
+        @NotNull TipoAcabado tipoAcabadoCode) {
 }
