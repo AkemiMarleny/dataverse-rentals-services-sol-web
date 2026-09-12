@@ -27,18 +27,21 @@ public class MedidorService {
     private final MedidorRepository medidorRepository;
     private final UnidadRepository unidadRepository;
 
-    public Page<Medidor> findAll(Pageable pageable, String q) {
+    public Page<Medidor> findAll(Pageable pageable, Long unidadId, String q) {
 
         log.info("Búsqueda paginada de medidores [filtro: '{}', pageable: {}]", q, pageable);
-        return medidorRepository.findAll(MedidorSpecifications.tipoMedidorOrNumeroSerieContains(q), pageable);
+        return medidorRepository.findAll(MedidorSpecifications.byUnidadOrTipoMedidorOrNumeroSerieContains(unidadId, q),
+                pageable);
     }
 
-    public Long create(@Valid CreateMedidorDto payload, Long unidadId, Long usuarioId)
+    public Long create(@Valid CreateMedidorDto payload, Long edificioId, Long unidadId, Long usuarioId)
             throws ConflictException, RecordNotFoundException {
 
         log.info("Registrando nuevo medidor con los siguientes datos: {}", payload);
-        unidadRepository.findById(unidadId).orElseThrow(() -> new RecordNotFoundException(
-                String.format("La unidad solicitada con el id: %s no se encuentra registrada.", "unidadId")));
+        unidadRepository.findByEdificioIdAndId(edificioId, unidadId)
+                .orElseThrow(() -> new RecordNotFoundException(
+                        String.format("No se encontró la unidad con ID: %s para el edificio con ID: %s.", unidadId,
+                                edificioId)));
 
         if (medidorRepository.existsByUnidadIdAndTipoMedidorCode(unidadId, payload.tipoMedidorCode())) {
             throw new ConflictException(String.format(

@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/unidades/{unidadId}/medidores")
+@RequestMapping("api/v1/edificios/{edificioId}/unidades/{unidadId}/medidores")
 @Slf4j
 public class MedidorController {
 
@@ -38,21 +38,24 @@ public class MedidorController {
     private final SecurityContext securityContext;
 
     @GetMapping
-    public ResponseEntity<Page<MedidorPaginaDto>> findAll(Pageable pageable, @RequestParam String q) {
+    public ResponseEntity<Page<MedidorPaginaDto>> findAll(Pageable pageable, @PathVariable Long unidadId,
+            @RequestParam String q) {
 
         log.info("Listando medidores con filtro '{}' y parámetros: {}", q, pageable);
-        org.springframework.data.domain.Page<MedidorPaginaDto> medidorPage = medidorService.findAll(pageable, q)
+        org.springframework.data.domain.Page<MedidorPaginaDto> medidorPage = medidorService
+                .findAll(pageable, unidadId, q)
                 .map(MedidorPaginaDto::fromEntity);
         return ResponseEntity.ok(PageFactory.from(medidorPage));
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponse> create(@PathVariable Long unidadId, @RequestBody CreateMedidorDto request)
+    public ResponseEntity<CreateResponse> create(@PathVariable Long edificioId, @PathVariable Long unidadId,
+            @RequestBody CreateMedidorDto request)
             throws ConflictException, RecordNotFoundException {
 
         log.info("Iniciando la creación de una nuevo medidor: {}", request);
         Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
-        Long id = medidorService.create(request, unidadId, usuarioId);
+        Long id = medidorService.create(request, edificioId, unidadId, usuarioId);
         return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
     }
 

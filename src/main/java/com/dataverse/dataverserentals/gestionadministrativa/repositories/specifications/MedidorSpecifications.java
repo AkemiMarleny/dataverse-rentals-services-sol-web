@@ -20,4 +20,14 @@ public class MedidorSpecifications {
         };
     }
 
+    public static Specification<Medidor> byUnidadId(Long unidadId) {
+        return (root, query, cb) -> {
+            return cb.equal(root.get("unidadId"), unidadId);
+        };
+    }
+
+    public static Specification<Medidor> byUnidadOrTipoMedidorOrNumeroSerieContains(Long unidadId, String q) {
+        return byUnidadId(unidadId).and(tipoMedidorOrNumeroSerieContains(q));
+    }
+
 }
