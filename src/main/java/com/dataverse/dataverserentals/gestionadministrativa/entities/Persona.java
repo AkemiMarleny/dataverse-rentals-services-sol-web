@@ -189,4 +189,11 @@ public class Persona {
         }
     }
 
+    public String getDenominacion() {
+        return switch (this.getTipoPersonaCode()) {
+            case NATURAL_SIN_NEGOCIO, NATURAL_CON_NEGOCIO ->
+                String.format("%s %s", this.getNombres(), this.getApellidos());
+            case JURIDICA -> this.getRazonSocial();
+        };
+    }
 }

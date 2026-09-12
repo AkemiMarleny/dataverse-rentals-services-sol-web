@@ -33,14 +33,13 @@ public record PersonaPaginaDto(
         String razonSocial) {
 
     public static PersonaPaginaDto fromEntity(Persona persona) {
-        String denominacion = calcularDenominacion(persona);
         Optional<Genero> personaGenero = Optional.ofNullable(persona.getGeneroCode());
 
         return new PersonaPaginaDto(
                 persona.getId(),
                 persona.getTipoPersonaCode(),
                 persona.getTipoPersonaCode().intoString(),
-                denominacion,
+                persona.getDenominacion(),
                 persona.getTipoDocumentoCode(),
                 persona.getTipoDocumentoCode().intoString(),
                 persona.getNumeroDocumento(),
@@ -54,13 +53,4 @@ public record PersonaPaginaDto(
                 persona.getNombreComercial(),
                 persona.getRazonSocial());
     }
-
-    private static String calcularDenominacion(Persona persona) {
-        return switch (persona.getTipoPersonaCode()) {
-            case NATURAL_SIN_NEGOCIO, NATURAL_CON_NEGOCIO ->
-                String.format("%s %s", persona.getNombres(), persona.getApellidos());
-            case JURIDICA -> persona.getRazonSocial();
-        };
-    }
-
 }

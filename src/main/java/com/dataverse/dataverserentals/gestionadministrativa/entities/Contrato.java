@@ -3,6 +3,8 @@ package com.dataverse.dataverserentals.gestionadministrativa.entities;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoContrato;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -69,5 +71,23 @@ public class Contrato {
 
     @Column(name = "usuario_creacion_id", nullable = false)
     private Long usuarioCreacionId;
+
+    public EstadoContrato getEstado() {
+        LocalDateTime now = LocalDateTime.now();
+
+        if (this.getFechaCierre() != null) {
+            return EstadoContrato.CERRADO;
+        }
+
+        if (now.isAfter(this.getFechaFin())) {
+            return EstadoContrato.VENCIDO;
+        }
+
+        if (now.isAfter(this.getFechaFin().minusDays(30))) {
+            return EstadoContrato.POR_VENCER;
+        }
+
+        return EstadoContrato.VIGENTE;
+    }
 
 }
