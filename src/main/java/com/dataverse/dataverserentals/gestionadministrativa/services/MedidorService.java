@@ -58,18 +58,30 @@ public class MedidorService {
         return medidorRepository.save(medidor).getId();
     }
 
-    public Medidor findById(Long medidorId) throws RecordNotFoundException {
+    public Medidor findById(Long edificioId, Long unidadId, Long medidorId) throws RecordNotFoundException {
 
         log.info("Recuperando datos del medidor con identificador: {}", medidorId);
-        return medidorRepository.findById(medidorId).orElseThrow(() -> new RecordNotFoundException(
-                String.format("El medidor con el ID %s no existe en nuestros registros.", medidorId)));
+        unidadRepository.findByEdificioIdAndId(edificioId, unidadId)
+                .orElseThrow(() -> new RecordNotFoundException(
+                        String.format("No se encontró la unidad con ID: %s para el edificio con ID: %s.", unidadId,
+                                edificioId)));
+
+        return medidorRepository.findByUnidadIdAndId(unidadId, medidorId)
+                .orElseThrow(() -> new RecordNotFoundException(
+                        String.format("No se encontró el medidor con ID %s asociado a la unidad con ID %s", medidorId,
+                                unidadId)));
     }
 
-    public void update(@Valid UpdateMedidorDto payload, Long unidadId, Long medidorId, Long usuarioId)
+    public void update(@Valid UpdateMedidorDto payload, Long edificioId, Long unidadId, Long medidorId, Long usuarioId)
             throws RecordNotFoundException, ConflictException {
 
         log.info("Iniciando actualización del medidor con ID: {} para la unidad: {}. Datos: {}", medidorId, unidadId,
                 payload);
+        unidadRepository.findByEdificioIdAndId(edificioId, unidadId)
+                .orElseThrow(() -> new RecordNotFoundException(
+                        String.format("No se encontró la unidad con ID: %s para el edificio con ID: %s.", unidadId,
+                                edificioId)));
+
         Medidor medidor = medidorRepository.findByUnidadIdAndId(unidadId, medidorId)
                 .orElseThrow(() -> new RecordNotFoundException(
                         String.format("No se encontró el medidor con ID %s asociado a la unidad con ID %s", medidorId,

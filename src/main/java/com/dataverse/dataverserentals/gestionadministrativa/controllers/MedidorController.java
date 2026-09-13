@@ -60,21 +60,27 @@ public class MedidorController {
     }
 
     @GetMapping("{medidorId}")
-    public ResponseEntity<DetailMedidorDto> findById(@PathVariable Long medidorId) throws RecordNotFoundException {
+    public ResponseEntity<DetailMedidorDto> findById(
+            @PathVariable Long edificioId,
+            @PathVariable Long unidadId,
+            @PathVariable Long medidorId) throws RecordNotFoundException {
 
         log.info("Consultando detalles del medidor con ID: {}", medidorId);
-        Medidor medidor = medidorService.findById(medidorId);
+        Medidor medidor = medidorService.findById(edificioId, unidadId, medidorId);
         DetailMedidorDto detailMedidorDto = DetailMedidorDto.fromEntity(medidor);
         return new ResponseEntity<>(detailMedidorDto, HttpStatus.OK);
     }
 
     @PutMapping("{medidorId}")
-    public ResponseEntity<Void> update(@PathVariable Long unidadId, @PathVariable Long medidorId,
+    public ResponseEntity<Void> update(
+            @PathVariable Long edificioId,
+            @PathVariable Long unidadId,
+            @PathVariable Long medidorId,
             @RequestBody UpdateMedidorDto request) throws RecordNotFoundException, ConflictException {
 
         log.info("Iniciando actualización del medidor: {}", request);
         Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
-        medidorService.update(request, unidadId, medidorId, usuarioId);
+        medidorService.update(request, edificioId, unidadId, medidorId, usuarioId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

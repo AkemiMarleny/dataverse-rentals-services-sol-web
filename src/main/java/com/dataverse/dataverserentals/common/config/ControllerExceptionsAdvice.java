@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.util.Collections;
 
 import com.dataverse.dataverserentals.common.dto.ErrorResponse;
 import com.dataverse.dataverserentals.common.dto.FieldError;
@@ -94,6 +97,19 @@ public class ControllerExceptionsAdvice {
     public ResponseEntity<ErrorResponse> accessDeniedException(AccessDeniedException e) {
         log.warn("[FORBIDDEN] : {}", e.getMessage());
         return new ResponseEntity<>(new ErrorResponse("Usuario no autorizado"), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String paramName = ex.getName();
+        String invalidValue = ex.getValue() != null ? ex.getValue().toString() : "null";
+        String message = String.format("El parámetro '%s' debe ser un valor numérico válido. Valor recibido: '%s'",
+                paramName, invalidValue);
+
+        FieldError fieldError = new FieldError(paramName, "Debe ser un valor numérico");
+        ErrorResponse errorResponse = new ErrorResponse(message, Collections.singletonList(fieldError));
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     private List<FieldError> buildFieldErrors(Set<ConstraintViolation<?>> constraintViolations) {

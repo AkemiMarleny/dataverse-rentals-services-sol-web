@@ -13,7 +13,7 @@ public enum TipoMedidor {
         return switch (this) {
             case GENERAL_ELECTRICIDAD -> "General electrecidad";
             case GENERAL_AGUA -> "General agua";
-            case ELECTRICIDAD -> "Electrecidad";
+            case ELECTRICIDAD -> "Electricidad";
             case AGUA -> "Agua";
         };
     }
