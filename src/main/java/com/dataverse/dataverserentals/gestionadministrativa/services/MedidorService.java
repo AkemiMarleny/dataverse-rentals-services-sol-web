@@ -77,15 +77,7 @@ public class MedidorService {
 
         log.info("Iniciando actualización del medidor con ID: {} para la unidad: {}. Datos: {}", medidorId, unidadId,
                 payload);
-        unidadRepository.findByEdificioIdAndId(edificioId, unidadId)
-                .orElseThrow(() -> new RecordNotFoundException(
-                        String.format("No se encontró la unidad con ID: %s para el edificio con ID: %s.", unidadId,
-                                edificioId)));
-
-        Medidor medidor = medidorRepository.findByUnidadIdAndId(unidadId, medidorId)
-                .orElseThrow(() -> new RecordNotFoundException(
-                        String.format("No se encontró el medidor con ID %s asociado a la unidad con ID %s", medidorId,
-                                unidadId)));
+        Medidor medidor = findById(edificioId, unidadId, medidorId);
 
         Long cantidadMedidoresDuplicados = medidorRepository.countByUnidadIdAndTipoMedidorCodeAndIdNot(unidadId,
                 payload.tipoMedidorCode(), medidorId);

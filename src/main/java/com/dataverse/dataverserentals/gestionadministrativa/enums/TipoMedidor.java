@@ -11,7 +11,7 @@ public enum TipoMedidor {
 
     public String intoString() {
         return switch (this) {
-            case GENERAL_ELECTRICIDAD -> "General electrecidad";
+            case GENERAL_ELECTRICIDAD -> "General electricidad";
             case GENERAL_AGUA -> "General agua";
             case ELECTRICIDAD -> "Electricidad";
             case AGUA -> "Agua";
