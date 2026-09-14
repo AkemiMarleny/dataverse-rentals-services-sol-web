@@ -30,7 +30,8 @@ public class MedidorService {
     public Page<Medidor> findAll(Pageable pageable, Long unidadId, String q) {
 
         log.info("Búsqueda paginada de medidores [filtro: '{}', pageable: {}]", q, pageable);
-        return medidorRepository.findAll(MedidorSpecifications.byUnidadOrTipoMedidorOrNumeroSerieContains(unidadId, q),
+        return medidorRepository.findAll(
+                MedidorSpecifications.byUnidadIdOrTipoMedidorOrNumeroSerieContains(unidadId, q),
                 pageable);
     }
 

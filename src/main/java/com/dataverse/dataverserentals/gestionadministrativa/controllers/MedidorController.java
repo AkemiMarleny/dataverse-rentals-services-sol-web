@@ -39,7 +39,7 @@ public class MedidorController {
 
     @GetMapping
     public ResponseEntity<Page<MedidorPaginaDto>> findAll(Pageable pageable, @PathVariable Long unidadId,
-            @RequestParam String q) {
+            @RequestParam(required = false) String q) {
 
         log.info("Listando medidores con filtro '{}' y parámetros: {}", q, pageable);
         org.springframework.data.domain.Page<MedidorPaginaDto> medidorPage = medidorService

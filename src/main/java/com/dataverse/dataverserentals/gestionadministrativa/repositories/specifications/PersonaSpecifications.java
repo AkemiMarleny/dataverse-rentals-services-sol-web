@@ -33,6 +33,10 @@ public class PersonaSpecifications {
 
     public static Specification<Persona> nombresOrApellidosOrNumeroDocumentoContains(String q,
             TipoPersona tipoPersonaCode) {
+        if (q == null || q.isBlank()) {
+            return (root, query, cb) -> cb.conjunction();
+        }
+
         String queryWillcard = "%" + q + "%";
 
         return (root, query, where) -> {
@@ -47,6 +51,10 @@ public class PersonaSpecifications {
 
     public static Specification<Persona> nombresOrApellidosOrNumeroDocumentoOrNombreComercialContains(String q,
             TipoPersona tipoPersonaCode) {
+        if (q == null || q.isBlank()) {
+            return (root, query, cb) -> cb.conjunction();
+        }
+
         String queryWillcard = "%" + q + "%";
 
         return (root, query, where) -> {
@@ -62,6 +70,10 @@ public class PersonaSpecifications {
     }
 
     public static Specification<Persona> razonSocialOrNumeroDocumentoContains(String q, TipoPersona tipoPersonaCode) {
+        if (q == null || q.isBlank()) {
+            return (root, query, cb) -> cb.conjunction();
+        }
+
         String queryWillcard = "%" + q + "%";
 
         return (root, query, where) -> {
@@ -75,6 +87,10 @@ public class PersonaSpecifications {
     }
 
     public static Specification<Persona> numeroDocumentoContains(String q) {
+        if (q == null || q.isBlank()) {
+            return (root, query, cb) -> cb.conjunction();
+        }
+
         String queryWillcard = "%" + q + "%";
 
         return (root, query, where) -> {

@@ -43,7 +43,7 @@ public class PersonaController {
     @GetMapping
     public ResponseEntity<Page<PersonaPaginaDto>> findAll(
             Pageable pageable,
-            @RequestParam String q,
+            @RequestParam(required = false) String q,
             @RequestParam Optional<TipoPersona> tipoPersonaCode) {
 
         log.info("Listando personas con filtro '{}', tipo: {} y parámetros: {}", q, tipoPersonaCode, pageable);
