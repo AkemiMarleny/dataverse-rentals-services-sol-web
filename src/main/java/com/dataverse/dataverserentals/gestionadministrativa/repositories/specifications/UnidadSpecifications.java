@@ -9,8 +9,8 @@ public class UnidadSpecifications {
         if (q == null || q.isBlank()) {
             return (root, query, cb) -> cb.conjunction();
         }
-        String queryWildcard = "%" + q + "%";
-        return (root, query, cb) -> cb.like(root.get("numeroPuerta"), queryWildcard);
+        String queryWildcard = "%" + q.toUpperCase() + "%";
+        return (root, query, cb) -> cb.like(cb.upper(root.get("numeroPuerta")), queryWildcard);
     }
 
     public static Specification<Unidad> byEdificioId(Long edificioId) {

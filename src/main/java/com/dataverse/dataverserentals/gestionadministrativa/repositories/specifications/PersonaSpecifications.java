@@ -37,14 +37,14 @@ public class PersonaSpecifications {
             return (root, query, cb) -> cb.conjunction();
         }
 
-        String queryWillcard = "%" + q + "%";
+        String queryWillcard = "%" + q.toUpperCase() + "%";
 
-        return (root, query, where) -> {
+        return (root, query, cb) -> {
 
-            return where.and(where.equal(root.get("tipoPersonaCode"), tipoPersonaCode), where.or(
-                    where.like(root.get("nombres"), queryWillcard),
-                    where.like(root.get("apellidos"), queryWillcard),
-                    where.like(root.get("numeroDocumento"), queryWillcard)));
+            return cb.and(cb.equal(root.get("tipoPersonaCode"), tipoPersonaCode), cb.or(
+                    cb.like(cb.upper(root.get("nombres")), queryWillcard),
+                    cb.like(cb.upper(root.get("apellidos")), queryWillcard),
+                    cb.like(cb.upper(root.get("numeroDocumento")), queryWillcard)));
 
         };
     }
@@ -55,16 +55,16 @@ public class PersonaSpecifications {
             return (root, query, cb) -> cb.conjunction();
         }
 
-        String queryWillcard = "%" + q + "%";
+        String queryWillcard = "%" + q.toUpperCase() + "%";
 
-        return (root, query, where) -> {
+        return (root, query, cb) -> {
 
-            return where.and(where.equal(root.get("tipoPersonaCode"), tipoPersonaCode),
-                    where.or(
-                            where.like(root.get("nombres"), queryWillcard),
-                            where.like(root.get("apellidos"), queryWillcard),
-                            where.like(root.get("numeroDocumento"), queryWillcard),
-                            where.like(root.get("nombreComercial"), queryWillcard)));
+            return cb.and(cb.equal(root.get("tipoPersonaCode"), tipoPersonaCode),
+                    cb.or(
+                            cb.like(cb.upper(root.get("nombres")), queryWillcard),
+                            cb.like(cb.upper(root.get("apellidos")), queryWillcard),
+                            cb.like(cb.upper(root.get("numeroDocumento")), queryWillcard),
+                            cb.like(cb.upper(root.get("nombreComercial")), queryWillcard)));
 
         };
     }
@@ -74,14 +74,14 @@ public class PersonaSpecifications {
             return (root, query, cb) -> cb.conjunction();
         }
 
-        String queryWillcard = "%" + q + "%";
+        String queryWillcard = "%" + q.toUpperCase() + "%";
 
-        return (root, query, where) -> {
+        return (root, query, cb) -> {
 
-            return where.and(where.equal(root.get("tipoPersonaCode"), tipoPersonaCode),
-                    where.or(
-                            where.like(root.get("razonSocial"), queryWillcard),
-                            where.like(root.get("numeroDocumento"), queryWillcard)));
+            return cb.and(cb.equal(root.get("tipoPersonaCode"), tipoPersonaCode),
+                    cb.or(
+                            cb.like(cb.upper(root.get("razonSocial")), queryWillcard),
+                            cb.like(cb.upper(root.get("numeroDocumento")), queryWillcard)));
 
         };
     }
@@ -91,11 +91,11 @@ public class PersonaSpecifications {
             return (root, query, cb) -> cb.conjunction();
         }
 
-        String queryWillcard = "%" + q + "%";
+        String queryWillcard = "%" + q.toUpperCase() + "%";
 
-        return (root, query, where) -> {
+        return (root, query, cb) -> {
 
-            return where.or(where.like(root.get("numeroDocumento"), queryWillcard));
+            return cb.or(cb.like(cb.upper(root.get("numeroDocumento")), queryWillcard));
         };
     }
 
