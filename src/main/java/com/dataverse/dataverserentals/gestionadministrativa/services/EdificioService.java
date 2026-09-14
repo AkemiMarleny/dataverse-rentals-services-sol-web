@@ -32,7 +32,7 @@ public class EdificioService {
             return edificioRepository.findAll(pageable);
         }
 
-        return edificioRepository.findByNombreContaining(pageable, q);
+        return edificioRepository.findByNombreContainingIgnoreCase(pageable, q);
     }
 
     public Long create(@Valid CreateEdificioDto payload, Long usuarioId) throws ConflictException {

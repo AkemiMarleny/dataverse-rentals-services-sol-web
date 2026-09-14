@@ -10,7 +10,7 @@ public interface EdificioRepository extends JpaRepository<Edificio, Long> {
 
     boolean existsByNombre(String nombre);
 
-    Page<Edificio> findByNombreContaining(Pageable pageable, String q);
+    Page<Edificio> findByNombreContainingIgnoreCase(Pageable pageable, String q);
 
     Long countByNombreAndIdNot(String nombre, Long id);
 
