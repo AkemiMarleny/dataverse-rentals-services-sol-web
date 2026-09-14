@@ -38,7 +38,7 @@ public class EdificioController {
     private final SecurityContext securityContext;
 
     @GetMapping
-    public ResponseEntity<Page<EdificioPaginaDto>> findAll(Pageable pageable, @RequestParam String q) {
+    public ResponseEntity<Page<EdificioPaginaDto>> findAll(Pageable pageable, @RequestParam(required = false) String q) {
 
         log.info("Listando edificios con filtro '{}' y parámetros: {}", q, pageable);
         org.springframework.data.domain.Page<EdificioPaginaDto> edificioPage = edificioService.findAll(pageable, q)

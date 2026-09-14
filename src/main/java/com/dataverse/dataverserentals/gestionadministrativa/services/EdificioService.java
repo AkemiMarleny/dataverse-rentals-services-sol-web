@@ -27,6 +27,11 @@ public class EdificioService {
     public Page<Edificio> findAll(Pageable pageable, String q) {
 
         log.info("Búsqueda paginada de edificios [filtro: '{}', pageable: {}]", q, pageable);
+
+        if (q == null || q.isBlank()) {
+            return edificioRepository.findAll(pageable);
+        }
+
         return edificioRepository.findByNombreContaining(pageable, q);
     }
 
