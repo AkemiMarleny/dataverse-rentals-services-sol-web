@@ -31,7 +31,7 @@ public class UnidadService {
     public Page<Unidad> findAll(Pageable pageable, Long edificioId, String q) {
 
         log.info("Búsqueda paginada de unidades [filtro: '{}', pageable: {}]", q, pageable);
-        return unidadRepository.findAll(UnidadSpecifications.byEdificioIdOrPisoOrPuertaContains(edificioId, q),
+        return unidadRepository.findAll(UnidadSpecifications.byEdificioIdOrNumeroPuertaContains(edificioId, q),
                 pageable);
     }
 
