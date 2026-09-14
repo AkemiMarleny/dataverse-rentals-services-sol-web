@@ -28,7 +28,8 @@ public class CalcularPropuestasCommand {
         log.info("generando propuestas de liquidacion");
 
         UsuarioPrincipal usuarioPrincipal = securityContext.getUsuarioPrincipal();
-        if (!RolUsuario.SYSTEM.equals(usuarioPrincipal.usuarioRol())) {
+        if (!RolUsuario.SYSTEM.equals(usuarioPrincipal.usuarioRol())
+                && !RolUsuario.ADMINISTRADOR.equals(usuarioPrincipal.usuarioRol())) {
             throw new AccessDeniedException(usuarioPrincipal);
         }
 
