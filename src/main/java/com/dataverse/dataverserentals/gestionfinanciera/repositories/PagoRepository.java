@@ -25,4 +25,9 @@ public interface PagoRepository extends JpaRepository<Pago, Long>, JpaSpecificat
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT p FROM Pago p WHERE p.id = :id")
     Optional<Pago> findByIdForUpdate(@Param("id") Long id);
+
+    @Query(value = "SELECT CAST(EXTRACT(MONTH FROM fecha_aprobacion) AS INTEGER) as mes, SUM(monto_pagado) as total " +
+            "FROM pagos WHERE estado_codigo = 'APROBADO' AND EXTRACT(YEAR FROM fecha_aprobacion) = :anio " +
+            "GROUP BY EXTRACT(MONTH FROM fecha_aprobacion)", nativeQuery = true)
+    List<Object[]> findIngresosAgrupadosByAnio(@Param("anio") int anio);
 }

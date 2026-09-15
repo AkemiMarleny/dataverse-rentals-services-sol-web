@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.dataverse.dataverserentals.gestionoperativa.entities.GastoOperativo;
 import com.dataverse.dataverserentals.gestionoperativa.enums.TipoGasto;
@@ -25,4 +26,9 @@ public interface GastoOperativoRepository extends JpaRepository<GastoOperativo, 
             List<TipoGasto> gastoTipos,
             LocalDateTime periodoInicio,
             LocalDateTime periodoFin);
+
+    @Query(value = "SELECT CAST(EXTRACT(MONTH FROM fecha_gasto) AS INTEGER) as mes, SUM(monto) as total " +
+            "FROM gatos_operativos WHERE EXTRACT(YEAR FROM fecha_gasto) = :anio " +
+            "GROUP BY EXTRACT(MONTH FROM fecha_gasto)", nativeQuery = true)
+    List<Object[]> findEgresosAgrupadosByAnio(@Param("anio") int anio);
 }
