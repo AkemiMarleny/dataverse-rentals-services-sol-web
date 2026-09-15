@@ -37,4 +37,18 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
     Page<Contrato> findByPersonaNombresOrPersonaApellidosContaining(
             @Param("q") String q,
             Pageable pageable);
+
+    @Query("""
+            SELECT COUNT(DISTINCT c.unidadId)
+            FROM Contrato c
+            WHERE c.fechaInicio <= :ultimoDiaMes
+            AND (
+                (c.fechaCierre IS NULL AND c.fechaFin >= :primeroDiaMes)
+                OR
+                (c.fechaCierre IS NOT NULL AND c.fechaCierre >= :primeroDiaMes)
+            )
+            """)
+    Long countUnidadesOcupadasByMes(
+            @Param("primeroDiaMes") LocalDateTime primeroDiaMes,
+            @Param("ultimoDiaMes") LocalDateTime ultimoDiaMes);
 }
