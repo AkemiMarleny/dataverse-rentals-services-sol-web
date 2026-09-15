@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Edificio;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
+import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.CreateGastoOperativoDto;
 import com.dataverse.dataverserentals.gestionoperativa.enums.TipoGasto;
 
 import jakarta.persistence.Column;
@@ -89,4 +90,18 @@ public class GastoOperativo {
 
     @Column(name = "usuario_modificacion_id", nullable = true)
     private Long usuarioModificacionId;
+
+    public static GastoOperativo from(CreateGastoOperativoDto payload, Long usuarioId) {
+        return GastoOperativo.builder()
+                .edificioId(payload.edificioId())
+                .categoriaGastoId(payload.categoriaGastoId())
+                .tipoGastoCode(payload.tipoGastoCode())
+                .descripcion(payload.descripcion())
+                .monto(payload.monto())
+                .fechaGasto(payload.fechaGasto())
+                .registradorId(usuarioId)
+                .usuarioCreacionId(usuarioId)
+                .fechaCreacion(LocalDateTime.now())
+                .build();
+    }
 }

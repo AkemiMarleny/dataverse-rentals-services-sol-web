@@ -1,0 +1,13 @@
+POST http://localhost:8080/api/v1/gastos-operativos
+Content-Type: application/json
+Authorization: Bearer 
+{
+    "edificioId": 1,
+    "categoriaGastoId": 1,
+    "tipoGastoCode": "MATERIAL",
+    "descripcion": "Compra de luminarias LED para pasillos comunes",
+    "monto": 150.50,
+    "fechaGasto": "2026-05-04T10:00:00"
+}
+
+###
