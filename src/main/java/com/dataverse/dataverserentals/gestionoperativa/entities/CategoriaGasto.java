@@ -3,6 +3,7 @@ package com.dataverse.dataverserentals.gestionoperativa.entities;
 import java.time.LocalDateTime;
 
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
+import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.CreateCategoriaGastoDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,15 +14,25 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "categorias_gasto")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CategoriaGasto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, unique = true)
     private String nombre;
 
     @Column(nullable = true, length = 255)
@@ -46,4 +57,15 @@ public class CategoriaGasto {
 
     @Column(name = "usuario_modificacion_id", nullable = false)
     private Long usuarioModificacionId;
+
+    public static CategoriaGasto from(CreateCategoriaGastoDto payload, Long usuarioId) {
+        return CategoriaGasto.builder()
+                .nombre(payload.nombre())
+                .descripcion(payload.descripcion())
+                .fechaCreacion(LocalDateTime.now())
+                .usuarioCreacionId(usuarioId)
+                .fechaModificacion(LocalDateTime.now())
+                .usuarioModificacionId(usuarioId)
+                .build();
+    }
 }
