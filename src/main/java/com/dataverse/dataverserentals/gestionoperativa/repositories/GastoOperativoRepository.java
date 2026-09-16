@@ -30,7 +30,7 @@ public interface GastoOperativoRepository
             LocalDateTime periodoFin);
 
     @Query(value = "SELECT CAST(EXTRACT(MONTH FROM fecha_gasto) AS INTEGER) as mes, SUM(monto) as total " +
-            "FROM gatos_operativos WHERE EXTRACT(YEAR FROM fecha_gasto) = :anio " +
+            "FROM gastos_operativos WHERE EXTRACT(YEAR FROM fecha_gasto) = :anio " +
             "GROUP BY EXTRACT(MONTH FROM fecha_gasto)", nativeQuery = true)
     List<Object[]> findEgresosAgrupadosByAnio(@Param("anio") int anio);
 }

@@ -17,6 +17,7 @@ import com.dataverse.dataverserentals.gestionadministrativa.entities.Contrato;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.ContratoRepository;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.PersonaRepository;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.UnidadRepository;
+import com.dataverse.dataverserentals.notifications.NotificationService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class ContratoService {
     private final ContratoRepository contratoRepository;
     private final UnidadRepository unidadRepository;
     private final PersonaRepository personaRepository;
+    private final NotificationService notificationService;
 
     public Page<Contrato> findAll(Pageable pageable, String q) {
         log.info("Búsqueda paginada de contratos [filtro: '{}', pageable: {}]", q, pageable);
@@ -78,6 +80,9 @@ public class ContratoService {
                 .usuarioCreacionId(usuarioCreacionId)
                 .build();
 
-        return contratoRepository.save(contrato).getId();
+        Long contratoId = contratoRepository.save(contrato).getId();
+        notificationService.sendEvent("CONTRATO_CREATED", contrato);
+
+        return contratoId;
     }
 }

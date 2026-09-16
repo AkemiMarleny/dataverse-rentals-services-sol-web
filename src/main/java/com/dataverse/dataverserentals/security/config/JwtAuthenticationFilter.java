@@ -16,6 +16,7 @@ import com.dataverse.dataverserentals.security.services.JwtService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -33,15 +34,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
+        String token = extractToken(request);
 
-        if (authHeader == null || !authHeader.startsWith(jwtConfig.getTipo() + " ")) {
-            log.warn("auth header does not include a JWT token");
+        if (token == null) {
+            log.warn("No JWT token found in Authorization header or cookies");
             filterChain.doFilter(request, response);
             return;
         }
-
-        String token = authHeader.substring(jwtConfig.getTipo().length() + 1);
 
         try {
             UsuarioPrincipal userPrincipal = jwtService.getUsuarioPrincipalFromToken(token);
@@ -68,6 +67,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private String extractToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader != null && authHeader.startsWith(jwtConfig.getTipo() + " ")) {
+            return authHeader.substring(jwtConfig.getTipo().length() + 1);
+        }
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (jwtConfig.getCookieName().equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+
+        return null;
     }
 
     private List<GrantedAuthority> getAuthorities(UsuarioPrincipal userPrincipal) {

@@ -13,6 +13,7 @@ import com.dataverse.dataverserentals.gestionoperativa.entities.GastoOperativo;
 import com.dataverse.dataverserentals.gestionoperativa.repositories.CategoriaGastoRepository;
 import com.dataverse.dataverserentals.gestionoperativa.repositories.GastoOperativoRepository;
 import com.dataverse.dataverserentals.gestionoperativa.repositories.specifications.GastoOperativoSpecifications;
+import com.dataverse.dataverserentals.notifications.NotificationService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class GastoOperativoService {
     private final GastoOperativoRepository gastoOperativoRepository;
     private final EdificioRepository edificioRepository;
     private final CategoriaGastoRepository categoriaGastoRepository;
+    private final NotificationService notificationService;
 
     public Page<GastoOperativo> findAll(Pageable pageable, Long edificioId, Long categoriaGastoId) {
 
@@ -56,7 +58,9 @@ public class GastoOperativoService {
 
         GastoOperativo gastoOperativo = GastoOperativo.from(payload, usuarioId);
 
-        return gastoOperativoRepository.save(gastoOperativo).getId();
+        Long gastoId = gastoOperativoRepository.save(gastoOperativo).getId();
+        notificationService.sendEvent("EXPENSE_CREATED", gastoOperativo);
+        return gastoId;
     }
 
     public GastoOperativo findById(Long gastoOperativoId) throws RecordNotFoundException {

@@ -13,7 +13,10 @@ import com.dataverse.dataverserentals.security.exceptions.CredencialesInvalidasE
 import com.dataverse.dataverserentals.security.exceptions.UsuarioBloqueadoException;
 import com.dataverse.dataverserentals.security.exceptions.UsuarioInactivoException;
 import com.dataverse.dataverserentals.security.services.AuthenticationService;
+import com.dataverse.dataverserentals.security.services.JwtService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,13 +27,20 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final JwtService jwtService;
 
     @PostMapping("login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request)
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request, HttpServletResponse httpResponse)
             throws CredencialesInvalidasException, UsuarioInactivoException, UsuarioBloqueadoException {
         log.info("Intento de autenticación para usuario: {}", request.nombreUsuario());
-        LoginResponse response = authenticationService.authenticate(request);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        LoginResponse loginResponse = authenticationService.authenticate(request);
+
+        if (loginResponse.status().equals("SUCCESS")) {
+            Cookie jwtCookie = jwtService.toCookie(loginResponse.token());
+            httpResponse.addCookie(jwtCookie);
+        }
+
+        return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
 
 }

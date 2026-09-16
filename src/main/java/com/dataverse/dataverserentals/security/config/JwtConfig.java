@@ -14,4 +14,6 @@ public class JwtConfig {
     private String secret;
     private long expiration;
     private String tipo = "Bearer";
+    private String cookieName = "jwt_token";
+    private boolean cookieSecure = false;
 }

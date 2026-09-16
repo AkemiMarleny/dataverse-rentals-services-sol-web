@@ -26,6 +26,8 @@ import com.dataverse.dataverserentals.security.exceptions.MfaAlreadyEnabledExcep
 import com.dataverse.dataverserentals.security.services.JwtService;
 import com.dataverse.dataverserentals.security.services.MfaService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -104,7 +106,8 @@ public class MfaController {
     }
 
     @PostMapping("verify")
-    public ResponseEntity<MfaVerificationResponse> verifyMfa(@RequestBody MfaVerificationRequest request)
+    public ResponseEntity<MfaVerificationResponse> verifyMfa(@RequestBody MfaVerificationRequest request,
+            HttpServletResponse httpResponse)
             throws RecordNotFoundException, InvalidMfaCodeException {
         UsuarioPrincipal usuarioPrincipal = securityContext.getUsuarioPrincipal();
 
@@ -128,6 +131,9 @@ public class MfaController {
         }
 
         String token = jwtService.tokenForRoleAssume(usuario);
+        Cookie jwtCookie = jwtService.toCookie(token);
+        httpResponse.addCookie(jwtCookie);
+
         return new ResponseEntity<>(
                 new MfaVerificationResponse(token, jwtConfig.getTipo(), false, false),
                 HttpStatus.OK);

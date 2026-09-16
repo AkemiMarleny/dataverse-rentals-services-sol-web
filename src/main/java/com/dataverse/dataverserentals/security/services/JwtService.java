@@ -17,6 +17,7 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -31,6 +32,16 @@ public class JwtService {
     private final String CLAIM_SCOPE = "scope";
 
     private final JwtConfig jwtConfig;
+
+    public Cookie toCookie(String token) {
+        Cookie jwtCookie = new Cookie(jwtConfig.getCookieName(), token);
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setSecure(jwtConfig.isCookieSecure());
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge((int) (jwtConfig.getExpiration() / 1000));
+
+        return jwtCookie;
+    }
 
     public String tokenForSetupMFA(Usuario usuario) {
         return tokenBuilder(

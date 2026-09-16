@@ -14,6 +14,7 @@ import com.dataverse.dataverserentals.gestionadministrativa.entities.Unidad;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.EdificioRepository;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.UnidadRepository;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.specifications.UnidadSpecifications;
+import com.dataverse.dataverserentals.notifications.NotificationService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,8 @@ public class UnidadService {
 
     private final UnidadRepository unidadRepository;
     private final EdificioRepository edificioRepository;
+
+    private final NotificationService notificationService;
 
     public Page<Unidad> findAll(Pageable pageable, Long edificioId, String q) {
 
@@ -48,7 +51,12 @@ public class UnidadService {
                     payload.numeroPuerta()));
         }
         Unidad unidad = Unidad.from(edificioId, payload, usuarioId);
-        return unidadRepository.save(unidad).getId();
+
+        Long unidadId = unidadRepository.save(unidad).getId();
+
+        notificationService.sendEvent("UNIDAD_CREATED", unidad);
+
+        return unidadId;
     }
 
     public Unidad findById(Long edificioId, Long unidadId) throws RecordNotFoundException {

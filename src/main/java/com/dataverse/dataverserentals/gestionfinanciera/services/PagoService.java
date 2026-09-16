@@ -21,6 +21,7 @@ import com.dataverse.dataverserentals.gestionfinanciera.enums.AccionAuditoria;
 import com.dataverse.dataverserentals.gestionfinanciera.enums.EstadoPago;
 import com.dataverse.dataverserentals.gestionfinanciera.repositories.PagoRepository;
 import com.dataverse.dataverserentals.gestionfinanciera.repositories.ReciboRepository;
+import com.dataverse.dataverserentals.notifications.NotificationService;
 import com.dataverse.dataverserentals.security.context.UsuarioPrincipal;
 
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class PagoService {
     private final PagoRepository pagoRepository;
     private final ReciboRepository reciboRepository;
     private final ContratoRepository contratoRepository;
+    private final NotificationService notificationService;
 
     public Page<Pago> findPagosByReciboId(Long reciboId, UsuarioPrincipal usuarioPrincipal, Pageable pageable)
             throws AccessDeniedException {
@@ -88,7 +90,8 @@ public class PagoService {
                 .fechaCreacion(LocalDateTime.now())
                 .usuarioCreacionId(usuarioCreacionId)
                 .build();
-        return pagoRepository.save(pago).getId();
+        Long pagoId = pagoRepository.save(pago).getId();
+        return pagoId;
     }
 
     public Recibo findReciboById(Long reciboId) {
@@ -133,6 +136,7 @@ public class PagoService {
             Recibo recibo = findReciboByIdForUpdate(reciboId);
             recibo.agregarPago(pago);
             reciboRepository.save(recibo);
+            notificationService.sendEvent("PAYMENT_APPROVED", pago);
         } else if (AccionAuditoria.RECHAZAR.equals(request.accion())) {
             if (request.motivoRechazo() == null || request.motivoRechazo().trim().isEmpty()) {
                 throw new FieldConstraintException(
