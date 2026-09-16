@@ -26,7 +26,8 @@ public class GenerarRecibosCommand {
     @Transactional(rollbackFor = Exception.class)
     public void execute(UsuarioPrincipal usuarioPrincipal) throws AccessDeniedException {
 
-        if (!RolUsuario.SYSTEM.equals(usuarioPrincipal.usuarioRol())) {
+        if (!RolUsuario.SYSTEM.equals(usuarioPrincipal.usuarioRol())
+                && !RolUsuario.ADMINISTRADOR.equals(usuarioPrincipal.usuarioRol())) {
             log.error("usuario no autorizado para generar recibos");
             throw new AccessDeniedException(usuarioPrincipal);
         }
