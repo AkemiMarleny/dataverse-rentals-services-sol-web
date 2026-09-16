@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.CreateCategoriaGastoDto;
+import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.UpdateCategoriaGastoDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -67,5 +68,12 @@ public class CategoriaGasto {
                 .fechaModificacion(LocalDateTime.now())
                 .usuarioModificacionId(usuarioId)
                 .build();
+    }
+
+    public void updateWith(UpdateCategoriaGastoDto request, Long usuarioModificacionId) {
+        this.nombre = request.nombre();
+        this.descripcion = request.descripcion();
+        this.fechaModificacion = LocalDateTime.now();
+        this.usuarioModificacionId = usuarioModificacionId;
     }
 }

@@ -15,6 +15,16 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sI
 
 ###
 
-GET http://localhost:8080/api/v1/categorias-gastos/1
+GET http://localhost:8080/api/v1/categorias-gastos/2
 Content-Type: application/json
-# Authorization: Bearer {{token}}
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjoxLCJ1b3duIjoxLCJzY29wZSI6IkZVTExfQUNDRVNTIiwiaWF0IjoxNzc4MDE1MjE1LCJleHAiOjE3NzgxMDE2MTV9.6-BTPbzj-7cd_hVxeFL-I8ZcTvSp30cjBLuEDboi1tkXr6UjRFs8N4rsdK-PddRp0Vp_QEw7GSysfkbSrhuoiw
+
+###
+PUT http://localhost:8080/api/v1/categorias-gastos/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYXRhdmVyc2VzeXMiLCJ1cm9sIjoiU1lTVEVNIiwidWlkIjoxLCJ1b3duIjoxLCJzY29wZSI6IkZVTExfQUNDRVNTIiwiaWF0IjoxNzc4MDE1MjE1LCJleHAiOjE3NzgxMDE2MTV9.6-BTPbzj-7cd_hVxeFL-I8ZcTvSp30cjBLuEDboi1tkXr6UjRFs8N4rsdK-PddRp0Vp_QEw7GSysfkbSrhuoiw
+
+{
+    "nombre": "Limpieza general",
+    "descripcion": "Insumos para la limpieza del edificio"
+}

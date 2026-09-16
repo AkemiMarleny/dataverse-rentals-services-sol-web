@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,7 @@ import com.dataverse.dataverserentals.common.exceptions.ConflictException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.CreateCategoriaGastoDto;
+import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.UpdateCategoriaGastoDto;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.response.CategoriaGastoPaginaDto;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.response.DetailCategoriaGastoDto;
 import com.dataverse.dataverserentals.gestionoperativa.entities.CategoriaGasto;
@@ -47,7 +49,8 @@ public class CategoriaGastoController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponse> create(@RequestBody CreateCategoriaGastoDto request) throws ConflictException {
+    public ResponseEntity<CreateResponse> create(@RequestBody CreateCategoriaGastoDto request)
+            throws ConflictException {
 
         log.info("Iniciando la creación de una nueva categoría de gasto: {}", request);
         Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
@@ -63,6 +66,17 @@ public class CategoriaGastoController {
         CategoriaGasto categoriaGasto = categoriaGastoService.findById(categoriaGastoId);
         DetailCategoriaGastoDto detailCategoriaGastoDto = DetailCategoriaGastoDto.fromEntity(categoriaGasto);
         return new ResponseEntity<>(detailCategoriaGastoDto, HttpStatus.OK);
+    }
+
+    @PutMapping("{categoriaGastoId}")
+    public ResponseEntity<Void> update(
+            @PathVariable Long categoriaGastoId,
+            @RequestBody UpdateCategoriaGastoDto request) throws RecordNotFoundException, ConflictException {
+
+        log.info("Iniciando actualización de la categoría de gasto con ID: {}", categoriaGastoId);
+        Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
+        categoriaGastoService.update(categoriaGastoId, request, usuarioId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
