@@ -1,5 +1,7 @@
 package com.dataverse.dataverserentals.gestionoperativa.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -19,6 +21,17 @@ import lombok.extern.slf4j.Slf4j;
 public class CategoriaGastoService {
 
     private final CategoriaGastoRepository categoriaGastoRepository;
+
+    public Page<CategoriaGasto> findAll(Pageable pageable, String q) {
+
+        log.info("Búsqueda paginada de categorías de gasto [filtro: '{}', pageable: {}]", q, pageable);
+
+        if (q == null || q.isBlank()) {
+            return categoriaGastoRepository.findAll(pageable);
+        }
+
+        return categoriaGastoRepository.findByNombreContainingIgnoreCase(pageable, q);
+    }
 
     public Long create(@Valid CreateCategoriaGastoDto payload, Long usuarioId) throws ConflictException {
         log.info("Registrando nueva categoría de gasto: {}", payload);
