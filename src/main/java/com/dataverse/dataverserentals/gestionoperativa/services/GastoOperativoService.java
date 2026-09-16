@@ -57,4 +57,11 @@ public class GastoOperativoService {
 
         return gastoOperativoRepository.save(gastoOperativo).getId();
     }
+
+    public GastoOperativo findById(Long gastoOperativoId) throws RecordNotFoundException {
+        log.info("Consultando gasto operativo con ID: {}", gastoOperativoId);
+        return gastoOperativoRepository.findById(gastoOperativoId)
+                .orElseThrow(() -> new RecordNotFoundException(
+                        String.format("El gasto operativo con id %s no se encuentra registrado.", gastoOperativoId)));
+    }
 }
