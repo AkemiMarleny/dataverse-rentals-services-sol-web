@@ -50,7 +50,7 @@ public class MedidorService {
                     payload.tipoMedidorCode(), unidadId));
         }
 
-        if (medidorRepository.existsByNumeroSerie(payload.numeroSerie())) {
+        if (medidorRepository.existsByNumeroSerieIgnoreCase(payload.numeroSerie())) {
             throw new ConflictException(String.format(
                     "El número de serie %s ya está registrada en el sistema",
                     payload.numeroSerie()));
@@ -91,7 +91,7 @@ public class MedidorService {
                     unidadId, payload.tipoMedidorCode()));
         }
 
-        Long seriesDuplicadas = medidorRepository.countByNumeroSerieAndIdNot(payload.numeroSerie(),
+        Long seriesDuplicadas = medidorRepository.countByNumeroSerieIgnoreCaseAndIdNot(payload.numeroSerie(),
                 medidorId);
 
         if (seriesDuplicadas > 0) {

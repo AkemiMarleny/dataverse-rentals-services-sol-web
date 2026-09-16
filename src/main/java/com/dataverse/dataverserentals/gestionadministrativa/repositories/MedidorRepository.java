@@ -14,13 +14,13 @@ public interface MedidorRepository extends JpaRepository<Medidor, Long>, JpaSpec
 
     boolean existsByUnidadIdAndTipoMedidorCode(Long unidadId, TipoMedidor tipoMedidorCode);
 
-    boolean existsByNumeroSerie(String numeroSerie);
+    boolean existsByNumeroSerieIgnoreCase(String numeroSerie);
 
     Optional<Medidor> findByUnidadIdAndId(Long unidadId, Long id);
 
     Long countByUnidadIdAndTipoMedidorCodeAndIdNot(Long unidadId, TipoMedidor tipoMedidorCode, Long id);
 
-    Long countByNumeroSerieAndIdNot(String numeroSerie, Long id);
+    Long countByNumeroSerieIgnoreCaseAndIdNot(String numeroSerie, Long id);
 
     @Query("""
             SELECT m
