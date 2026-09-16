@@ -2,6 +2,7 @@ package com.dataverse.dataverserentals.gestionadministrativa.entities;
 
 import java.time.LocalDateTime;
 
+import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.UpdateUsuarioDto;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoUsuario;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.RolUsuario;
 
@@ -87,5 +88,14 @@ public class Usuario {
 
     @Column(name = "usuario_modificacion_id", nullable = true)
     private Long usuarioModificacionId;
+
+    public void actualizar(UpdateUsuarioDto request, Long usuarioModificacionId) {
+        this.nombreUsuario = request.nombreUsuario();
+        this.rolCode = request.rolCode();
+        this.estadoCode = request.estadoCode();
+        this.mfaEnabled = request.mfaEnabled();
+        this.fechaModificacion = LocalDateTime.now();
+        this.usuarioModificacionId = usuarioModificacionId;
+    }
 
 }

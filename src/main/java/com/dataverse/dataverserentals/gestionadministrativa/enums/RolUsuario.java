@@ -5,5 +5,15 @@ public enum RolUsuario {
     ANALISTA_FINANZAS,
     OPERARIO,
     INQUILINO,
-    SYSTEM
+    SYSTEM;
+
+    public String intoString() {
+        return switch (this) {
+            case ADMINISTRADOR -> "Administrador";
+            case ANALISTA_FINANZAS -> "Analista de finanzas";
+            case OPERARIO -> "Operario";
+            case INQUILINO -> "Inquilino";
+            case SYSTEM -> "Sistema";
+        };
+    }
 }
