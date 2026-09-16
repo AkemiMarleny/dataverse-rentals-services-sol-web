@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,9 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dataverse.dataverserentals.common.dto.CreateResponse;
 import com.dataverse.dataverserentals.common.dto.Page;
 import com.dataverse.dataverserentals.common.exceptions.ConflictException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.CreateCategoriaGastoDto;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.response.CategoriaGastoPaginaDto;
+import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.response.DetailCategoriaGastoDto;
+import com.dataverse.dataverserentals.gestionoperativa.entities.CategoriaGasto;
 import com.dataverse.dataverserentals.gestionoperativa.services.CategoriaGastoService;
 import com.dataverse.dataverserentals.security.context.SecurityContext;
 
@@ -49,6 +53,16 @@ public class CategoriaGastoController {
         Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
         Long id = categoriaGastoService.create(request, usuarioId);
         return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
+    }
+
+    @GetMapping("{categoriaGastoId}")
+    public ResponseEntity<DetailCategoriaGastoDto> findById(@PathVariable Long categoriaGastoId)
+            throws RecordNotFoundException {
+
+        log.info("Consultando detalles de la categoría de gasto con ID: {}", categoriaGastoId);
+        CategoriaGasto categoriaGasto = categoriaGastoService.findById(categoriaGastoId);
+        DetailCategoriaGastoDto detailCategoriaGastoDto = DetailCategoriaGastoDto.fromEntity(categoriaGasto);
+        return new ResponseEntity<>(detailCategoriaGastoDto, HttpStatus.OK);
     }
 
 }

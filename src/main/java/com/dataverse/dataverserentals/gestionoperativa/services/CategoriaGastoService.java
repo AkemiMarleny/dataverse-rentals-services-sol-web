@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.dataverse.dataverserentals.common.exceptions.ConflictException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.CreateCategoriaGastoDto;
 import com.dataverse.dataverserentals.gestionoperativa.entities.CategoriaGasto;
 import com.dataverse.dataverserentals.gestionoperativa.repositories.CategoriaGastoRepository;
@@ -43,5 +44,13 @@ public class CategoriaGastoService {
         CategoriaGasto categoriaGasto = CategoriaGasto.from(payload, usuarioId);
 
         return categoriaGastoRepository.save(categoriaGasto).getId();
+    }
+
+    public CategoriaGasto findById(Long categoriaGastoId) throws RecordNotFoundException {
+        log.info("Consultando categoría de gasto con ID: {}", categoriaGastoId);
+        return categoriaGastoRepository.findById(categoriaGastoId)
+                .orElseThrow(() -> new RecordNotFoundException(
+                        String.format("La categoría de gasto con id %s no se encuentra registrada.",
+                                categoriaGastoId)));
     }
 }
