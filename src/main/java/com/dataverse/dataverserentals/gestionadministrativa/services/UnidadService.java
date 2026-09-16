@@ -42,7 +42,7 @@ public class UnidadService {
                 .orElseThrow(() -> new FieldConstraintException("edificioId",
                         "El edificio solicitado con el id: %s no se encuentra registrado."));
 
-        if (unidadRepository.existsByEdificioIdAndNumeroPuerta(
+        if (unidadRepository.existsByEdificioIdAndNumeroPuertaIgnoreCase(
                 edificioId, payload.numeroPuerta())) {
             throw new ConflictException(String.format("La puerta %s ya se encuentra registrada en este edificio.",
                     payload.numeroPuerta()));
@@ -71,7 +71,7 @@ public class UnidadService {
 
         Unidad unidad = findById(edificioId, unidadId);
 
-        Long cantidadPuertasDuplicadas = unidadRepository.countByEdificioIdAndNumeroPuertaAndIdNot(edificioId,
+        Long cantidadPuertasDuplicadas = unidadRepository.countByEdificioIdAndNumeroPuertaIgnoreCaseAndIdNot(edificioId,
                 payload.numeroPuerta(), unidadId);
 
         if (cantidadPuertasDuplicadas > 0) {

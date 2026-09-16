@@ -11,9 +11,9 @@ import com.dataverse.dataverserentals.gestionadministrativa.entities.Unidad;
 
 public interface UnidadRepository extends JpaRepository<Unidad, Long>, JpaSpecificationExecutor<Unidad> {
 
-    boolean existsByEdificioIdAndNumeroPuerta(Long edificioId, String numeroPuerta);
+    boolean existsByEdificioIdAndNumeroPuertaIgnoreCase(Long edificioId, String numeroPuerta);
 
-    Long countByEdificioIdAndNumeroPuertaAndIdNot(Long edificioId, String numeroPuerta, Long id);
+    Long countByEdificioIdAndNumeroPuertaIgnoreCaseAndIdNot(Long edificioId, String numeroPuerta, Long id);
 
     Optional<Unidad> findByEdificioIdAndId(Long edificioId, Long id);
 
