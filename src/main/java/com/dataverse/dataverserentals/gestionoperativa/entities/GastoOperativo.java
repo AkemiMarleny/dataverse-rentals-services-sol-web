@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Edificio;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.CreateGastoOperativoDto;
+import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.UpdateGastoOperativoDto;
 import com.dataverse.dataverserentals.gestionoperativa.enums.TipoGasto;
 
 import jakarta.persistence.Column;
@@ -103,5 +104,16 @@ public class GastoOperativo {
                 .usuarioCreacionId(usuarioId)
                 .fechaCreacion(LocalDateTime.now())
                 .build();
+    }
+
+    public void updateWith(UpdateGastoOperativoDto request, Long usuarioModificacionId) {
+        this.edificioId = request.edificioId();
+        this.categoriaGastoId = request.categoriaGastoId();
+        this.tipoGastoCode = request.tipoGastoCode();
+        this.descripcion = request.descripcion();
+        this.monto = request.monto();
+        this.fechaGasto = request.fechaGasto();
+        this.fechaModificacion = LocalDateTime.now();
+        this.usuarioModificacionId = usuarioModificacionId;
     }
 }

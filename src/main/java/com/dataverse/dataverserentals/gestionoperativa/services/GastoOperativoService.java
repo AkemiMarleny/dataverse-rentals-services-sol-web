@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.EdificioRepository;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.CreateGastoOperativoDto;
+import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.UpdateGastoOperativoDto;
 import com.dataverse.dataverserentals.gestionoperativa.entities.GastoOperativo;
 import com.dataverse.dataverserentals.gestionoperativa.repositories.CategoriaGastoRepository;
 import com.dataverse.dataverserentals.gestionoperativa.repositories.GastoOperativoRepository;
@@ -63,5 +64,26 @@ public class GastoOperativoService {
         return gastoOperativoRepository.findById(gastoOperativoId)
                 .orElseThrow(() -> new RecordNotFoundException(
                         String.format("El gasto operativo con id %s no se encuentra registrado.", gastoOperativoId)));
+    }
+
+    public void update(Long gastoOperativoId, @Valid UpdateGastoOperativoDto payload, Long usuarioId)
+            throws RecordNotFoundException {
+
+        log.info("Iniciando actualización del gasto operativo con ID: {}. Datos: {}", gastoOperativoId, payload);
+
+        if (!edificioRepository.existsById(payload.edificioId())) {
+            throw new RecordNotFoundException("No se encontró el edificio con ID: " + payload.edificioId());
+        }
+
+        if (!categoriaGastoRepository.existsById(payload.categoriaGastoId())) {
+            throw new RecordNotFoundException(
+                    "No se encontró la categoría de gasto con ID: " + payload.categoriaGastoId());
+        }
+
+        GastoOperativo gastoOperativo = findById(gastoOperativoId);
+
+        gastoOperativo.updateWith(payload, usuarioId);
+
+        gastoOperativoRepository.save(gastoOperativo);
     }
 }

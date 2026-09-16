@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import com.dataverse.dataverserentals.common.dto.Page;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.CreateGastoOperativoDto;
+import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.UpdateGastoOperativoDto;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.response.DetailGastoOperativoDto;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.response.GastoOperativoPaginaDto;
 import com.dataverse.dataverserentals.gestionoperativa.entities.GastoOperativo;
@@ -68,5 +70,16 @@ public class GastoOperativoController {
         GastoOperativo gastoOperativo = gastoOperativoService.findById(gastoOperativoId);
         DetailGastoOperativoDto detailGastoOperativoDto = DetailGastoOperativoDto.fromEntity(gastoOperativo);
         return new ResponseEntity<>(detailGastoOperativoDto, HttpStatus.OK);
+    }
+
+    @PutMapping("{gastoOperativoId}")
+    public ResponseEntity<Void> update(
+            @PathVariable Long gastoOperativoId,
+            @RequestBody UpdateGastoOperativoDto request) throws RecordNotFoundException {
+
+        log.info("Iniciando la actualización del gasto operativo con ID: {}", gastoOperativoId);
+        Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
+        gastoOperativoService.update(gastoOperativoId, request, usuarioId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
