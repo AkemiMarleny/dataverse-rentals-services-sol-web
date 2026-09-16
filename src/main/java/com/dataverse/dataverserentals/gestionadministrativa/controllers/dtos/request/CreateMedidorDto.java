@@ -8,6 +8,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record CreateMedidorDto(
-        @NotNull TipoMedidor tipoMedidorCode,
-        @NotBlank @Length(min = 7) String numeroSerie) {
+        @NotNull(message = "Debe ingresar el tipo de medidor") TipoMedidor tipoMedidorCode,
+        @NotBlank(message = "Debe ingresar el número de serie") @Length(min = 7) String numeroSerie) {
 }
