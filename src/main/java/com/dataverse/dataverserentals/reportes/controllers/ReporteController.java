@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dataverse.dataverserentals.reportes.controllers.dtos.response.IngresoEgresoMensualDto;
 import com.dataverse.dataverserentals.reportes.controllers.dtos.response.IngresoEgresoMensualItemDto;
+import com.dataverse.dataverserentals.reportes.controllers.dtos.response.MorosidadDto;
 import com.dataverse.dataverserentals.reportes.controllers.dtos.response.OcupacionUnidadesDto;
 import com.dataverse.dataverserentals.reportes.services.ReporteFinancieroService;
+import com.dataverse.dataverserentals.reportes.services.ReporteMorosidadService;
 import com.dataverse.dataverserentals.reportes.services.ReporteOcupacionService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class ReporteController {
 
     private final ReporteFinancieroService reporteFinancieroService;
     private final ReporteOcupacionService reporteOcupacionService;
+    private final ReporteMorosidadService reporteMorosidadService;
 
     @GetMapping("/resumen-anual")
     public ResponseEntity<IngresoEgresoMensualDto> getResumenAnual(
@@ -42,6 +45,15 @@ public class ReporteController {
         log.info("Generando reporte de ocupación de unidades para el año: {}", anio != null ? anio : "actual");
 
         OcupacionUnidadesDto reporte = reporteOcupacionService.getOcupacionPorAnio(anio);
+        return ResponseEntity.ok(reporte);
+    }
+
+    @GetMapping("/morosidad")
+    public ResponseEntity<MorosidadDto> getMorosidad(
+            @RequestParam(required = false) Integer anio) {
+        log.info("Generando reporte de morosidad para el año: {}", anio != null ? anio : "actual");
+
+        MorosidadDto reporte = reporteMorosidadService.getMorosidadPorAnio(anio);
         return ResponseEntity.ok(reporte);
     }
 }
