@@ -38,7 +38,7 @@ public class EdificioService {
     public Long create(@Valid CreateEdificioDto payload, Long usuarioId) throws ConflictException {
 
         log.info("Registrando nuevo edificio con los siguientes datos: {}", payload);
-        if (edificioRepository.existsByNombre(payload.nombre())) {
+        if (edificioRepository.existsByNombreIgnoreCase(payload.nombre())) {
             throw new ConflictException(String.format("Ya existe un edificio con el nombre: %s", payload.nombre()));
         }
         Edificio edificio = Edificio.from(payload, usuarioId);
@@ -58,7 +58,7 @@ public class EdificioService {
         log.info("Iniciando actualización del edificio con ID: {}. Datos recibidos: {}", edificioId, payload);
         Edificio edificio = findById(edificioId);
 
-        Long cantidadEdificiosDuplicados = edificioRepository.countByNombreAndIdNot(payload.nombre(), edificioId);
+        Long cantidadEdificiosDuplicados = edificioRepository.countByNombreIgnoreCaseAndIdNot(payload.nombre(), edificioId);
         if (cantidadEdificiosDuplicados > 0) {
             log.info("Validación fallida: Ya existe otro edificio con el mismo nombre: {}", payload.nombre());
             throw new ConflictException(

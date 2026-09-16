@@ -8,10 +8,10 @@ import com.dataverse.dataverserentals.gestionadministrativa.entities.Edificio;
 
 public interface EdificioRepository extends JpaRepository<Edificio, Long> {
 
-    boolean existsByNombre(String nombre);
+    boolean existsByNombreIgnoreCase(String nombre);
 
     Page<Edificio> findByNombreContainingIgnoreCase(Pageable pageable, String q);
 
-    Long countByNombreAndIdNot(String nombre, Long id);
+    Long countByNombreIgnoreCaseAndIdNot(String nombre, Long id);
 
 }
