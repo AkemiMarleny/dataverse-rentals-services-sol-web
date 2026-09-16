@@ -15,6 +15,9 @@ import com.dataverse.dataverserentals.gestionoperativa.enums.TipoGasto;
 
 public interface GastoOperativoRepository
         extends JpaRepository<GastoOperativo, Long>, JpaSpecificationExecutor<GastoOperativo> {
+    
+    Optional<GastoOperativo> findByIdAndEdificioId(Long id, Long edificioId);
+
     @Query("""
             SELECT SUM(go.monto)
             FROM GastoOperativo go

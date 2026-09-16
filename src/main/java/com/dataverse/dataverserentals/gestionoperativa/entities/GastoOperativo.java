@@ -85,9 +85,9 @@ public class GastoOperativo {
     @Column(name = "usuario_modificacion_id", nullable = true)
     private Long usuarioModificacionId;
 
-    public static GastoOperativo from(CreateGastoOperativoDto payload, Long usuarioCreacionId) {
+    public static GastoOperativo from(CreateGastoOperativoDto payload, Long edificioId, Long usuarioCreacionId) {
         return GastoOperativo.builder()
-                .edificioId(payload.edificioId())
+                .edificioId(edificioId)
                 .categoriaGastoId(payload.categoriaGastoId())
                 .tipoGastoCode(payload.tipoGastoCode())
                 .descripcion(payload.descripcion())
@@ -101,7 +101,6 @@ public class GastoOperativo {
     }
 
     public void updateWith(UpdateGastoOperativoDto request, Long usuarioModificacionId) {
-        this.edificioId = request.edificioId();
         this.categoriaGastoId = request.categoriaGastoId();
         this.tipoGastoCode = request.tipoGastoCode();
         this.descripcion = request.descripcion();

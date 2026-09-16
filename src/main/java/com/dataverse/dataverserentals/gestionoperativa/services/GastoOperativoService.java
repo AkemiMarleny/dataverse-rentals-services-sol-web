@@ -45,10 +45,11 @@ public class GastoOperativoService {
                 pageable);
     }
 
-    public Long create(@Valid CreateGastoOperativoDto payload, Long usuarioId) throws FieldConstraintException {
-        log.info("Registrando nuevo gasto operativo: {}", payload);
+    public Long create(@Valid CreateGastoOperativoDto payload, Long edificioId, Long usuarioId)
+            throws FieldConstraintException {
+        log.info("Registrando nuevo gasto operativo en edificio {}: {}", edificioId, payload);
 
-        if (!edificioRepository.existsById(payload.edificioId())) {
+        if (!edificioRepository.existsById(edificioId)) {
             throw new FieldConstraintException("edificioId",
                     "No se encontró el edificio solicitado.");
         }
@@ -58,19 +59,28 @@ public class GastoOperativoService {
                     "No se encontró la categoría de gasto solicitada.");
         }
 
-        GastoOperativo gastoOperativo = GastoOperativo.from(payload, usuarioId);
+        GastoOperativo gastoOperativo = GastoOperativo.from(payload, edificioId, usuarioId);
 
         Long gastoId = gastoOperativoRepository.save(gastoOperativo).getId();
         notificationService.sendEvent("EXPENSE_CREATED", gastoOperativo);
         return gastoId;
     }
 
-    public void update(Long gastoOperativoId, @Valid UpdateGastoOperativoDto payload, Long usuarioId)
+    public GastoOperativo findById(Long edificioId, Long gastoOperativoId) throws RecordNotFoundException {
+        log.info("Consultando gasto operativo con ID: {} en edificio {}", gastoOperativoId, edificioId);
+        return gastoOperativoRepository.findByIdAndEdificioId(gastoOperativoId, edificioId)
+                .orElseThrow(() -> new RecordNotFoundException(
+                        String.format("El gasto operativo con id %s no se encuentra registrado para el edificio %s.",
+                                gastoOperativoId, edificioId)));
+    }
+
+    public void update(Long edificioId, Long gastoOperativoId, @Valid UpdateGastoOperativoDto payload, Long usuarioId)
             throws RecordNotFoundException, FieldConstraintException {
 
-        log.info("Iniciando actualización del gasto operativo con ID: {}. Datos: {}", gastoOperativoId, payload);
+        log.info("Iniciando actualización del gasto operativo con ID: {} en edificio {}. Datos: {}", gastoOperativoId,
+                edificioId, payload);
 
-        if (!edificioRepository.existsById(payload.edificioId())) {
+        if (!edificioRepository.existsById(edificioId)) {
             throw new FieldConstraintException("edificioId",
                     "No se encontró el edificio solicitado.");
         }
@@ -80,17 +90,11 @@ public class GastoOperativoService {
                     "No se encontró la categoría de gasto solicitada.");
         }
 
-        GastoOperativo gastoOperativo = findById(gastoOperativoId);
+        GastoOperativo gastoOperativo = findById(edificioId, gastoOperativoId);
 
         gastoOperativo.updateWith(payload, usuarioId);
 
         gastoOperativoRepository.save(gastoOperativo);
     }
 
-    public GastoOperativo findById(Long gastoOperativoId) throws RecordNotFoundException {
-        log.info("Consultando gasto operativo con ID: {}", gastoOperativoId);
-        return gastoOperativoRepository.findById(gastoOperativoId)
-                .orElseThrow(() -> new RecordNotFoundException(
-                        String.format("El gasto operativo con id %s no se encuentra registrado.", gastoOperativoId)));
-    }
 }

@@ -10,7 +10,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record UpdateGastoOperativoDto(
-        @NotNull(message = "Debe seleccionar un edificio") Long edificioId,
         @NotNull(message = "Debe seleccionar una categoría de gasto") Long categoriaGastoId,
         @NotNull(message = "El tipo de gasto es obligatorio") TipoGasto tipoGastoCode,
         @NotBlank(message = "Debe indicar o especificar el detalle del gasto operativo") String descripcion,

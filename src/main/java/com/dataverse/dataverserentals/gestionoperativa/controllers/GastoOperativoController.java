@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/gastos-operativos")
+@RequestMapping("api/v1/edificios/{edificioId}/gastos-operativos")
 @Slf4j
 public class GastoOperativoController {
 
@@ -40,7 +40,7 @@ public class GastoOperativoController {
     @GetMapping
     public ResponseEntity<Page<GastoOperativoPaginaDto>> findAll(
             Pageable pageable,
-            @RequestParam(required = false) Long edificioId,
+            @PathVariable Long edificioId,
             @RequestParam(required = false) Long categoriaGastoId) {
 
         log.info("Listando gastos operativos con edificioId: {}, categoriaId: {} y parámetros: {}",
@@ -54,32 +54,37 @@ public class GastoOperativoController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponse> create(@RequestBody CreateGastoOperativoDto request) {
+    public ResponseEntity<CreateResponse> create(
+            @PathVariable Long edificioId,
+            @RequestBody CreateGastoOperativoDto request) {
 
-        log.info("Iniciando la creación de un nuevo gasto operativo: {}", request);
+        log.info("Iniciando la creación de un nuevo gasto operativo en edificio {}: {}", edificioId, request);
         Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
-        Long id = gastoOperativoService.create(request, usuarioId);
+        Long id = gastoOperativoService.create(request, edificioId, usuarioId);
         return new ResponseEntity<>(new CreateResponse(id), HttpStatus.CREATED);
     }
 
     @GetMapping("{gastoOperativoId}")
-    public ResponseEntity<DetailGastoOperativoDto> findById(@PathVariable Long gastoOperativoId)
+    public ResponseEntity<DetailGastoOperativoDto> findById(
+            @PathVariable Long edificioId,
+            @PathVariable Long gastoOperativoId)
             throws RecordNotFoundException {
 
-        log.info("Consultando detalles del gasto operativo con ID: {}", gastoOperativoId);
-        GastoOperativo gastoOperativo = gastoOperativoService.findById(gastoOperativoId);
+        log.info("Consultando detalles del gasto operativo con ID: {} en edificio {}", gastoOperativoId, edificioId);
+        GastoOperativo gastoOperativo = gastoOperativoService.findById(edificioId, gastoOperativoId);
         DetailGastoOperativoDto detailGastoOperativoDto = DetailGastoOperativoDto.fromEntity(gastoOperativo);
         return new ResponseEntity<>(detailGastoOperativoDto, HttpStatus.OK);
     }
 
     @PutMapping("{gastoOperativoId}")
     public ResponseEntity<Void> update(
+            @PathVariable Long edificioId,
             @PathVariable Long gastoOperativoId,
             @RequestBody UpdateGastoOperativoDto request) throws RecordNotFoundException, FieldConstraintException {
 
-        log.info("Iniciando la actualización del gasto operativo con ID: {}", gastoOperativoId);
+        log.info("Iniciando la actualización del gasto operativo con ID: {} en edificio {}", gastoOperativoId, edificioId);
         Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
-        gastoOperativoService.update(gastoOperativoId, request, usuarioId);
+        gastoOperativoService.update(edificioId, gastoOperativoId, request, usuarioId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
