@@ -1,5 +1,6 @@
 package com.dataverse.dataverserentals.security.controllers;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -133,6 +134,9 @@ public class MfaController {
         String token = jwtService.tokenForRoleAssume(usuario);
         Cookie jwtCookie = jwtService.toCookie(token);
         httpResponse.addCookie(jwtCookie);
+
+        usuario.setFechaUltimoLogin(LocalDateTime.now());
+        usuarioRepository.save(usuario);
 
         return new ResponseEntity<>(
                 new MfaVerificationResponse(token, jwtConfig.getTipo(), false, false),
