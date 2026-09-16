@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dataverse.dataverserentals.common.dto.CreateResponse;
 import com.dataverse.dataverserentals.common.dto.Page;
+import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.CreateGastoOperativoDto;
@@ -53,8 +54,7 @@ public class GastoOperativoController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponse> create(@RequestBody CreateGastoOperativoDto request)
-            throws RecordNotFoundException {
+    public ResponseEntity<CreateResponse> create(@RequestBody CreateGastoOperativoDto request) {
 
         log.info("Iniciando la creación de un nuevo gasto operativo: {}", request);
         Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
@@ -75,7 +75,7 @@ public class GastoOperativoController {
     @PutMapping("{gastoOperativoId}")
     public ResponseEntity<Void> update(
             @PathVariable Long gastoOperativoId,
-            @RequestBody UpdateGastoOperativoDto request) throws RecordNotFoundException {
+            @RequestBody UpdateGastoOperativoDto request) throws RecordNotFoundException, FieldConstraintException {
 
         log.info("Iniciando la actualización del gasto operativo con ID: {}", gastoOperativoId);
         Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
