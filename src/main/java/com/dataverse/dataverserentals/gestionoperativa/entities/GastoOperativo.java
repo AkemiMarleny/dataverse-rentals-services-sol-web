@@ -65,13 +65,6 @@ public class GastoOperativo {
     @JoinColumn(name = "edificio_id", insertable = false, updatable = false)
     private Edificio edificio;
 
-    @Column(name = "registrador_id", nullable = false)
-    private Long registradorId;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "registrador_id", insertable = false, updatable = false)
-    private Usuario registrador;
-
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
 
@@ -92,7 +85,7 @@ public class GastoOperativo {
     @Column(name = "usuario_modificacion_id", nullable = true)
     private Long usuarioModificacionId;
 
-    public static GastoOperativo from(CreateGastoOperativoDto payload, Long usuarioId) {
+    public static GastoOperativo from(CreateGastoOperativoDto payload, Long usuarioCreacionId) {
         return GastoOperativo.builder()
                 .edificioId(payload.edificioId())
                 .categoriaGastoId(payload.categoriaGastoId())
@@ -100,9 +93,10 @@ public class GastoOperativo {
                 .descripcion(payload.descripcion())
                 .monto(payload.monto())
                 .fechaGasto(payload.fechaGasto())
-                .registradorId(usuarioId)
-                .usuarioCreacionId(usuarioId)
                 .fechaCreacion(LocalDateTime.now())
+                .usuarioCreacionId(usuarioCreacionId)
+                .fechaModificacion(LocalDateTime.now())
+                .usuarioModificacionId(usuarioCreacionId)
                 .build();
     }
 
