@@ -49,7 +49,7 @@ public class MfaController {
     public ResponseEntity<MfaSetupResponse> setupMfa() throws RecordNotFoundException, MfaAlreadyEnabledException {
         UsuarioPrincipal usuarioPrincipal = securityContext.getUsuarioPrincipal();
 
-        Usuario usuario = usuarioRepository.findByNombreUsuario(usuarioPrincipal.usuarioNombre())
+        Usuario usuario = usuarioRepository.findByNombreUsuarioIgnoreCase(usuarioPrincipal.usuarioNombre())
                 .orElseThrow(() -> new RecordNotFoundException("Usuario no encontrado"));
 
         if (usuario.getMfaEnabled()) {
@@ -87,7 +87,7 @@ public class MfaController {
         }
 
         String username = securityContext.getUsuarioPrincipal().usuarioNombre();
-        Usuario usuario = usuarioRepository.findByNombreUsuario(username)
+        Usuario usuario = usuarioRepository.findByNombreUsuarioIgnoreCase(username)
                 .orElseThrow(() -> new RecordNotFoundException("Usuario no encontrado"));
 
         usuario.setMfaSecret(mfaSecretEncryptor.encrypt(request.secret()));
@@ -108,7 +108,7 @@ public class MfaController {
             throws RecordNotFoundException, InvalidMfaCodeException {
         UsuarioPrincipal usuarioPrincipal = securityContext.getUsuarioPrincipal();
 
-        Usuario usuario = usuarioRepository.findByNombreUsuario(usuarioPrincipal.usuarioNombre())
+        Usuario usuario = usuarioRepository.findByNombreUsuarioIgnoreCase(usuarioPrincipal.usuarioNombre())
                 .orElseThrow(() -> new RecordNotFoundException("Usuario no encontrado"));
 
         if (usuario.getMfaSecret() == null || !usuario.getMfaEnabled()) {

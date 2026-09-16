@@ -16,14 +16,14 @@ public interface PersonaRepository extends JpaRepository<Persona, Long>, JpaSpec
 
     boolean existsByPersonaJuridicaChecksum(String personaJuridicaChecksum);
 
-    boolean existsByTipoDocumentoCodeAndNumeroDocumento(TipoDocumento tipoDocumentoCode, String numeroDocumento);
+    boolean existsByTipoDocumentoCodeAndNumeroDocumentoIgnoreCase(TipoDocumento tipoDocumentoCode, String numeroDocumento);
 
-    Optional<Persona> findByTipoDocumentoCodeAndNumeroDocumento(TipoDocumento tipoDocumentoCode,
+    Optional<Persona> findByTipoDocumentoCodeAndNumeroDocumentoIgnoreCase(TipoDocumento tipoDocumentoCode,
             String numeroDocumento);
 
     boolean existsByNumeroCelular(String numeroCelular);
 
-    boolean existsByCorreo(String correo);
+    boolean existsByCorreoIgnoreCase(String correo);
 
     Long countByPersonaNaturalChecksumAndIdNot(String personaNaturalChecksum, Long id);
 
@@ -31,18 +31,18 @@ public interface PersonaRepository extends JpaRepository<Persona, Long>, JpaSpec
 
     Long countByPersonaJuridicaChecksumAndIdNot(String personaJuridicaChecksum, Long id);
 
-    Long countByTipoDocumentoCodeAndNumeroDocumentoAndIdNot(TipoDocumento tipoDocumentoCode, String numeroDocumento,
+    Long countByTipoDocumentoCodeAndNumeroDocumentoIgnoreCaseAndIdNot(TipoDocumento tipoDocumentoCode, String numeroDocumento,
             Long id);
 
     Long countByNumeroCelularAndIdNot(String numeroCelular, Long id);
 
-    Long countByCorreoAndIdNot(String correo, Long id);
+    Long countByCorreoIgnoreCaseAndIdNot(String correo, Long id);
 
-    boolean existsByNombreComercial(String nombreComercial);
+    boolean existsByNombreComercialIgnoreCase(String nombreComercial);
 
-    Long countByNombreComercialAndIdNot(String nombreComercial, Long id);
+    Long countByNombreComercialIgnoreCaseAndIdNot(String nombreComercial, Long id);
 
-    boolean existsByRazonSocial(String razonSocial);
+    boolean existsByRazonSocialIgnoreCase(String razonSocial);
 
-    Long countByRazonSocialAndIdNot(String razonSocial, Long id);
+    Long countByRazonSocialIgnoreCaseAndIdNot(String razonSocial, Long id);
 }

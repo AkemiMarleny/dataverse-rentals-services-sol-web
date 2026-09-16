@@ -36,7 +36,7 @@ public class UsuarioService {
 
         Persona persona = personaService.findById(payload.personaId());
 
-        if (usuarioRepository.existsByNombreUsuario(payload.nombreUsuario())) {
+        if (usuarioRepository.existsByNombreUsuarioIgnoreCase(payload.nombreUsuario())) {
             throw new ConflictException(
                     String.format("El nombre de usuario '%s' ya se encuentra registrado en el sistema.",
                             payload.nombreUsuario()));

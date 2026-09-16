@@ -37,7 +37,7 @@ public class AuthenticationService {
 
     public LoginResponse authenticate(@Valid LoginRequest request)
             throws CredencialesInvalidasException, UsuarioInactivoException, UsuarioBloqueadoException {
-        Usuario usuario = usuarioRepository.findByNombreUsuario(request.nombreUsuario())
+        Usuario usuario = usuarioRepository.findByNombreUsuarioIgnoreCase(request.nombreUsuario())
                 .orElseThrow(() -> new CredencialesInvalidasException("Credenciales inválidas"));
 
         if (usuario.getEstadoCode() == EstadoUsuario.INACTIVO) {
@@ -74,7 +74,7 @@ public class AuthenticationService {
         String nombreUsuario = usuarioPrincipal.usuarioNombre();
         TokenScope tokenScope = usuarioPrincipal.scope();
 
-        Usuario usuario = usuarioRepository.findByNombreUsuario(nombreUsuario)
+        Usuario usuario = usuarioRepository.findByNombreUsuarioIgnoreCase(nombreUsuario)
                 .orElseThrow(() -> new RecordNotFoundException("Usuario no encontrado"));
 
         var mfaVerified = TokenScope.FULL_ACCESS.equals(tokenScope);

@@ -54,7 +54,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private Long createDefaultUsuario(Long personaId, UsuarioPrincipal usuarioPrincipal)
             throws RecordNotFoundException, ConflictException, UnprocesableEntity {
-        Optional<Usuario> usuarioDefault = usuarioRepository.findByNombreUsuario("dataversesys");
+        Optional<Usuario> usuarioDefault = usuarioRepository.findByNombreUsuarioIgnoreCase("dataversesys");
         if (usuarioDefault.isEmpty()) {
             CreateUsuarioDto createUsuario = new CreateUsuarioDto(
                     personaId,
@@ -74,7 +74,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private Long createDefaultPersona(UsuarioPrincipal usuarioPrincipal)
             throws FieldConstraintException, ConflictException {
-        Optional<Persona> personaDefault = personaRepository.findByTipoDocumentoCodeAndNumeroDocumento(
+        Optional<Persona> personaDefault = personaRepository.findByTipoDocumentoCodeAndNumeroDocumentoIgnoreCase(
                 TipoDocumento.DNI, "89876567");
         if (personaDefault.isEmpty()) {
             return personaService.create(
@@ -97,7 +97,7 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private Long createDefaultAdminPersona(UsuarioPrincipal usuarioPrincipal) {
-        Optional<Persona> personaDefault = personaRepository.findByTipoDocumentoCodeAndNumeroDocumento(
+        Optional<Persona> personaDefault = personaRepository.findByTipoDocumentoCodeAndNumeroDocumentoIgnoreCase(
                 TipoDocumento.DNI, "12345678");
         if (personaDefault.isEmpty()) {
             return personaService.create(
@@ -122,7 +122,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private Long createDefaultAdminUsuario(Long personaId, UsuarioPrincipal usuarioPrincipal)
             throws RecordNotFoundException, ConflictException, UnprocesableEntity {
-        Optional<Usuario> usuarioDefault = usuarioRepository.findByNombreUsuario("dataverseadmin");
+        Optional<Usuario> usuarioDefault = usuarioRepository.findByNombreUsuarioIgnoreCase("dataverseadmin");
         if (usuarioDefault.isEmpty()) {
             CreateUsuarioDto createUsuario = new CreateUsuarioDto(
                     personaId,

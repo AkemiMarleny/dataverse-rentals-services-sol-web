@@ -60,7 +60,7 @@ public class PersonaService {
             throw new ConflictException("Ya existe otra persona registrada con los mismos datos.");
         }
 
-        if (personaRepository.existsByTipoDocumentoCodeAndNumeroDocumento(payload.tipoDocumentoCode(),
+        if (personaRepository.existsByTipoDocumentoCodeAndNumeroDocumentoIgnoreCase(payload.tipoDocumentoCode(),
                 payload.numeroDocumento())) {
             throw new ConflictException(
                     String.format("El documento de identidad %s: %s ya se encuentra vinculado a otra persona.",
@@ -72,14 +72,14 @@ public class PersonaService {
                     String.format("El número de celular %s ya está registrado.", payload.numeroCelular()));
         }
 
-        if (personaRepository.existsByCorreo(payload.correo())) {
+        if (personaRepository.existsByCorreoIgnoreCase(payload.correo())) {
             throw new ConflictException(
                     String.format("El correo %s ya se encuentra registrado en el sistema.", payload.correo()));
         }
 
         Optional.ofNullable(persona.getNombreComercial())
                 .filter(nombreComercial -> payload.tipoPersonaCode() == TipoPersona.NATURAL_CON_NEGOCIO)
-                .filter(nombreComercial -> personaRepository.existsByNombreComercial(nombreComercial))
+                .filter(nombreComercial -> personaRepository.existsByNombreComercialIgnoreCase(nombreComercial))
                 .ifPresent(nombreComercial -> {
                     throw new ConflictException(
                             String.format("El nombre comercial %s ya está registrado.", nombreComercial));
@@ -87,7 +87,7 @@ public class PersonaService {
 
         Optional.ofNullable(persona.getRazonSocial())
                 .filter(razonSocial -> payload.tipoPersonaCode() == TipoPersona.JURIDICA)
-                .filter(razonSocial -> personaRepository.existsByRazonSocial(razonSocial))
+                .filter(razonSocial -> personaRepository.existsByRazonSocialIgnoreCase(razonSocial))
                 .ifPresent(razonSocial -> {
                     throw new ConflictException(
                             String.format("La razón social %s ya está registrada.", razonSocial));
@@ -122,7 +122,7 @@ public class PersonaService {
             throw new ConflictException("Ya existe otra persona registrada con los mismos datos (checksum duplicado).");
         }
 
-        Long cantidadDocumentosDuplicados = personaRepository.countByTipoDocumentoCodeAndNumeroDocumentoAndIdNot(
+        Long cantidadDocumentosDuplicados = personaRepository.countByTipoDocumentoCodeAndNumeroDocumentoIgnoreCaseAndIdNot(
                 payload.tipoDocumentoCode(), payload.numeroDocumento(), personaId);
         if (cantidadDocumentosDuplicados > 0) {
             log.info("Validación fallida: Documento duplicado detectado para Tipo: {} y Número: {}",
@@ -141,7 +141,7 @@ public class PersonaService {
                     String.format("El número de celular %s ya está registrado.", payload.numeroCelular()));
         }
 
-        Long cantidadCorreosDuplicados = personaRepository.countByCorreoAndIdNot(payload.correo(), personaId);
+        Long cantidadCorreosDuplicados = personaRepository.countByCorreoIgnoreCaseAndIdNot(payload.correo(), personaId);
         if (cantidadCorreosDuplicados > 0) {
             log.info("Validación fallida: Correo {} ya está en uso.", payload.correo());
             throw new ConflictException(
@@ -150,7 +150,7 @@ public class PersonaService {
 
         Optional.ofNullable(persona.getNombreComercial())
                 .filter(nombreComercial -> payload.tipoPersonaCode() == TipoPersona.NATURAL_CON_NEGOCIO)
-                .filter(nombreComercial -> personaRepository.countByNombreComercialAndIdNot(nombreComercial,
+                .filter(nombreComercial -> personaRepository.countByNombreComercialIgnoreCaseAndIdNot(nombreComercial,
                         personaId) > 0)
                 .ifPresent(nombreComercial -> {
                     throw new ConflictException(
@@ -159,7 +159,7 @@ public class PersonaService {
 
         Optional.ofNullable(persona.getRazonSocial())
                 .filter(razonSocial -> payload.tipoPersonaCode() == TipoPersona.JURIDICA)
-                .filter(razonSocial -> personaRepository.countByRazonSocialAndIdNot(razonSocial, personaId) > 0)
+                .filter(razonSocial -> personaRepository.countByRazonSocialIgnoreCaseAndIdNot(razonSocial, personaId) > 0)
                 .ifPresent(razonSocial -> {
                     throw new ConflictException(
                             String.format("La razón social %s ya está registrada.", razonSocial));
