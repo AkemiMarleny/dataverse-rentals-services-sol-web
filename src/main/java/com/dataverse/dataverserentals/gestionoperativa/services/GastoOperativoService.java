@@ -1,7 +1,7 @@
 package com.dataverse.dataverserentals.gestionoperativa.services;
 
-import java.time.LocalDateTime;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -11,6 +11,7 @@ import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.
 import com.dataverse.dataverserentals.gestionoperativa.entities.GastoOperativo;
 import com.dataverse.dataverserentals.gestionoperativa.repositories.CategoriaGastoRepository;
 import com.dataverse.dataverserentals.gestionoperativa.repositories.GastoOperativoRepository;
+import com.dataverse.dataverserentals.gestionoperativa.repositories.specifications.GastoOperativoSpecifications;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,20 @@ public class GastoOperativoService {
     private final EdificioRepository edificioRepository;
     private final CategoriaGastoRepository categoriaGastoRepository;
 
+    public Page<GastoOperativo> findAll(Pageable pageable, Long edificioId, Long categoriaGastoId) {
+
+        log.info("Búsqueda paginada de gastos operativos [edificioId: {}, categoriaId: {}, pageable: {}]",
+                edificioId, categoriaGastoId, pageable);
+
+        if (edificioId == null && categoriaGastoId == null) {
+            return gastoOperativoRepository.findAll(pageable);
+        }
+
+        return gastoOperativoRepository.findAll(
+                GastoOperativoSpecifications.filterBy(edificioId, categoriaGastoId),
+                pageable);
+    }
+
     public Long create(@Valid CreateGastoOperativoDto payload, Long usuarioId) throws RecordNotFoundException {
         log.info("Registrando nuevo gasto operativo: {}", payload);
 
@@ -34,7 +49,8 @@ public class GastoOperativoService {
         }
 
         if (!categoriaGastoRepository.existsById(payload.categoriaGastoId())) {
-            throw new RecordNotFoundException("No se encontró la categoría de gasto con ID: " + payload.categoriaGastoId());
+            throw new RecordNotFoundException(
+                    "No se encontró la categoría de gasto con ID: " + payload.categoriaGastoId());
         }
 
         GastoOperativo gastoOperativo = GastoOperativo.from(payload, usuarioId);

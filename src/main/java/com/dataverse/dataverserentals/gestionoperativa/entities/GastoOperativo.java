@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "gatos_operativos")
+@Table(name = "gastos_operativos")
 @Getter
 @Setter
 @Builder

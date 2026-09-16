@@ -6,13 +6,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.dataverse.dataverserentals.gestionoperativa.entities.GastoOperativo;
 import com.dataverse.dataverserentals.gestionoperativa.enums.TipoGasto;
 
-public interface GastoOperativoRepository extends JpaRepository<GastoOperativo, Long> {
+public interface GastoOperativoRepository
+        extends JpaRepository<GastoOperativo, Long>, JpaSpecificationExecutor<GastoOperativo> {
     @Query("""
             SELECT SUM(go.monto)
             FROM GastoOperativo go
