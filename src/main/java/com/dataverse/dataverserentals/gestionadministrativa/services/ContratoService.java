@@ -9,14 +9,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
+import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
 import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.exceptions.UnprocesableEntity;
+import com.dataverse.dataverserentals.gestionadministrativa.enums.RolUsuario;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateContratoDto;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Contrato;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.ContratoRepository;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.PersonaRepository;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.UnidadRepository;
+import com.dataverse.dataverserentals.security.context.SecurityContext;
+import com.dataverse.dataverserentals.security.context.UsuarioPrincipal;
 import com.dataverse.dataverserentals.notifications.NotificationService;
 
 import jakarta.validation.Valid;
@@ -33,19 +37,53 @@ public class ContratoService {
     private final UnidadRepository unidadRepository;
     private final PersonaRepository personaRepository;
     private final NotificationService notificationService;
+    private final SecurityContext securityContext;
 
-    public Page<Contrato> findAll(Pageable pageable, String q) {
+    public Page<Contrato> findAll(Pageable pageable, String q) throws AccessDeniedException {
         log.info("Búsqueda paginada de contratos [filtro: '{}', pageable: {}]", q, pageable);
-        if (StringUtils.hasText(q)) {
-            return contratoRepository.findByPersonaNombresOrPersonaApellidosContaining(q, pageable);
+
+        UsuarioPrincipal usuarioPrincipal = securityContext.getUsuarioPrincipal();
+        RolUsuario rol = usuarioPrincipal.usuarioRol();
+
+        if (RolUsuario.ADMINISTRADOR.equals(rol)) {
+            if (StringUtils.hasText(q)) {
+                return contratoRepository.findByPersonaNombresOrPersonaApellidosContaining(q, pageable);
+            }
+            return contratoRepository.findAll(pageable);
         }
-        return contratoRepository.findAll(pageable);
+
+        if (RolUsuario.INQUILINO.equals(rol)) {
+            Long inquilinoId = usuarioPrincipal.personaId();
+            if (StringUtils.hasText(q)) {
+                return contratoRepository.findByPersonaIdAndPersonaNombresOrPersonaApellidosContaining(inquilinoId, q, pageable);
+            }
+            return contratoRepository.findByPersonaId(inquilinoId, pageable);
+        }
+
+        throw new AccessDeniedException(usuarioPrincipal);
     }
 
-    public Contrato findById(Long contratoId) throws RecordNotFoundException {
+    public Contrato findById(Long contratoId) throws AccessDeniedException, RecordNotFoundException {
         log.info("Recuperando datos del contrato con identificador: {}", contratoId);
-        return contratoRepository.findById(contratoId).orElseThrow(() -> new RecordNotFoundException(
+
+        UsuarioPrincipal usuarioPrincipal = securityContext.getUsuarioPrincipal();
+        RolUsuario rol = usuarioPrincipal.usuarioRol();
+
+        Contrato contrato = contratoRepository.findById(contratoId).orElseThrow(() -> new RecordNotFoundException(
                 String.format("El contrato solicitado con el id: %s no se encuentra registrado.", contratoId)));
+
+        if (RolUsuario.ADMINISTRADOR.equals(rol)) {
+            return contrato;
+        }
+
+        if (RolUsuario.INQUILINO.equals(rol)) {
+            if (!contrato.getPersonaId().equals(usuarioPrincipal.personaId())) {
+                throw new AccessDeniedException(usuarioPrincipal);
+            }
+            return contrato;
+        }
+
+        throw new AccessDeniedException(usuarioPrincipal);
     }
 
     public Long create(@Valid CreateContratoDto payload, Long usuarioCreacionId)

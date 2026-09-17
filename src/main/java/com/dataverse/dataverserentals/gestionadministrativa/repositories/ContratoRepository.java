@@ -31,6 +31,25 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
     @Query("""
             SELECT c
             FROM Contrato c
+            WHERE c.personaId = :personaId
+            """)
+    Page<Contrato> findByPersonaId(@Param("personaId") Long personaId, Pageable pageable);
+
+    @Query("""
+            SELECT c
+            FROM Contrato c
+            WHERE c.personaId = :personaId
+            AND (LOWER(c.persona.nombres) LIKE LOWER(CONCAT('%', :q, '%'))
+               OR LOWER(c.persona.apellidos) LIKE LOWER(CONCAT('%', :q, '%')))
+            """)
+    Page<Contrato> findByPersonaIdAndPersonaNombresOrPersonaApellidosContaining(
+            @Param("personaId") Long personaId,
+            @Param("q") String q,
+            Pageable pageable);
+
+    @Query("""
+            SELECT c
+            FROM Contrato c
             WHERE LOWER(c.persona.nombres) LIKE LOWER(CONCAT('%', :q, '%'))
                OR LOWER(c.persona.apellidos) LIKE LOWER(CONCAT('%', :q, '%'))
             """)

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dataverse.dataverserentals.common.dto.CreateResponse;
 import com.dataverse.dataverserentals.common.dto.Page;
+import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.exceptions.UnprocesableEntity;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
@@ -37,7 +38,7 @@ public class ContratoController {
     @GetMapping
     public ResponseEntity<Page<ContratoPaginaDto>> findAll(
             Pageable pageable,
-            @RequestParam(defaultValue = "") String q) {
+            @RequestParam(defaultValue = "") String q) throws AccessDeniedException {
 
         log.info("Listando contratos con filtro '{}' y parámetros: {}", q, pageable);
         org.springframework.data.domain.Page<ContratoPaginaDto> contratoPage = contratoService
@@ -57,7 +58,8 @@ public class ContratoController {
     }
 
     @GetMapping("{contratoId}")
-    public ResponseEntity<DetailContratoDto> findById(@PathVariable Long contratoId) throws RecordNotFoundException {
+    public ResponseEntity<DetailContratoDto> findById(@PathVariable Long contratoId)
+            throws AccessDeniedException, RecordNotFoundException {
         log.info("Recuperando detalle del contrato con ID: {}", contratoId);
         var contrato = contratoService.findById(contratoId);
         return new ResponseEntity<>(DetailContratoDto.fromEntity(contrato), HttpStatus.OK);
