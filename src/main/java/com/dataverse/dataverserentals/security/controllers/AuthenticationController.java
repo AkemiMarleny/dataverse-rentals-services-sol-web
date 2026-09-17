@@ -16,6 +16,7 @@ import com.dataverse.dataverserentals.security.services.AuthenticationService;
 import com.dataverse.dataverserentals.security.services.JwtService;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +42,14 @@ public class AuthenticationController {
         }
 
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("logout")
+    public ResponseEntity<Void> logout(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        log.info("Cerrando sesión de usuario");
+        Cookie jwtCookie = jwtService.toLogoutCookie();
+        httpResponse.addCookie(jwtCookie);
+        return ResponseEntity.ok().build();
     }
 
 }

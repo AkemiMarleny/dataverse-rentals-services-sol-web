@@ -43,6 +43,15 @@ public class JwtService {
         return jwtCookie;
     }
 
+    public Cookie toLogoutCookie() {
+        Cookie jwtCookie = new Cookie(jwtConfig.getCookieName(), null);
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setSecure(jwtConfig.isCookieSecure());
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(0);
+        return jwtCookie;
+    }
+
     public String tokenForSetupMFA(Usuario usuario) {
         return tokenBuilder(
                 usuario,

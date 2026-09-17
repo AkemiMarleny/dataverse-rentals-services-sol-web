@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/login").permitAll()
+                        .requestMatchers("/api/v1/auth/login", "/api/v1/auth/logout").permitAll()
                         .requestMatchers("/api/v1/auth/mfa/setup", "/api/v1/auth/mfa/enable")
                         .hasAnyAuthority(TokenScope.MFA_SETUP.asAuthority(), TokenScope.FULL_ACCESS.asAuthority())
                         .requestMatchers("/api/v1/auth/mfa/verify").hasAuthority(TokenScope.MFA_VERIFY.asAuthority())
