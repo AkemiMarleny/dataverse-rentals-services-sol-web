@@ -67,7 +67,7 @@ public class PagoController {
         }
 
         UsuarioPrincipal usuarioPrincipal = securityContext.getUsuarioPrincipal();
-        Long pagoId = pagoService.createPago(reciboId, request, usuarioPrincipal);
+        Long pagoId = pagoService.createPago(reciboId, request, file, usuarioPrincipal);
         return new ResponseEntity<>(new CreateResponse(pagoId), HttpStatus.CREATED);
     }
 

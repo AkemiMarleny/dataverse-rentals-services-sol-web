@@ -55,7 +55,7 @@ public class MfaController {
         Usuario usuario = usuarioRepository.findByNombreUsuarioIgnoreCase(usuarioPrincipal.usuarioNombre())
                 .orElseThrow(() -> new RecordNotFoundException("Usuario no encontrado"));
 
-        if (usuario.getMfaEnabled()) {
+        if (usuario.getMfaSecret() != null) {
             throw new MfaAlreadyEnabledException(
                     "MFA ya se encuentra activo.");
         }

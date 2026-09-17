@@ -78,6 +78,7 @@ public class AuthenticationService {
                 .orElseThrow(() -> new RecordNotFoundException("Usuario no encontrado"));
 
         var mfaVerified = TokenScope.FULL_ACCESS.equals(tokenScope);
+        var mfaConfigured = usuario.getMfaSecret() != null;
 
         return new CurrentUserResponse(
                 usuario.getId(),
@@ -86,6 +87,7 @@ public class AuthenticationService {
                 usuario.getRolCode(),
                 usuario.getMfaEnabled(),
                 usuario.getMfaSetupRequired(),
+                mfaConfigured,
                 mfaVerified);
     }
 }

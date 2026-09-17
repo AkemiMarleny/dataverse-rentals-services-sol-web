@@ -9,5 +9,6 @@ public record CurrentUserResponse(
         RolUsuario rolCode,
         Boolean mfaEnabled,
         Boolean mfaSetupRequired,
+        Boolean mfaConfigured,
         Boolean mfaVerified) {
 }
