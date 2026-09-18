@@ -1,6 +1,7 @@
 package com.dataverse.dataverserentals.gestionoperativa.entities;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Edificio;
@@ -56,7 +57,7 @@ public class GastoOperativo {
     private BigDecimal monto;
 
     @Column(nullable = false)
-    private LocalDateTime fechaGasto;
+    private LocalDate fechaGasto;
 
     @Column(name = "edificio_id", nullable = false)
     private Long edificioId;

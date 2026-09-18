@@ -1,7 +1,7 @@
 package com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.response;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import com.dataverse.dataverserentals.gestionoperativa.entities.GastoOperativo;
 import com.dataverse.dataverserentals.gestionoperativa.enums.TipoGasto;
@@ -14,7 +14,7 @@ public record GastoOperativoPaginaDto(
         String tipoGastoNombre,
         String descripcion,
         BigDecimal monto,
-        LocalDateTime fechaGasto) {
+        LocalDate fechaGasto) {
 
     public static GastoOperativoPaginaDto fromEntity(GastoOperativo gastoOperativo) {
 
