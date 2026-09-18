@@ -25,11 +25,13 @@ import com.dataverse.dataverserentals.security.controllers.dtos.response.MfaSetu
 import com.dataverse.dataverserentals.security.controllers.dtos.response.MfaVerificationResponse;
 import com.dataverse.dataverserentals.security.exceptions.InvalidMfaCodeException;
 import com.dataverse.dataverserentals.security.exceptions.MfaAlreadyEnabledException;
+import com.dataverse.dataverserentals.common.helpers.ClientInfoUtil;
 import com.dataverse.dataverserentals.security.services.JwtService;
 import com.dataverse.dataverserentals.security.services.MfaService;
 import com.dataverse.dataverserentals.security.services.RefreshTokenService;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -110,7 +112,7 @@ public class MfaController {
     @PostMapping("verify")
     @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<MfaVerificationResponse> verifyMfa(@RequestBody MfaVerificationRequest request,
-            HttpServletResponse httpResponse)
+            HttpServletRequest httpRequest, HttpServletResponse httpResponse)
             throws RecordNotFoundException, InvalidMfaCodeException {
         UsuarioPrincipal usuarioPrincipal = securityContext.getUsuarioPrincipal();
 
@@ -140,7 +142,11 @@ public class MfaController {
         Cookie jwtCookie = jwtService.toShortCookie(token);
         httpResponse.addCookie(jwtCookie);
 
-        String refreshToken = refreshTokenService.createRefreshToken(usuario.getId()).getToken();
+        String refreshToken = refreshTokenService
+                .createRefreshToken(usuario.getId(),
+                        ClientInfoUtil.extractUserAgent(httpRequest),
+                        ClientInfoUtil.extractIp(httpRequest))
+                .getToken();
         Cookie refreshCookie = jwtService.toRefreshCookie(refreshToken);
         httpResponse.addCookie(refreshCookie);
 

@@ -26,7 +26,7 @@ public class RefreshTokenService {
     private final JwtConfig jwtConfig;
 
     @Transactional
-    public RefreshToken createRefreshToken(Long usuarioId) {
+    public RefreshToken createRefreshToken(Long usuarioId, String userAgent, String ipAddress) {
         enforceSessionLimit(usuarioId);
 
         RefreshToken refreshToken = RefreshToken.builder()
@@ -35,13 +35,16 @@ public class RefreshTokenService {
                 .expiryDate(LocalDateTime.now().plus(jwtConfig.getRefreshExpiration(), ChronoUnit.MILLIS))
                 .revoked(false)
                 .createdAt(LocalDateTime.now())
+                .userAgent(userAgent)
+                .ipAddress(ipAddress)
                 .build();
 
         return refreshTokenRepository.save(refreshToken);
     }
 
     @Transactional
-    public RefreshToken rotateRefreshToken(String tokenValue) throws InvalidRefreshTokenException {
+    public RefreshToken rotateRefreshToken(String tokenValue, String userAgent, String ipAddress)
+            throws InvalidRefreshTokenException {
         RefreshToken oldToken = refreshTokenRepository.findByToken(tokenValue)
                 .orElseThrow(() -> new InvalidRefreshTokenException("Refresh token no encontrado"));
 
@@ -49,10 +52,19 @@ public class RefreshTokenService {
             throw new InvalidRefreshTokenException("Refresh token inválido o expirado");
         }
 
+        if (!matchesFingerprint(oldToken, userAgent, ipAddress)) {
+            oldToken.setRevoked(true);
+            refreshTokenRepository.save(oldToken);
+            log.warn("Posible hijacking detectado: el fingerprint no coincide para usuarioId={}. Token revocado.",
+                    oldToken.getUsuarioId());
+            throw new InvalidRefreshTokenException(
+                    "Sesión inválida: el token no corresponde a este dispositivo");
+        }
+
         oldToken.setRevoked(true);
         refreshTokenRepository.save(oldToken);
 
-        return createRefreshToken(oldToken.getUsuarioId());
+        return createRefreshToken(oldToken.getUsuarioId(), userAgent, ipAddress);
     }
 
     @Transactional
@@ -73,6 +85,13 @@ public class RefreshTokenService {
 
     public long countActiveSessions(Long usuarioId) {
         return refreshTokenRepository.countByUsuarioIdAndRevokedFalse(usuarioId);
+    }
+
+    private boolean matchesFingerprint(RefreshToken token, String userAgent, String ipAddress) {
+        if (token.getUserAgent() == null || token.getIpAddress() == null) {
+            return true;
+        }
+        return token.getUserAgent().equals(userAgent) && token.getIpAddress().equals(ipAddress);
     }
 
     private void enforceSessionLimit(Long usuarioId) {

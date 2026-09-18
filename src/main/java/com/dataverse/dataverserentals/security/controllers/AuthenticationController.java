@@ -15,6 +15,7 @@ import com.dataverse.dataverserentals.security.config.JwtConfig;
 import com.dataverse.dataverserentals.security.controllers.dtos.request.LoginRequest;
 import com.dataverse.dataverserentals.security.controllers.dtos.response.LoginResponse;
 import com.dataverse.dataverserentals.security.controllers.dtos.response.RefreshResponse;
+import com.dataverse.dataverserentals.common.helpers.ClientInfoUtil;
 import com.dataverse.dataverserentals.security.exceptions.CredencialesInvalidasException;
 import com.dataverse.dataverserentals.security.exceptions.InvalidRefreshTokenException;
 import com.dataverse.dataverserentals.security.exceptions.UsuarioBloqueadoException;
@@ -59,7 +60,10 @@ public class AuthenticationController {
             throw new InvalidRefreshTokenException("Refresh token no encontrado en la cookie");
         }
 
-        var newRefreshToken = refreshTokenService.rotateRefreshToken(refreshTokenValue);
+        String userAgent = ClientInfoUtil.extractUserAgent(httpRequest);
+        String ipAddress = ClientInfoUtil.extractIp(httpRequest);
+
+        var newRefreshToken = refreshTokenService.rotateRefreshToken(refreshTokenValue, userAgent, ipAddress);
         var usuario = authenticationService.getUserById(newRefreshToken.getUsuarioId());
         String newAccessToken = jwtService.tokenForRoleAssume(usuario);
 

@@ -61,11 +61,12 @@ public class AuthenticationService {
         return new LoginResponse(tempToken, jwtConfig.getTipo(), "MFA_REQUIRED");
     }
 
-    public String createRefreshToken(String nombreUsuario) throws RecordNotFoundException {
+    public String createRefreshToken(String nombreUsuario, String userAgent, String ipAddress)
+            throws RecordNotFoundException {
         Usuario usuario = usuarioRepository.findByNombreUsuarioIgnoreCase(nombreUsuario)
                 .orElseThrow(() -> new RecordNotFoundException("Usuario no encontrado"));
 
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(usuario.getId());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(usuario.getId(), userAgent, ipAddress);
         return refreshToken.getToken();
     }
 
