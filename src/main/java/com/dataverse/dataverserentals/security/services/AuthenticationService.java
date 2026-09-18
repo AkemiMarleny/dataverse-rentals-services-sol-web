@@ -1,7 +1,5 @@
 package com.dataverse.dataverserentals.security.services;
 
-import java.time.LocalDateTime;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +14,7 @@ import com.dataverse.dataverserentals.security.context.UsuarioPrincipal;
 import com.dataverse.dataverserentals.security.controllers.dtos.request.LoginRequest;
 import com.dataverse.dataverserentals.security.controllers.dtos.response.CurrentUserResponse;
 import com.dataverse.dataverserentals.security.controllers.dtos.response.LoginResponse;
+import com.dataverse.dataverserentals.security.entities.RefreshToken;
 import com.dataverse.dataverserentals.security.enums.TokenScope;
 import com.dataverse.dataverserentals.security.exceptions.CredencialesInvalidasException;
 import com.dataverse.dataverserentals.security.exceptions.UsuarioBloqueadoException;
@@ -33,6 +32,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final JwtConfig jwtConfig;
     private final SecurityContextImpl securityContext;
+    private final RefreshTokenService refreshTokenService;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public LoginResponse authenticate(@Valid LoginRequest request)
@@ -57,16 +57,21 @@ public class AuthenticationService {
             return new LoginResponse(tempToken, jwtConfig.getTipo(), "MFA_SETUP_REQUIRED");
         }
 
-        if (usuario.getMfaEnabled() != null && usuario.getMfaEnabled()) {
-            String tempToken = jwtService.tokenForVerify(usuario);
-            return new LoginResponse(tempToken, jwtConfig.getTipo(), "MFA_REQUIRED");
-        }
+        String tempToken = jwtService.tokenForVerify(usuario);
+        return new LoginResponse(tempToken, jwtConfig.getTipo(), "MFA_REQUIRED");
+    }
 
-        usuario.setFechaUltimoLogin(LocalDateTime.now());
-        usuarioRepository.save(usuario);
+    public String createRefreshToken(String nombreUsuario) throws RecordNotFoundException {
+        Usuario usuario = usuarioRepository.findByNombreUsuarioIgnoreCase(nombreUsuario)
+                .orElseThrow(() -> new RecordNotFoundException("Usuario no encontrado"));
 
-        String token = jwtService.tokenForRoleAssume(usuario);
-        return new LoginResponse(token, jwtConfig.getTipo(), "SUCCESS");
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(usuario.getId());
+        return refreshToken.getToken();
+    }
+
+    public Usuario getUserById(Long usuarioId) throws RecordNotFoundException {
+        return usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RecordNotFoundException("Usuario no encontrado"));
     }
 
     public CurrentUserResponse getCurrentUser() throws RecordNotFoundException {

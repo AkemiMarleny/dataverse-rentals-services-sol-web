@@ -12,8 +12,10 @@ import lombok.Setter;
 @ConfigurationProperties(prefix = "dataverse.jwt")
 public class JwtConfig {
     private String secret;
-    private long expiration;
+    private long shortExpiration;
     private String tipo = "Bearer";
     private String cookieName = "jwt_token";
     private boolean cookieSecure = false;
+    private String refreshCookieName = "refresh_token";
+    private long refreshExpiration = 604800000;
 }

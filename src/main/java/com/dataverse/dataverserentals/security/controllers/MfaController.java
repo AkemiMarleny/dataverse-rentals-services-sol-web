@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,7 @@ import com.dataverse.dataverserentals.security.exceptions.InvalidMfaCodeExceptio
 import com.dataverse.dataverserentals.security.exceptions.MfaAlreadyEnabledException;
 import com.dataverse.dataverserentals.security.services.JwtService;
 import com.dataverse.dataverserentals.security.services.MfaService;
+import com.dataverse.dataverserentals.security.services.RefreshTokenService;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -47,6 +49,7 @@ public class MfaController {
     private final JwtConfig jwtConfig;
     private final SecurityContextImpl securityContext;
     private final MfaSecretEncryptor mfaSecretEncryptor;
+    private final RefreshTokenService refreshTokenService;
 
     @GetMapping("setup")
     public ResponseEntity<MfaSetupResponse> setupMfa() throws RecordNotFoundException, MfaAlreadyEnabledException {
@@ -83,7 +86,8 @@ public class MfaController {
     }
 
     @PostMapping("enable")
-    public ResponseEntity<MfaVerificationResponse> enableMfa(@RequestBody @Valid MfaSetupRequest request)
+    public ResponseEntity<Void> enableMfa(@RequestBody @Valid MfaSetupRequest request,
+            HttpServletResponse httpResponse)
             throws RecordNotFoundException, InvalidMfaCodeException {
         if (!mfaService.validateTotpCode(request.secret(), Integer.parseInt(request.code()))) {
             throw new InvalidMfaCodeException("Código MFA inválido");
@@ -100,13 +104,11 @@ public class MfaController {
         usuario.setMfaBackupCodes(mfaSecretEncryptor.encrypt(mfaService.encodeBackupCodes(backupCodes)));
         usuarioRepository.save(usuario);
 
-        String token = jwtService.tokenForRoleAssume(usuario);
-        return new ResponseEntity<>(
-                new MfaVerificationResponse(token, jwtConfig.getTipo(), false, false),
-                HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("verify")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<MfaVerificationResponse> verifyMfa(@RequestBody MfaVerificationRequest request,
             HttpServletResponse httpResponse)
             throws RecordNotFoundException, InvalidMfaCodeException {
@@ -131,12 +133,16 @@ public class MfaController {
             throw new InvalidMfaCodeException("Código MFA inválido");
         }
 
-        String token = jwtService.tokenForRoleAssume(usuario);
-        Cookie jwtCookie = jwtService.toCookie(token);
-        httpResponse.addCookie(jwtCookie);
-
         usuario.setFechaUltimoLogin(LocalDateTime.now());
         usuarioRepository.save(usuario);
+
+        String token = jwtService.tokenForRoleAssume(usuario);
+        Cookie jwtCookie = jwtService.toShortCookie(token);
+        httpResponse.addCookie(jwtCookie);
+
+        String refreshToken = refreshTokenService.createRefreshToken(usuario.getId()).getToken();
+        Cookie refreshCookie = jwtService.toRefreshCookie(refreshToken);
+        httpResponse.addCookie(refreshCookie);
 
         return new ResponseEntity<>(
                 new MfaVerificationResponse(token, jwtConfig.getTipo(), false, false),

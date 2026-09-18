@@ -33,12 +33,12 @@ public class JwtService {
 
     private final JwtConfig jwtConfig;
 
-    public Cookie toCookie(String token) {
+    public Cookie toShortCookie(String token) {
         Cookie jwtCookie = new Cookie(jwtConfig.getCookieName(), token);
         jwtCookie.setHttpOnly(true);
         jwtCookie.setSecure(jwtConfig.isCookieSecure());
         jwtCookie.setPath("/");
-        jwtCookie.setMaxAge((int) (jwtConfig.getExpiration() / 1000));
+        jwtCookie.setMaxAge((int) (jwtConfig.getShortExpiration() / 1000));
 
         return jwtCookie;
     }
@@ -49,7 +49,27 @@ public class JwtService {
         jwtCookie.setSecure(jwtConfig.isCookieSecure());
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(0);
+
         return jwtCookie;
+    }
+
+    public Cookie toRefreshCookie(String token) {
+        Cookie refreshCookie = new Cookie(jwtConfig.getRefreshCookieName(), token);
+        refreshCookie.setHttpOnly(true);
+        refreshCookie.setSecure(jwtConfig.isCookieSecure());
+        refreshCookie.setPath("/api/v1/auth/refresh");
+        refreshCookie.setMaxAge((int) (jwtConfig.getRefreshExpiration() / 1000));
+
+        return refreshCookie;
+    }
+
+    public Cookie toClearRefreshCookie() {
+        Cookie refreshCookie = new Cookie(jwtConfig.getRefreshCookieName(), null);
+        refreshCookie.setHttpOnly(true);
+        refreshCookie.setSecure(jwtConfig.isCookieSecure());
+        refreshCookie.setPath("/api/v1/auth/refresh");
+        refreshCookie.setMaxAge(0);
+        return refreshCookie;
     }
 
     public String tokenForSetupMFA(Usuario usuario) {
@@ -72,7 +92,7 @@ public class JwtService {
         return tokenBuilder(
                 usuario,
                 TokenScope.FULL_ACCESS,
-                jwtConfig.getExpiration())
+                jwtConfig.getShortExpiration())
                 .compact();
     }
 
