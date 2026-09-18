@@ -31,17 +31,17 @@ public class GastoOperativoService {
     private final CategoriaGastoRepository categoriaGastoRepository;
     private final NotificationService notificationService;
 
-    public Page<GastoOperativo> findAll(Pageable pageable, Long edificioId, Long categoriaGastoId) {
+    public Page<GastoOperativo> findAll(Pageable pageable, Long edificioId, String q) {
 
-        log.info("Búsqueda paginada de gastos operativos [edificioId: {}, categoriaId: {}, pageable: {}]",
-                edificioId, categoriaGastoId, pageable);
+        log.info("Búsqueda paginada de gastos operativos [edificioId: {}, categoriaNombre: {}, pageable: {}]",
+                edificioId, q, pageable);
 
-        if (edificioId == null && categoriaGastoId == null) {
+        if (edificioId == null && (q == null || q.trim().isEmpty())) {
             return gastoOperativoRepository.findAll(pageable);
         }
 
         return gastoOperativoRepository.findAll(
-                GastoOperativoSpecifications.filterBy(edificioId, categoriaGastoId),
+                GastoOperativoSpecifications.filterBy(edificioId, q),
                 pageable);
     }
 

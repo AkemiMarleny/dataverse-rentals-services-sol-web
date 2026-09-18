@@ -41,16 +41,16 @@ public class GastoOperativoController {
     public ResponseEntity<Page<GastoOperativoPaginaDto>> findAll(
             Pageable pageable,
             @PathVariable Long edificioId,
-            @RequestParam(required = false) Long categoriaGastoId) {
+            @RequestParam(required = false) String q) {
 
-        log.info("Listando gastos operativos con edificioId: {}, categoriaId: {} y parámetros: {}",
-                edificioId, categoriaGastoId, pageable);
+        log.info("Listando gastos operativos con edificioId: {}, categoriaNombre: {} y parámetros: {}",
+                edificioId, q, pageable);
 
-        org.springframework.data.domain.Page<GastoOperativoPaginaDto> gastoPage = gastoOperativoService
-                .findAll(pageable, edificioId, categoriaGastoId)
+        org.springframework.data.domain.Page<GastoOperativoPaginaDto> gastoOperativoPage = gastoOperativoService
+                .findAll(pageable, edificioId, q)
                 .map(GastoOperativoPaginaDto::fromEntity);
 
-        return ResponseEntity.ok(PageFactory.from(gastoPage));
+        return ResponseEntity.ok(PageFactory.from(gastoOperativoPage));
     }
 
     @PostMapping
@@ -82,7 +82,8 @@ public class GastoOperativoController {
             @PathVariable Long gastoOperativoId,
             @RequestBody UpdateGastoOperativoDto request) throws RecordNotFoundException, FieldConstraintException {
 
-        log.info("Iniciando la actualización del gasto operativo con ID: {} en edificio {}", gastoOperativoId, edificioId);
+        log.info("Iniciando la actualización del gasto operativo con ID: {} en edificio {}", gastoOperativoId,
+                edificioId);
         Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
         gastoOperativoService.update(edificioId, gastoOperativoId, request, usuarioId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

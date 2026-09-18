@@ -2,8 +2,10 @@ package com.dataverse.dataverserentals.gestionoperativa.repositories.specificati
 
 import org.springframework.data.jpa.domain.Specification;
 
+import com.dataverse.dataverserentals.gestionoperativa.entities.CategoriaGasto;
 import com.dataverse.dataverserentals.gestionoperativa.entities.GastoOperativo;
 
+import jakarta.persistence.criteria.Join;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -17,14 +19,22 @@ public class GastoOperativoSpecifications {
         return (root, query, cb) -> cb.equal(root.get("edificioId"), edificioId);
     }
 
-    public static Specification<GastoOperativo> byCategoriaGastoId(Long categoriaGastoId) {
-        if (categoriaGastoId == null) {
+    public static Specification<GastoOperativo> byCategoriaGastoNombre(String categoriaGastoNombre) {
+        if (categoriaGastoNombre == null || categoriaGastoNombre.trim().isEmpty()) {
             return (root, query, cb) -> cb.conjunction();
         }
-        return (root, query, cb) -> cb.equal(root.get("categoriaGastoId"), categoriaGastoId);
+
+        String queryWillcard = "%" + categoriaGastoNombre.toLowerCase() + "%";
+
+        return (root, query, cb) -> {
+            Join<CategoriaGasto, GastoOperativo> categoriaGastoOperativo = root.join("categoriaGasto");
+            return cb.like(cb.lower(categoriaGastoOperativo.get("nombre")), queryWillcard);
+        };
+
     }
 
-    public static Specification<GastoOperativo> filterBy(Long edificioId, Long categoriaGastoId) {
-        return byEdificioId(edificioId).and(byCategoriaGastoId(categoriaGastoId));
+    public static Specification<GastoOperativo> filterBy(Long edificioId, String categoriaGastoNombre) {
+
+        return byEdificioId(edificioId).and(byCategoriaGastoNombre(categoriaGastoNombre));
     }
 }
