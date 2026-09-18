@@ -1,6 +1,6 @@
 package com.dataverse.dataverserentals.gestioncampo.repositories;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -14,18 +14,18 @@ public interface LecturaHistoricaRepository extends JpaRepository<LecturaHistori
     Page<LecturaHistorica> findByMedidorId(Long medidorId, Pageable pageable);
 
     Page<LecturaHistorica> findByMedidorIdAndFechaLecturaBetween(
-            Long medidorId, LocalDateTime desde, LocalDateTime hasta, Pageable pageable);
+            Long medidorId, LocalDate desde, LocalDate hasta, Pageable pageable);
 
     Optional<LecturaHistorica> findByMedidorIdAndId(Long medidorId, Long id);
 
     Optional<LecturaHistorica> findFirstByMedidorIdAndFechaLecturaBetweenOrderByFechaLecturaAsc(
             Long medidorId,
-            LocalDateTime fechaInicioPeriodo,
-            LocalDateTime fechaFinPeriodo);
+            LocalDate fechaInicioPeriodo,
+            LocalDate fechaFinPeriodo);
 
     Optional<LecturaHistorica> findFirstByMedidorIdAndFechaLecturaBetweenOrderByFechaLecturaDesc(
             Long medidorId,
-            LocalDateTime fechaInicioPeriodo,
-            LocalDateTime fechaFinPeriodo);
+            LocalDate fechaInicioPeriodo,
+            LocalDate fechaFinPeriodo);
 
 }

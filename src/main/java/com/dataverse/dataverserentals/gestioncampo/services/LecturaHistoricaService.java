@@ -1,7 +1,6 @@
 package com.dataverse.dataverserentals.gestioncampo.services;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +35,7 @@ public class LecturaHistoricaService {
 
         if (fechaDesde != null && fechaHasta != null) {
             return lecturaHistoricaRepository.findByMedidorIdAndFechaLecturaBetween(
-                    medidorId, fechaDesde.atStartOfDay(), fechaHasta.atTime(LocalTime.MAX), pageable);
+                    medidorId, fechaDesde, fechaHasta, pageable);
         }
 
         return lecturaHistoricaRepository.findByMedidorId(medidorId, pageable);

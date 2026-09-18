@@ -1,6 +1,7 @@
 package com.dataverse.dataverserentals.gestioncampo.entities;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Medidor;
@@ -38,7 +39,7 @@ public class LecturaHistorica {
     private Long medidorId;
 
     @Column(name = "fecha_lectura", nullable = false)
-    private LocalDateTime fechaLectura;
+    private LocalDate fechaLectura;
 
     @Column(name = "valor_lectura", precision = 10, scale = 2, nullable = false)
     private BigDecimal valorLectura;
@@ -66,7 +67,7 @@ public class LecturaHistorica {
     public static LecturaHistorica from(Long medidorId, CreateLecturaHistoricaDto request, Long usuarioCreacionId) {
         LecturaHistorica lecturaHistorica = new LecturaHistorica();
         lecturaHistorica.setMedidorId(medidorId);
-        lecturaHistorica.setFechaLectura(LocalDateTime.now());
+        lecturaHistorica.setFechaLectura(request.fechaLectura());
         lecturaHistorica.setValorLectura(request.valorLectura());
         lecturaHistorica.setFechaCreacion(LocalDateTime.now());
         lecturaHistorica.setUsuarioCreacionId(usuarioCreacionId);
@@ -77,7 +78,7 @@ public class LecturaHistorica {
     }
 
     public void updateWith(UpdateLecturaHistoricaDto request, Long usuarioModificacionId) {
-        this.fechaLectura = LocalDateTime.now();
+        this.fechaLectura = request.fechaLectura();
         this.valorLectura = request.valorLectura();
         this.fechaModificacion = LocalDateTime.now();
         this.usuarioModificacionId = usuarioModificacionId;

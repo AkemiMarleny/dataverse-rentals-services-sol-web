@@ -33,8 +33,8 @@ public class CalcularCostoConsumoMedidorCommand {
         BigDecimal primeraLecturaDeMedidor = lecturaHistoricaRepository
                 .findFirstByMedidorIdAndFechaLecturaBetweenOrderByFechaLecturaAsc(
                         medidor.getId(),
-                        fechaInicioPeriodo,
-                        fechaFinPeriodo)
+                        fechaInicioPeriodo.toLocalDate(),
+                        fechaFinPeriodo.toLocalDate())
                 .map(lectura -> lectura.getValorLectura())
                 .orElse(BigDecimal.valueOf(0.0D));
         log.info("[primeraLecturaDeMedidor={}] [medidorId={}] [fechaInicioPeriodo={}] [fechaFinPeriodo={}]",
@@ -46,8 +46,8 @@ public class CalcularCostoConsumoMedidorCommand {
         BigDecimal ultimaLecturaDeMedidor = lecturaHistoricaRepository
                 .findFirstByMedidorIdAndFechaLecturaBetweenOrderByFechaLecturaDesc(
                         medidor.getId(),
-                        fechaInicioPeriodo,
-                        fechaFinPeriodo)
+                        fechaInicioPeriodo.toLocalDate(),
+                        fechaFinPeriodo.toLocalDate())
                 .map(lectura -> lectura.getValorLectura())
                 .orElse(BigDecimal.valueOf(0.0D));
         log.info("[ultimaLecturaDeMedidor={}] [medidorId={}] [fechaInicioPeriodo={}] [fechaFinPeriodo={}]",
