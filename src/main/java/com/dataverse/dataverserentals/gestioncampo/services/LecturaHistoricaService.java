@@ -31,54 +31,60 @@ public class LecturaHistoricaService {
     public Page<LecturaHistorica> findAll(Long medidorId, Pageable pageable,
             LocalDate fechaDesde, LocalDate fechaHasta) {
 
-        log.info("Búsqueda paginada de lecturas históricas [filtro: '{}', pageable: {}]", medidorId, pageable);
+        log.info("Búsqueda paginada de lecturas históricas [medidorId: '{}', desde: '{}', hasta: '{}', pageable: {}]", 
+                medidorId, fechaDesde, fechaHasta, pageable);
 
-        if (fechaDesde != null && fechaHasta != null) {
-            return lecturaHistoricaRepository.findByMedidorIdAndFechaLecturaBetween(
-                    medidorId, fechaDesde, fechaHasta, pageable);
+        if (medidorId != null) {
+            if (fechaDesde != null && fechaHasta != null) {
+                return lecturaHistoricaRepository.findByMedidorIdAndFechaLecturaBetween(
+                        medidorId, fechaDesde, fechaHasta, pageable);
+            }
+            return lecturaHistoricaRepository.findByMedidorId(medidorId, pageable);
         }
 
-        return lecturaHistoricaRepository.findByMedidorId(medidorId, pageable);
+        if (fechaDesde != null && fechaHasta != null) {
+            return lecturaHistoricaRepository.findByFechaLecturaBetween(fechaDesde, fechaHasta, pageable);
+        }
+
+        return lecturaHistoricaRepository.findAll(pageable);
     }
 
-    public Long create(Long medidorId, @Valid CreateLecturaHistoricaDto payload, Long usuarioId)
+    public Long create(@Valid CreateLecturaHistoricaDto payload, Long usuarioId)
             throws FieldConstraintException {
 
         log.info("Registrando nueva lectura histórica con los siguientes datos: {}", payload);
 
-        medidorRepository.findById(medidorId)
+        medidorRepository.findById(payload.medidorId())
                 .orElseThrow(() -> new FieldConstraintException("medidorId",
                         String.format("El medidor solicitado con el id: %s no se encuentra registrado.",
-                                medidorId)));
+                                payload.medidorId())));
 
-        LecturaHistorica lecturaHistorica = LecturaHistorica.from(medidorId, payload, usuarioId);
+        LecturaHistorica lecturaHistorica = LecturaHistorica.from(payload.medidorId(), payload, usuarioId);
         return lecturaHistoricaRepository.save(lecturaHistorica).getId();
     }
 
-    public LecturaHistorica findById(Long medidorId, Long lecturaHistoricaId) throws RecordNotFoundException {
+    public LecturaHistorica findById(Long lecturaHistoricaId) throws RecordNotFoundException {
 
         log.info("Recuperando datos de la lectura histórica con identificador: {}", lecturaHistoricaId);
-        return lecturaHistoricaRepository.findByMedidorIdAndId(medidorId, lecturaHistoricaId)
+        return lecturaHistoricaRepository.findById(lecturaHistoricaId)
                 .orElseThrow(() -> new RecordNotFoundException(
-                        String.format("No se encontró la lectura histórica con ID: %d asociada al medidor con ID: %d",
-                                lecturaHistoricaId, medidorId)));
+                        String.format("No se encontró la lectura histórica con ID: %d",
+                                lecturaHistoricaId)));
     }
 
-    public void update(Long medidorId, Long lecturaHistoricaId, @Valid UpdateLecturaHistoricaDto payload,
+    public void update(Long lecturaHistoricaId, @Valid UpdateLecturaHistoricaDto payload,
             Long usuarioId)
             throws RecordNotFoundException {
 
         log.info("Iniciando actualización de la lectura histórica con ID: {}. Datos recibidos: {}", lecturaHistoricaId,
                 payload);
-        medidorRepository.findById(medidorId)
-                .orElseThrow(() -> new FieldConstraintException("medidorId",
-                        String.format("El medidor solicitado con el id: %s no se encuentra registrado.",
-                                medidorId)));
+
         LecturaHistorica lecturaHistorica = lecturaHistoricaRepository
-                .findByMedidorIdAndId(medidorId, lecturaHistoricaId)
+                .findById(lecturaHistoricaId)
                 .orElseThrow(() -> new RecordNotFoundException(
-                        String.format("No se encontró la lectura histórica con ID: %d asociada al medidor con ID: %d",
-                                lecturaHistoricaId, medidorId)));
+                        String.format("No se encontró la lectura histórica con ID: %d",
+                                lecturaHistoricaId)));
+
         lecturaHistorica.updateWith(payload, usuarioId);
         lecturaHistoricaRepository.save(lecturaHistorica);
     }

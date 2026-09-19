@@ -1,29 +1,28 @@
-POST http://localhost:8080/api/v1/medidores/2/lecturas-historicas
+POST http://localhost:8080/api/v1/lecturas-historicas
 Content-Type: application/json
 
 {
-    "valorLectura": 1254090.75,
-    "usuarioCreacionId": 1
+    "medidorId": 2,
+    "fechaLectura": "2026-05-08",
+    "valorLectura": 1254090.75
 }
 
 ###
 
-GET http://localhost:8080/api/v1/medidores/2/lecturas-historicas?fechaDesde=2026-04-17&fechaHasta=2026-04-18
+GET http://localhost:8080/api/v1/lecturas-historicas?medidorId=2&fechaDesde=2026-04-17&fechaHasta=2026-04-18
 Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/api/v1/medidores/2/lecturas-historicas/12
+GET http://localhost:8080/api/v1/lecturas-historicas/1
 Content-Type: application/json
 
 ###
 
-PUT http://localhost:8080/api/v1/medidores/2/lecturas-historicas/12
+PUT http://localhost:8080/api/v1/lecturas-historicas/1
 Content-Type: application/json
 
 {
-    "valorLectura": 1254098.75,
-    "usuarioModificacionId": 1
+    "fechaLectura": "2026-05-08",
+    "valorLectura": 1254098.75
 }
-
-

@@ -16,6 +16,8 @@ public interface LecturaHistoricaRepository extends JpaRepository<LecturaHistori
     Page<LecturaHistorica> findByMedidorIdAndFechaLecturaBetween(
             Long medidorId, LocalDate desde, LocalDate hasta, Pageable pageable);
 
+    Page<LecturaHistorica> findByFechaLecturaBetween(LocalDate desde, LocalDate hasta, Pageable pageable);
+
     Optional<LecturaHistorica> findByMedidorIdAndId(Long medidorId, Long id);
 
     Optional<LecturaHistorica> findFirstByMedidorIdAndFechaLecturaBetweenOrderByFechaLecturaAsc(

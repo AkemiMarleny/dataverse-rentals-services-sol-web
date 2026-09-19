@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/medidores/{medidorId}/lecturas-historicas")
+@RequestMapping("api/v1/lecturas-historicas")
 @Slf4j
 public class LecturaHistoricaController {
 
@@ -42,13 +42,14 @@ public class LecturaHistoricaController {
 
     @GetMapping
     public ResponseEntity<Page<LecturaHistoricaPaginaDto>> findAll(
-            @PathVariable Long medidorId,
+            @RequestParam(required = false) Long medidorId,
             Pageable pageable,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
 
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
 
-        log.info("Listando lecturas históricas con filtro '{}' y parámetros: {}", pageable, pageable);
+        log.info("Listando lecturas históricas con filtros: medidorId={}, fechaDesde={}, fechaHasta={}, parámetros: {}", 
+                medidorId, fechaDesde, fechaHasta, pageable);
 
         org.springframework.data.domain.Page<LecturaHistoricaPaginaDto> lecturaHistoricaPage = lecturaHistoricaService
                 .findAll(medidorId, pageable, fechaDesde, fechaHasta)
@@ -57,34 +58,34 @@ public class LecturaHistoricaController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateResponse> create(@PathVariable Long medidorId,
+    public ResponseEntity<CreateResponse> create(
             @RequestBody CreateLecturaHistoricaDto request)
             throws FieldConstraintException {
 
         log.info("Iniciando la creación de una nueva lectura histórica: {}", request);
         Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
-        Long lecturaHistoricaId = lecturaHistoricaService.create(medidorId, request, usuarioId);
+        Long lecturaHistoricaId = lecturaHistoricaService.create(request, usuarioId);
         return new ResponseEntity<>(new CreateResponse(lecturaHistoricaId), HttpStatus.CREATED);
     }
 
     @GetMapping("{lecturaHistoricaId}")
-    public ResponseEntity<DetailLecturaHistoricaDto> findById(@PathVariable Long medidorId,
+    public ResponseEntity<DetailLecturaHistoricaDto> findById(
             @PathVariable Long lecturaHistoricaId) throws RecordNotFoundException {
 
         log.info("Consultando detalles de la lectura histórica con ID: {}", lecturaHistoricaId);
 
-        LecturaHistorica lecturaHistorica = lecturaHistoricaService.findById(medidorId, lecturaHistoricaId);
+        LecturaHistorica lecturaHistorica = lecturaHistoricaService.findById(lecturaHistoricaId);
         DetailLecturaHistoricaDto detailLecturaHistoricaDto = DetailLecturaHistoricaDto.fromEntity(lecturaHistorica);
         return new ResponseEntity<>(detailLecturaHistoricaDto, HttpStatus.OK);
     }
 
     @PutMapping("{lecturaHistoricaId}")
-    public ResponseEntity<Void> update(@PathVariable Long medidorId, @PathVariable Long lecturaHistoricaId,
+    public ResponseEntity<Void> update(@PathVariable Long lecturaHistoricaId,
             @RequestBody UpdateLecturaHistoricaDto request) throws RecordNotFoundException {
 
         log.info("Iniciando actualización de la lectura histórica: {}", request);
         Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
-        lecturaHistoricaService.update(medidorId, lecturaHistoricaId, request, usuarioId);
+        lecturaHistoricaService.update(lecturaHistoricaId, request, usuarioId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
