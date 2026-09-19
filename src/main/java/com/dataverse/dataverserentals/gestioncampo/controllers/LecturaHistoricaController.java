@@ -42,17 +42,17 @@ public class LecturaHistoricaController {
 
     @GetMapping
     public ResponseEntity<Page<LecturaHistoricaPaginaDto>> findAll(
-            @RequestParam(required = false) Long medidorId,
+            @RequestParam(required = false) String q,
             Pageable pageable,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
-
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
 
-        log.info("Listando lecturas históricas con filtros: medidorId={}, fechaDesde={}, fechaHasta={}, parámetros: {}", 
-                medidorId, fechaDesde, fechaHasta, pageable);
+        log.info(
+                "Listando lecturas históricas con filtros: medidorNumeroSerie={}, fechaDesde={}, fechaHasta={}, parámetros: {}",
+                q, fechaDesde, fechaHasta, pageable);
 
         org.springframework.data.domain.Page<LecturaHistoricaPaginaDto> lecturaHistoricaPage = lecturaHistoricaService
-                .findAll(medidorId, pageable, fechaDesde, fechaHasta)
+                .findAll(q, pageable, fechaDesde, fechaHasta)
                 .map(LecturaHistoricaPaginaDto::fromEntity);
         return ResponseEntity.ok(PageFactory.from(lecturaHistoricaPage));
     }

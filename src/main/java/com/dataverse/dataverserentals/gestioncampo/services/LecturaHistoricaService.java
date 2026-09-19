@@ -14,6 +14,7 @@ import com.dataverse.dataverserentals.gestioncampo.controllers.dtos.request.Crea
 import com.dataverse.dataverserentals.gestioncampo.controllers.dtos.request.UpdateLecturaHistoricaDto;
 import com.dataverse.dataverserentals.gestioncampo.entities.LecturaHistorica;
 import com.dataverse.dataverserentals.gestioncampo.repositories.LecturaHistoricaRepository;
+import com.dataverse.dataverserentals.gestioncampo.repositories.specifications.LecturaHistoricaSpecifications;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,25 +29,15 @@ public class LecturaHistoricaService {
     private final LecturaHistoricaRepository lecturaHistoricaRepository;
     private final MedidorRepository medidorRepository;
 
-    public Page<LecturaHistorica> findAll(Long medidorId, Pageable pageable,
+    public Page<LecturaHistorica> findAll(String medidorNumeroSerie, Pageable pageable,
             LocalDate fechaDesde, LocalDate fechaHasta) {
 
-        log.info("Búsqueda paginada de lecturas históricas [medidorId: '{}', desde: '{}', hasta: '{}', pageable: {}]", 
-                medidorId, fechaDesde, fechaHasta, pageable);
+        log.info("Búsqueda paginada de lecturas históricas [medidorNumeroSerie: '{}', desde: '{}', hasta: '{}', pageable: {}]", 
+                medidorNumeroSerie, fechaDesde, fechaHasta, pageable);
 
-        if (medidorId != null) {
-            if (fechaDesde != null && fechaHasta != null) {
-                return lecturaHistoricaRepository.findByMedidorIdAndFechaLecturaBetween(
-                        medidorId, fechaDesde, fechaHasta, pageable);
-            }
-            return lecturaHistoricaRepository.findByMedidorId(medidorId, pageable);
-        }
-
-        if (fechaDesde != null && fechaHasta != null) {
-            return lecturaHistoricaRepository.findByFechaLecturaBetween(fechaDesde, fechaHasta, pageable);
-        }
-
-        return lecturaHistoricaRepository.findAll(pageable);
+        return lecturaHistoricaRepository.findAll(
+                LecturaHistoricaSpecifications.filterBy(medidorNumeroSerie, fechaDesde, fechaHasta), 
+                pageable);
     }
 
     public Long create(@Valid CreateLecturaHistoricaDto payload, Long usuarioId)
