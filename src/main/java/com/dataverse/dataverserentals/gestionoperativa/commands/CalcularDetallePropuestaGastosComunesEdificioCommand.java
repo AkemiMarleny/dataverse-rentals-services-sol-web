@@ -36,8 +36,8 @@ public class CalcularDetallePropuestaGastosComunesEdificioCommand {
         BigDecimal montoTotalEnGastosOperativos = gastoOperativoRepository.sumMontoByEdificioAndTipoGastoAndPeriodo(
                 edificio.getId(),
                 List.of(TipoGasto.MANO_OBRA, TipoGasto.MATERIAL),
-                propuesta.getFechaInicioPeriodo(),
-                propuesta.getFechaFinPeriodo())
+                propuesta.getFechaInicioPeriodo().toLocalDate(),
+                propuesta.getFechaFinPeriodo().toLocalDate())
                 .orElse(BigDecimal.ZERO);
         log.info("monto total en gastos operativos: {}, edificioId: {}, edificioNombre: {}",
                 montoTotalEnGastosOperativos,
