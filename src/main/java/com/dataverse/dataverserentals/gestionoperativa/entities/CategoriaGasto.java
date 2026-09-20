@@ -74,8 +74,8 @@ public class CategoriaGasto {
     }
 
     public void updateWith(UpdateCategoriaGastoDto request, Long usuarioModificacionId) {
-        this.nombre = request.nombre();
-        this.descripcion = request.descripcion();
+        this.nombre = new BusinessNameCapitalizer(new Normalizar(request.nombre()).get()).get();
+        this.descripcion = new CapitalizeWord(request.descripcion()).get();
         this.fechaModificacion = LocalDateTime.now();
         this.usuarioModificacionId = usuarioModificacionId;
     }
