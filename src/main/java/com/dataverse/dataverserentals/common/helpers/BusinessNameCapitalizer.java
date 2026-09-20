@@ -11,7 +11,7 @@ public class BusinessNameCapitalizer {
     private final String valor;
 
     private static final Set<String> PALABRAS_MINUSCULAS = new HashSet<>(
-            Arrays.asList("de", "la", "del", "los", "y", "las", "al", "el", "con", "en", "por", "para"));
+            Arrays.asList("de", "la", "del", "los", "y", "las", "al", "el", "con", "en", "por", "para", "e"));
 
     public BusinessNameCapitalizer(String texto) {
         if (texto == null || texto.isBlank()) {

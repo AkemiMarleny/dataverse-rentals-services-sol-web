@@ -2,6 +2,9 @@ package com.dataverse.dataverserentals.gestionoperativa.entities;
 
 import java.time.LocalDateTime;
 
+import com.dataverse.dataverserentals.common.helpers.BusinessNameCapitalizer;
+import com.dataverse.dataverserentals.common.helpers.CapitalizeWord;
+import com.dataverse.dataverserentals.common.helpers.Normalizar;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.CreateCategoriaGastoDto;
 import com.dataverse.dataverserentals.gestionoperativa.controllers.dtos.request.UpdateCategoriaGastoDto;
@@ -61,8 +64,8 @@ public class CategoriaGasto {
 
     public static CategoriaGasto from(CreateCategoriaGastoDto payload, Long usuarioId) {
         return CategoriaGasto.builder()
-                .nombre(payload.nombre())
-                .descripcion(payload.descripcion())
+                .nombre(new BusinessNameCapitalizer(new Normalizar(payload.nombre()).get()).get())
+                .descripcion(new CapitalizeWord(payload.descripcion()).get())
                 .fechaCreacion(LocalDateTime.now())
                 .usuarioCreacionId(usuarioId)
                 .fechaModificacion(LocalDateTime.now())
