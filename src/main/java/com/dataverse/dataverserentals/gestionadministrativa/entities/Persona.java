@@ -3,9 +3,9 @@ package com.dataverse.dataverserentals.gestionadministrativa.entities;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.dataverse.dataverserentals.common.helpers.BusinessNameCapitalizer;
 import com.dataverse.dataverserentals.common.helpers.NombreCapitalizar;
 import com.dataverse.dataverserentals.common.helpers.Normalizar;
-import com.dataverse.dataverserentals.common.helpers.TiposEmpresaJoiner;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreatePersonDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.UpdatePersonDto;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.Genero;
@@ -123,7 +123,7 @@ public class Persona {
                         PersonaNaturalChecksum.fromRaw(nombresNormalizado, apellidosNormalizado,
                                 request.tipoDocumentoCode(), request.numeroDocumento()).get());
             } else {
-                String nombreComercialNormalizado = new NombreCapitalizar(
+                String nombreComercialNormalizado = new BusinessNameCapitalizer(
                         new Normalizar(request.nombreComercial()).get())
                         .get();
                 persona.setNombreComercial(nombreComercialNormalizado);
@@ -135,8 +135,8 @@ public class Persona {
         }
 
         else {
-            String razonSocialNormalizado = new NombreCapitalizar(
-                    new TiposEmpresaJoiner(new Normalizar(request.razonSocial()).get()).get()).get();
+            String razonSocialNormalizado = new BusinessNameCapitalizer(new Normalizar(request.razonSocial()).get())
+                    .get();
             persona.setRazonSocial(razonSocialNormalizado);
             persona.setPersonaJuridicaChecksum(
                     PersonaJuridicaChecksum
@@ -170,7 +170,7 @@ public class Persona {
                         nombresNormalizado, apellidosNormalizado,
                         request.tipoDocumentoCode(), request.numeroDocumento()).get();
             } else {
-                String nombreComercialNormalizado = new NombreCapitalizar(
+                String nombreComercialNormalizado = new BusinessNameCapitalizer(
                         new Normalizar(request.nombreComercial()).get())
                         .get();
                 this.nombreComercial = nombreComercialNormalizado;
@@ -181,8 +181,8 @@ public class Persona {
         }
 
         else {
-            String razonSocialNormalizado = new NombreCapitalizar(
-                    new TiposEmpresaJoiner(new Normalizar(request.razonSocial()).get()).get()).get();
+            String razonSocialNormalizado = new BusinessNameCapitalizer(
+                    new Normalizar(request.razonSocial()).get()).get();
             this.razonSocial = razonSocialNormalizado;
             this.personaJuridicaChecksum = PersonaJuridicaChecksum.fromRaw(
                     razonSocialNormalizado, request.tipoDocumentoCode(), request.numeroDocumento()).get();

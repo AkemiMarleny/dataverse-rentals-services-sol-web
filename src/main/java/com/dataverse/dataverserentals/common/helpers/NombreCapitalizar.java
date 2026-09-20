@@ -26,16 +26,14 @@ public class NombreCapitalizar {
         List<String> contenido = new ArrayList<>();
         for (int i = 0; i < palabras.length; i++) {
             String palabra = palabras[i];
-            if (palabra.contains("-")) {
+            if (i == 0) {
+                contenido.add(new CapitalizeWord(palabra).get());
+            } else if (palabra.contains("-")) {
                 contenido.add(capitalizarPalabraCompuesta(palabra, "-", true));
             } else if (palabraEsPreposicion(palabra)) {
                 contenido.add(palabra);
-            } else if (i == 0) {
-                contenido.add(new CapitalizeWord(palabra).get());
             } else if (palabra.contains("/")) {
                 contenido.add(capitalizarPalabraCompuesta(palabra, "/", false));
-            } else if (TiposEmpresaJoiner.esTipoEmpresa(palabra)) {
-                contenido.add(palabra.toUpperCase());
             } else {
                 contenido.add(new CapitalizeWord(palabra).get());
             }
