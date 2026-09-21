@@ -2,6 +2,7 @@ package com.dataverse.dataverserentals.gestionadministrativa.services;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,12 +14,15 @@ import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
 import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.exceptions.UnprocesableEntity;
+import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoContrato;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.RolUsuario;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateContratoDto;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Contrato;
+import com.dataverse.dataverserentals.gestionadministrativa.entities.VContrato;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.ContratoRepository;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.PersonaRepository;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.UnidadRepository;
+import com.dataverse.dataverserentals.gestionadministrativa.repositories.VContratoRepository;
 import com.dataverse.dataverserentals.security.context.SecurityContext;
 import com.dataverse.dataverserentals.security.context.UsuarioPrincipal;
 import com.dataverse.dataverserentals.notifications.NotificationService;
@@ -34,30 +38,28 @@ import lombok.extern.slf4j.Slf4j;
 public class ContratoService {
 
     private final ContratoRepository contratoRepository;
+    private final VContratoRepository vContratoRepository;
     private final UnidadRepository unidadRepository;
     private final PersonaRepository personaRepository;
     private final NotificationService notificationService;
     private final SecurityContext securityContext;
 
-    public Page<Contrato> findAll(Pageable pageable, String q) throws AccessDeniedException {
+    public Page<VContrato> findAll(
+            Pageable pageable, String q, Optional<EstadoContrato> estadoContrato) throws AccessDeniedException {
         log.info("Búsqueda paginada de contratos [filtro: '{}', pageable: {}]", q, pageable);
 
         UsuarioPrincipal usuarioPrincipal = securityContext.getUsuarioPrincipal();
         RolUsuario rol = usuarioPrincipal.usuarioRol();
 
         if (RolUsuario.ADMINISTRADOR.equals(rol)) {
-            if (StringUtils.hasText(q)) {
-                return contratoRepository.findByPersonaNombresOrPersonaApellidosContaining(q, pageable);
-            }
-            return contratoRepository.findAll(pageable);
+            return vContratoRepository.findByEstadoAndPersonaNombresOrPersonaApellidosContaining(
+                    estadoContrato.orElse(EstadoContrato.VIGENTE), q, pageable);
         }
 
         if (RolUsuario.INQUILINO.equals(rol)) {
             Long inquilinoId = usuarioPrincipal.personaId();
-            if (StringUtils.hasText(q)) {
-                return contratoRepository.findByPersonaIdAndPersonaNombresOrPersonaApellidosContaining(inquilinoId, q, pageable);
-            }
-            return contratoRepository.findByPersonaId(inquilinoId, pageable);
+            return vContratoRepository.findByPersonaIdAndEstado(inquilinoId,
+                    estadoContrato.orElse(EstadoContrato.VIGENTE), pageable);
         }
 
         throw new AccessDeniedException(usuarioPrincipal);

@@ -1,5 +1,7 @@
 package com.dataverse.dataverserentals.gestionadministrativa.controllers;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import com.dataverse.dataverserentals.common.factories.PageFactory;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateContratoDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.response.ContratoPaginaDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.response.DetailContratoDto;
+import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoContrato;
 import com.dataverse.dataverserentals.gestionadministrativa.services.ContratoService;
 import com.dataverse.dataverserentals.security.context.SecurityContext;
 
@@ -38,11 +41,12 @@ public class ContratoController {
     @GetMapping
     public ResponseEntity<Page<ContratoPaginaDto>> findAll(
             Pageable pageable,
+            @RequestParam Optional<EstadoContrato> estadoContrato,
             @RequestParam(defaultValue = "") String q) throws AccessDeniedException {
 
         log.info("Listando contratos con filtro '{}' y parámetros: {}", q, pageable);
         org.springframework.data.domain.Page<ContratoPaginaDto> contratoPage = contratoService
-                .findAll(pageable, q)
+                .findAll(pageable, q, estadoContrato)
                 .map(ContratoPaginaDto::fromEntity);
         return ResponseEntity.ok(PageFactory.from(contratoPage));
     }

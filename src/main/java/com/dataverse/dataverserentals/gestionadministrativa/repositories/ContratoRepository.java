@@ -12,82 +12,62 @@ import org.springframework.data.repository.query.Param;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Contrato;
 
 public interface ContratoRepository extends JpaRepository<Contrato, Long> {
-    @Query("""
-            SELECT c
-            FROM Contrato c
-            WHERE c.fechaCierre is NULL
-            AND c.fechaInicio <= :fechaInicio
-                """)
-    List<Contrato> findAllActivosNoVencidos(
-            LocalDateTime fechaInicio);
+   @Query("""
+         SELECT c
+         FROM Contrato c
+         WHERE c.fechaCierre is NULL
+         AND c.fechaInicio <= :fechaInicio
+             """)
+   List<Contrato> findAllActivosNoVencidos(
+         LocalDateTime fechaInicio);
 
-    @Query("""
-            SELECT c.id
-            FROM Contrato c
-            WHERE c.personaId = :personaId
-            """)
-    List<Long> findContratoIdsByPersonaId(Long personaId);
+   @Query("""
+         SELECT c.id
+         FROM Contrato c
+         WHERE c.personaId = :personaId
+         """)
+   List<Long> findContratoIdsByPersonaId(Long personaId);
 
-    @Query("""
-            SELECT c
-            FROM Contrato c
-            WHERE c.personaId = :personaId
-            """)
-    Page<Contrato> findByPersonaId(@Param("personaId") Long personaId, Pageable pageable);
+   @Query("""
+         SELECT c
+         FROM Contrato c
+         WHERE c.personaId = :personaId
+         """)
+   Page<Contrato> findByPersonaId(@Param("personaId") Long personaId, Pageable pageable);
 
-    @Query("""
-            SELECT c
-            FROM Contrato c
-            WHERE c.personaId = :personaId
-            AND (LOWER(c.persona.nombres) LIKE LOWER(CONCAT('%', :q, '%'))
-               OR LOWER(c.persona.apellidos) LIKE LOWER(CONCAT('%', :q, '%')))
-            """)
-    Page<Contrato> findByPersonaIdAndPersonaNombresOrPersonaApellidosContaining(
-            @Param("personaId") Long personaId,
-            @Param("q") String q,
-            Pageable pageable);
+   @Query("""
+         SELECT c
+         FROM Contrato c
+         WHERE c.personaId = :personaId
+         AND (LOWER(c.persona.nombres) LIKE LOWER(CONCAT('%', :q, '%'))
+            OR LOWER(c.persona.apellidos) LIKE LOWER(CONCAT('%', :q, '%')))
+         """)
+   Page<Contrato> findByPersonaIdAndPersonaNombresOrPersonaApellidosContaining(
+         @Param("personaId") Long personaId,
+         @Param("q") String q,
+         Pageable pageable);
 
-    @Query("""
-            SELECT c
-            FROM Contrato c
-            WHERE LOWER(c.persona.nombres) LIKE LOWER(CONCAT('%', :q, '%'))
-               OR LOWER(c.persona.apellidos) LIKE LOWER(CONCAT('%', :q, '%'))
-            """)
-    Page<Contrato> findByPersonaNombresOrPersonaApellidosContaining(
-            @Param("q") String q,
-            Pageable pageable);
+   @Query("""
+         SELECT c
+         FROM Contrato c
+         WHERE LOWER(c.persona.nombres) LIKE LOWER(CONCAT('%', :q, '%'))
+            OR LOWER(c.persona.apellidos) LIKE LOWER(CONCAT('%', :q, '%'))
+         """)
+   Page<Contrato> findByPersonaNombresOrPersonaApellidosContaining(
+         @Param("q") String q,
+         Pageable pageable);
 
-    @Query("""
-            SELECT COUNT(DISTINCT c.unidadId)
-            FROM Contrato c
-            WHERE c.fechaInicio <= :ultimoDiaMes
-            AND (
-                (c.fechaCierre IS NULL AND c.fechaFin >= :primeroDiaMes)
-                OR
-                (c.fechaCierre IS NOT NULL AND c.fechaCierre >= :primeroDiaMes)
-            )
-            """)
-    Long countUnidadesOcupadasByMes(
-            @Param("primeroDiaMes") LocalDateTime primeroDiaMes,
-            @Param("ultimoDiaMes") LocalDateTime ultimoDiaMes);
+   @Query("""
+         SELECT COUNT(DISTINCT c.unidadId)
+         FROM Contrato c
+         WHERE c.fechaInicio <= :ultimoDiaMes
+         AND (
+             (c.fechaCierre IS NULL AND c.fechaFin >= :primeroDiaMes)
+             OR
+             (c.fechaCierre IS NOT NULL AND c.fechaCierre >= :primeroDiaMes)
+         )
+         """)
+   Long countUnidadesOcupadasByMes(
+         @Param("primeroDiaMes") LocalDateTime primeroDiaMes,
+         @Param("ultimoDiaMes") LocalDateTime ultimoDiaMes);
 }
-
-
-// CULMINADO: fechaCierre IS NOT NULL
-// VENCIDO: fechaFin < NOW()
-//  VIGENTE: fechaFin IS NULL AND fechaCierre is NULL
-// POR_VENCER: NOW() - 30 days < fechaFin 
-// ---
-// filtros:
-// 1. q -> findByPersonaNombresOrPersonaApellidosContaining [OK]
-// 2. estado -> findBy
-//.    CULMINADO: fechaCierre IS NOT NULL
-//     VENCIDO: fechaFin < NOW()
-//     VIGENTE: fechaFin IS NULL AND fechaCierre is NULL
-//     POR_VENCER: NOW() - 30 days < fechaFin 
-// 3. q and estado -> findByPersonaNombresOrPersonaApellidosContaining + 
-//     CULMINADO: fechaCierre IS NOT NULL
-//     VENCIDO: fechaFin < NOW()
-//     VIGENTE: fechaFin IS NULL AND fechaCierre is NULL
-//     POR_VENCER: NOW() - 30 days < fechaFin 
-// 4. ninguno -> findAll() [modified]
