@@ -71,3 +71,23 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
             @Param("primeroDiaMes") LocalDateTime primeroDiaMes,
             @Param("ultimoDiaMes") LocalDateTime ultimoDiaMes);
 }
+
+
+// CULMINADO: fechaCierre IS NOT NULL
+// VENCIDO: fechaFin < NOW()
+//  VIGENTE: fechaFin IS NULL AND fechaCierre is NULL
+// POR_VENCER: NOW() - 30 days < fechaFin 
+// ---
+// filtros:
+// 1. q -> findByPersonaNombresOrPersonaApellidosContaining [OK]
+// 2. estado -> findBy
+//.    CULMINADO: fechaCierre IS NOT NULL
+//     VENCIDO: fechaFin < NOW()
+//     VIGENTE: fechaFin IS NULL AND fechaCierre is NULL
+//     POR_VENCER: NOW() - 30 days < fechaFin 
+// 3. q and estado -> findByPersonaNombresOrPersonaApellidosContaining + 
+//     CULMINADO: fechaCierre IS NOT NULL
+//     VENCIDO: fechaFin < NOW()
+//     VIGENTE: fechaFin IS NULL AND fechaCierre is NULL
+//     POR_VENCER: NOW() - 30 days < fechaFin 
+// 4. ninguno -> findAll() [modified]
