@@ -4,14 +4,14 @@ public enum EstadoContrato {
     VIGENTE,
     POR_VENCER,
     VENCIDO,
-    CERRADO;
+    CULMINADO;
 
     public String intoString() {
         return switch (this) {
             case VIGENTE -> "Vigente";
             case POR_VENCER -> "Por vencer";
             case VENCIDO -> "Vencido";
-            case CERRADO -> "Cerrado";
+            case CULMINADO -> "Culminado";
         };
     }
 }

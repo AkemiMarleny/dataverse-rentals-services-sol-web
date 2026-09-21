@@ -76,7 +76,7 @@ public class Contrato {
         LocalDateTime now = LocalDateTime.now();
 
         if (this.getFechaCierre() != null) {
-            return EstadoContrato.CERRADO;
+            return EstadoContrato.CULMINADO;
         }
 
         if (now.isAfter(this.getFechaFin())) {
