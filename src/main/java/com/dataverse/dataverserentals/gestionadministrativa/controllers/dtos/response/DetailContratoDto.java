@@ -23,7 +23,8 @@ public record DetailContratoDto(
         BigDecimal alquilerMensual,
         LocalDateTime fechaCreacion,
         String estadoCodigo,
-        String estadoNombre) {
+        String estadoNombre,
+        String pdfUrl) {
 
     public static DetailContratoDto fromEntity(Contrato contrato) {
         var persona = contrato.getPersona();
@@ -48,6 +49,7 @@ public record DetailContratoDto(
                 contrato.getAlquilerMensual(),
                 contrato.getFechaCreacion(),
                 contrato.getEstado().name(),
-                contrato.getEstado().intoString());
+                contrato.getEstado().intoString(),
+                contrato.getPdfUrl());
     }
 }
