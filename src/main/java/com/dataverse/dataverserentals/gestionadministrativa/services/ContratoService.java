@@ -9,15 +9,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
 import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.exceptions.UnprocesableEntity;
+import com.dataverse.dataverserentals.common.storage.FileStorageService;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoContrato;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.RolUsuario;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateContratoDto;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Contrato;
+import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.VContrato;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.ContratoRepository;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.PersonaRepository;
@@ -42,6 +45,7 @@ public class ContratoService {
     private final UnidadRepository unidadRepository;
     private final PersonaRepository personaRepository;
     private final NotificationService notificationService;
+    private final FileStorageService fileStorageService;
     private final SecurityContext securityContext;
 
     public Page<VContrato> findAll(
@@ -124,5 +128,23 @@ public class ContratoService {
         notificationService.sendEvent("CONTRATO_CREATED", contrato);
 
         return contratoId;
+    }
+
+    public void uploadContratto(
+            Long contrattoId,
+            MultipartFile file,
+            UsuarioPrincipal usuarioPrincipal) throws AccessDeniedException, RecordNotFoundException {
+        RolUsuario rol = usuarioPrincipal.usuarioRol();
+        if (!RolUsuario.ADMINISTRADOR.equals(rol)) {
+            throw new AccessDeniedException(usuarioPrincipal);
+        }
+
+        Contrato contrato = contratoRepository.findById(contrattoId).orElseThrow(() -> new RecordNotFoundException(
+                String.format("El contrato solicitado con el id: %s no se encuentra registrado.", contrattoId)));
+
+        String urlContratto = fileStorageService.uploadFile(file, "contratos/" + contrattoId);
+        contrato.setPdfUrl(urlContratto);
+
+        contratoRepository.save(contrato);
     }
 }

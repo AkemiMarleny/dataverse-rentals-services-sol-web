@@ -63,7 +63,7 @@ CREATE TABLE public.contratos (
     fecha_creacion timestamp(6) without time zone NOT NULL,
     fecha_fin timestamp(6) without time zone NOT NULL,
     fecha_inicio timestamp(6) without time zone NOT NULL,
-    pdf_url character varying(100),
+    pdf_url character varying(255),
     persona_id bigint NOT NULL,
     unidad_id bigint NOT NULL,
     usuario_creacion_id bigint NOT NULL

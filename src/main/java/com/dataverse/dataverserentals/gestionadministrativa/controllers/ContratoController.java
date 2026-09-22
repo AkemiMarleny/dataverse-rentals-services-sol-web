@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.dataverse.dataverserentals.common.dto.CreateResponse;
 import com.dataverse.dataverserentals.common.dto.Page;
@@ -67,5 +70,15 @@ public class ContratoController {
         log.info("Recuperando detalle del contrato con ID: {}", contratoId);
         var contrato = contratoService.findById(contratoId);
         return new ResponseEntity<>(DetailContratoDto.fromEntity(contrato), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "{contratoId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> uploadContratto(
+            @PathVariable Long contratoId,
+            @RequestPart(value = "file", required = true) MultipartFile file)
+            throws AccessDeniedException, RecordNotFoundException {
+
+        contratoService.uploadContratto(contratoId, file, securityContext.getUsuarioPrincipal());
+        return ResponseEntity.noContent().build();
     }
 }
