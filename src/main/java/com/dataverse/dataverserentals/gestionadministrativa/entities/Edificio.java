@@ -32,9 +32,6 @@ public class Edificio {
     @Column(length = 50, unique = true, nullable = false)
     private String nombre;
 
-    @Column(length = 200, nullable = false)
-    private String direccion;
-
     @Column(nullable = false)
     private Integer numeroPisos;
 
@@ -62,7 +59,6 @@ public class Edificio {
         Edificio edificio = new Edificio();
         String nombreNormalizato = new NombreCapitalizar(new Normalizar(request.nombre()).get()).get();
         edificio.setNombre(nombreNormalizato);
-        edificio.setDireccion(request.direccion());
         edificio.setNumeroPisos(request.numeroPisos());
         edificio.setFechaCreacion(LocalDateTime.now());
         edificio.setUsuarioCreacionId(usuarioCreacionId);
@@ -74,7 +70,6 @@ public class Edificio {
     public void updateWith(UpdateEdificioDto request, Long usuarioModificacionId) {
         String nombreNormalizato = new NombreCapitalizar(new Normalizar(request.nombre()).get()).get();
         this.nombre = nombreNormalizato;
-        this.direccion = request.direccion();
         this.numeroPisos = request.numeroPisos();
         this.fechaModificacion = LocalDateTime.now();
         this.usuarioModificacionId = usuarioModificacionId;
