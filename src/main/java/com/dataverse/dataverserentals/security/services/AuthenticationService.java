@@ -1,10 +1,13 @@
 package com.dataverse.dataverserentals.security.services;
 
+import java.time.LocalDateTime;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
+import com.dataverse.dataverserentals.common.exceptions.UnprocesableEntity;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.EstadoUsuario;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.UsuarioRepository;
@@ -12,6 +15,7 @@ import com.dataverse.dataverserentals.security.config.JwtConfig;
 import com.dataverse.dataverserentals.security.context.SecurityContextImpl;
 import com.dataverse.dataverserentals.security.context.UsuarioPrincipal;
 import com.dataverse.dataverserentals.security.controllers.dtos.request.LoginRequest;
+import com.dataverse.dataverserentals.security.controllers.dtos.request.UpdatePasswordRequest;
 import com.dataverse.dataverserentals.security.controllers.dtos.response.CurrentUserResponse;
 import com.dataverse.dataverserentals.security.controllers.dtos.response.LoginResponse;
 import com.dataverse.dataverserentals.security.entities.RefreshToken;
@@ -95,5 +99,27 @@ public class AuthenticationService {
                 usuario.getMfaSetupRequired(),
                 mfaConfigured,
                 mfaVerified);
+    }
+
+    public void updatePassword(@Valid UpdatePasswordRequest payload)
+            throws RecordNotFoundException, UnprocesableEntity {
+        UsuarioPrincipal usuarioPrincipal = securityContext.getUsuarioPrincipal();
+        String nombreUsuario = usuarioPrincipal.usuarioNombre();
+
+        Usuario usuario = usuarioRepository.findByNombreUsuarioIgnoreCase(nombreUsuario)
+                .orElseThrow(() -> new RecordNotFoundException("Usuario no encontrado"));
+
+        if (!passwordEncoder.matches(payload.contrasenaAnterior(), usuario.getContrasenaHash())) {
+            throw new CredencialesInvalidasException("Credenciales inválidas");
+        }
+
+        if (!payload.contrasenaNueva().equals(payload.confirmarContrasena())) {
+            throw new UnprocesableEntity("Las contraseñas no coinciden");
+        }
+
+        usuario.setContrasenaHash(passwordEncoder.encode(payload.contrasenaNueva()));
+        usuario.setFechaModificacion(LocalDateTime.now());
+
+        usuarioRepository.save(usuario);
     }
 }
