@@ -2,3 +2,13 @@
 GET http://localhost:8080/api/v1/toponimos
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlZmxvcmVzIiwidXJvbCI6IkFETUlOSVNUUkFET1IiLCJ1aWQiOjIsInVvd24iOjIsInNjb3BlIjoiTUZBX1NFVFVQIiwiaWF0IjoxNzg2NDg5NDIyLCJleHAiOjE3ODY0ODk3MjJ9.5ey32KSDD-RkhMshDo0JL0IHLrqehHU8NfKJpUY143jj4OPx3g4xjx3cabmg_WKspeve_nu6ItpjjdBySzcarA
+
+###
+
+POST http://localhost:8080/api/v1/toponimos
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlZmxvcmVzIiwidXJvbCI6IkFETUlOSVNUUkFET1IiLCJ1aWQiOjIsInVvd24iOjIsInNjb3BlIjoiTUZBX1NFVFVQIiwiaWF0IjoxNzg2NTA1MDU4LCJleHAiOjE3ODY1MDUzNTh9.TIFPH0SmRgl-iJY80SlkDpg8xaxgnQjDiEEUVmRMXNDJKG9EzS_BlBOiYQ6DJM5Sx24524y6FEK41HMdgNvokQ
+
+{
+    "nombre": "jirón 12344.."
+}

@@ -6,12 +6,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
+import com.dataverse.dataverserentals.common.exceptions.ConflictException;
+import com.dataverse.dataverserentals.common.helpers.CapitalizeWord;
+import com.dataverse.dataverserentals.common.helpers.Normalizar;
+import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateToponimoDto;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Toponimo;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.RolUsuario;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.ToponimoRepository;
 import com.dataverse.dataverserentals.security.context.SecurityContext;
 import com.dataverse.dataverserentals.security.context.UsuarioPrincipal;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,5 +41,18 @@ public class ToponimoService {
         }
 
         throw new AccessDeniedException(usuarioPrincipal);
+    }
+
+    public Long create(@Valid CreateToponimoDto payload, Long usuarioId) {
+
+        log.info("Registrando nuevo topónimo con los siguientes datos: {}", payload);
+
+        String nombreNormalizado = new CapitalizeWord(new Normalizar(payload.nombre()).get()).get();
+        if (toponimoRepository.existsByNombreIgnoreCase(nombreNormalizado)) {
+            throw new ConflictException(String.format("Ya existe un topónimo con el nombre: %s", nombreNormalizado));
+        }
+
+        Toponimo toponimo = Toponimo.from(nombreNormalizado, usuarioId);
+        return toponimoRepository.save(toponimo).getId();
     }
 }

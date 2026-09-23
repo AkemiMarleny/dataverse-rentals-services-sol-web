@@ -9,4 +9,6 @@ import com.dataverse.dataverserentals.gestionadministrativa.entities.Toponimo;
 public interface ToponimoRepository extends JpaRepository<Toponimo, Long> {
 
     Page<Toponimo> findByNombreContaining(Pageable pageable, String q);
+
+    boolean existsByNombreIgnoreCase(String nombre);
 }
