@@ -1,0 +1,4 @@
+### Listar toponimos
+GET http://localhost:8080/api/v1/toponimos
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlZmxvcmVzIiwidXJvbCI6IkFETUlOSVNUUkFET1IiLCJ1aWQiOjIsInVvd24iOjIsInNjb3BlIjoiTUZBX1NFVFVQIiwiaWF0IjoxNzg2NDg5NDIyLCJleHAiOjE3ODY0ODk3MjJ9.5ey32KSDD-RkhMshDo0JL0IHLrqehHU8NfKJpUY143jj4OPx3g4xjx3cabmg_WKspeve_nu6ItpjjdBySzcarA
