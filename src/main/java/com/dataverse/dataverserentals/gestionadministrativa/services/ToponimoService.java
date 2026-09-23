@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.dataverse.dataverserentals.common.exceptions.AccessDeniedException;
 import com.dataverse.dataverserentals.common.exceptions.ConflictException;
+import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.helpers.CapitalizeWord;
 import com.dataverse.dataverserentals.common.helpers.Normalizar;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateToponimoDto;
@@ -54,5 +55,12 @@ public class ToponimoService {
 
         Toponimo toponimo = Toponimo.from(nombreNormalizado, usuarioId);
         return toponimoRepository.save(toponimo).getId();
+    }
+
+    public Toponimo findById(Long toponimoId) throws RecordNotFoundException {
+
+        log.info("Recuperando datos del topónimo con identificador: {}", toponimoId);
+        return toponimoRepository.findById(toponimoId).orElseThrow(() -> new RecordNotFoundException(
+                String.format("El topónimo solicitado con el id: %s no se encuentra registrado.", toponimoId)));
     }
 }
