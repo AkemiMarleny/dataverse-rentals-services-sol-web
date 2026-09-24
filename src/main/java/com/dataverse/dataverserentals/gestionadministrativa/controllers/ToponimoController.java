@@ -77,11 +77,4 @@ public class ToponimoController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("{toponimoId}")
-    public ResponseEntity<Void> delete(@PathVariable Long toponimoId) {
-
-        log.info("Iniciando eliminación del topónimo con ID: {}", toponimoId);
-        toponimoService.delete(toponimoId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
 }
