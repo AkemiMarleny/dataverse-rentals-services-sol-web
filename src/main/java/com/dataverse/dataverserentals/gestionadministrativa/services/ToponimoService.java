@@ -49,12 +49,12 @@ public class ToponimoService {
 
         log.info("Registrando nuevo topónimo con los siguientes datos: {}", payload);
 
-        String nombreNormalizado = new CapitalizeWord(new Normalizar(payload.nombre()).get()).get();
-        if (toponimoRepository.existsByNombreIgnoreCase(nombreNormalizado)) {
-            throw new ConflictException(String.format("Ya existe un topónimo con el nombre: %s", nombreNormalizado));
+        Toponimo toponimo = Toponimo.from(payload, usuarioId);
+
+        if (toponimoRepository.existsByNombreIgnoreCase(payload.nombre())) {
+            throw new ConflictException(String.format("Ya existe un topónimo con el nombre: %s", payload.nombre()));
         }
 
-        Toponimo toponimo = Toponimo.from(nombreNormalizado, usuarioId);
         return toponimoRepository.save(toponimo).getId();
     }
 
@@ -71,16 +71,17 @@ public class ToponimoService {
         log.info("Iniciando actualización del topónimo con ID: {}. Datos recibidos: {}", toponimoId, payload);
         Toponimo toponimo = findById(toponimoId);
 
-        String nombreNormalizado = new CapitalizeWord(new Normalizar(payload.nombre()).get()).get();
-        Long cantidadToponimosDuplicados = toponimoRepository.countByNombreIgnoreCaseAndIdNot(nombreNormalizado,
+        toponimo.updateWith(payload, usuarioId);
+
+        Long cantidadToponimosDuplicados = toponimoRepository.countByNombreIgnoreCaseAndIdNot(toponimo.getNombre(),
                 toponimoId);
         if (cantidadToponimosDuplicados > 0) {
-            log.info("Validación fallida: Ya existe otro topónimo con el mismo nombre: {}", nombreNormalizado);
+            log.info("Validación fallida: Ya existe otro topónimo con el mismo nombre: {}", toponimo.getNombre());
             throw new ConflictException(
-                    String.format("No se puede actualizar: ya existe este nombre registrado: %s", nombreNormalizado));
+                    String.format("No se puede actualizar: ya existe este nombre registrado: %s",
+                            toponimo.getNombre()));
         }
 
-        toponimo.updateWith(nombreNormalizado, usuarioId);
         toponimoRepository.save(toponimo);
     }
 

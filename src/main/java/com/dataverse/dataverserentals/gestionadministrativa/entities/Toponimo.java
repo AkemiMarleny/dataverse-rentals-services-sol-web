@@ -2,6 +2,11 @@ package com.dataverse.dataverserentals.gestionadministrativa.entities;
 
 import java.time.LocalDateTime;
 
+import com.dataverse.dataverserentals.common.helpers.CapitalizeWord;
+import com.dataverse.dataverserentals.common.helpers.Normalizar;
+import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateToponimoDto;
+import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.UpdateToponimoDto;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -47,9 +52,10 @@ public class Toponimo {
     @Column(name = "usuario_modificacion_id", nullable = false)
     private Long usuarioModificacionId;
 
-    public static Toponimo from(String nombreNormalizato, Long usuarioId) {
+    public static Toponimo from(CreateToponimoDto request, Long usuarioId) {
         Toponimo toponimo = new Toponimo();
-        toponimo.setNombre(nombreNormalizato);
+        String nombreNormalizado = new CapitalizeWord(new Normalizar(request.nombre()).get()).get();
+        toponimo.setNombre(nombreNormalizado);
         toponimo.setFechaCreacion(LocalDateTime.now());
         toponimo.setUsuarioCreacionId(usuarioId);
         toponimo.setFechaModificacion(LocalDateTime.now());
@@ -57,8 +63,9 @@ public class Toponimo {
         return toponimo;
     }
 
-    public void updateWith(String nombreNormalizato, Long usuarioId) {
-        this.nombre = nombreNormalizato;
+    public void updateWith(UpdateToponimoDto request, Long usuarioId) {
+        String nombreNormalizado = new CapitalizeWord(new Normalizar(request.nombre()).get()).get();
+        this.nombre = nombreNormalizado;
         this.fechaModificacion = LocalDateTime.now();
         this.usuarioModificacionId = usuarioId;
     }
