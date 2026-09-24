@@ -83,4 +83,10 @@ public class ToponimoService {
         toponimo.updateWith(nombreNormalizado, usuarioId);
         toponimoRepository.save(toponimo);
     }
+
+    public void delete(Long toponimoId) {
+
+        log.info("Eliminando datos del topónimo con identificador: {}", toponimoId);
+        toponimoRepository.deleteById(toponimoId);
+    }
 }

@@ -2,10 +2,6 @@ package com.dataverse.dataverserentals.gestionadministrativa.entities;
 
 import java.time.LocalDateTime;
 
-import com.dataverse.dataverserentals.common.helpers.CapitalizeWord;
-import com.dataverse.dataverserentals.common.helpers.Normalizar;
-import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateToponimoDto;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
