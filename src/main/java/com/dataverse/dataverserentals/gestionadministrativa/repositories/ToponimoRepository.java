@@ -11,4 +11,6 @@ public interface ToponimoRepository extends JpaRepository<Toponimo, Long> {
     Page<Toponimo> findByNombreContaining(Pageable pageable, String q);
 
     boolean existsByNombreIgnoreCase(String nombre);
+
+    Long countByNombreIgnoreCaseAndIdNot(String nombre, Long id);
 }

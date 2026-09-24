@@ -11,6 +11,7 @@ import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.helpers.CapitalizeWord;
 import com.dataverse.dataverserentals.common.helpers.Normalizar;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateToponimoDto;
+import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.UpdateToponimoDto;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Toponimo;
 import com.dataverse.dataverserentals.gestionadministrativa.enums.RolUsuario;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.ToponimoRepository;
@@ -62,5 +63,24 @@ public class ToponimoService {
         log.info("Recuperando datos del topónimo con identificador: {}", toponimoId);
         return toponimoRepository.findById(toponimoId).orElseThrow(() -> new RecordNotFoundException(
                 String.format("El topónimo solicitado con el id: %s no se encuentra registrado.", toponimoId)));
+    }
+
+    public void update(Long toponimoId, @Valid UpdateToponimoDto payload, Long usuarioId)
+            throws RecordNotFoundException {
+
+        log.info("Iniciando actualización del topónimo con ID: {}. Datos recibidos: {}", toponimoId, payload);
+        Toponimo toponimo = findById(toponimoId);
+
+        String nombreNormalizado = new CapitalizeWord(new Normalizar(payload.nombre()).get()).get();
+        Long cantidadToponimosDuplicados = toponimoRepository.countByNombreIgnoreCaseAndIdNot(nombreNormalizado,
+                toponimoId);
+        if (cantidadToponimosDuplicados > 0) {
+            log.info("Validación fallida: Ya existe otro topónimo con el mismo nombre: {}", nombreNormalizado);
+            throw new ConflictException(
+                    String.format("No se puede actualizar: ya existe este nombre registrado: %s", nombreNormalizado));
+        }
+
+        toponimo.updateWith(nombreNormalizado, usuarioId);
+        toponimoRepository.save(toponimo);
     }
 }

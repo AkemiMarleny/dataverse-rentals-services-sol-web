@@ -60,4 +60,10 @@ public class Toponimo {
         toponimo.setUsuarioModificacionId(usuarioId);
         return toponimo;
     }
+
+    public void updateWith(String nombreNormalizato, Long usuarioId) {
+        this.nombre = nombreNormalizato;
+        this.fechaModificacion = LocalDateTime.now();
+        this.usuarioModificacionId = usuarioId;
+    }
 }
