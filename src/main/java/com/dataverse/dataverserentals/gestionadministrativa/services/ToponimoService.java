@@ -39,9 +39,8 @@ public class ToponimoService {
         RolUsuario rol = usuarioPrincipal.usuarioRol();
 
         if (RolUsuario.ADMINISTRADOR.equals(rol)) {
-            return toponimoRepository.findByNombreContaining(pageable, q);
+            return toponimoRepository.findByNombreIgnoreCaseContaining(pageable, q);
         }
-
         throw new AccessDeniedException(usuarioPrincipal);
     }
 
