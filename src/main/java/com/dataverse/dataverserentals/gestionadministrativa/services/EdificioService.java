@@ -3,14 +3,20 @@ package com.dataverse.dataverserentals.gestionadministrativa.services;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import com.dataverse.dataverserentals.common.exceptions.ConflictException;
+import com.dataverse.dataverserentals.common.exceptions.FieldConstraintException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
+import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateBuildingAddress;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateEdificioDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.UpdateEdificioDto;
+import com.dataverse.dataverserentals.gestionadministrativa.entities.Direccion;
 import com.dataverse.dataverserentals.gestionadministrativa.entities.Edificio;
+import com.dataverse.dataverserentals.gestionadministrativa.repositories.DireccionRepository;
 import com.dataverse.dataverserentals.gestionadministrativa.repositories.EdificioRepository;
+import com.dataverse.dataverserentals.gestionadministrativa.repositories.ToponimoRepository;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 public class EdificioService {
 
     private final EdificioRepository edificioRepository;
+    private final ToponimoRepository toponimoRepository;
+    private final DireccionRepository direccionRepository;
 
     public Page<Edificio> findAll(Pageable pageable, String q) {
 
@@ -58,7 +66,8 @@ public class EdificioService {
         log.info("Iniciando actualización del edificio con ID: {}. Datos recibidos: {}", edificioId, payload);
         Edificio edificio = findById(edificioId);
 
-        Long cantidadEdificiosDuplicados = edificioRepository.countByNombreIgnoreCaseAndIdNot(payload.nombre(), edificioId);
+        Long cantidadEdificiosDuplicados = edificioRepository.countByNombreIgnoreCaseAndIdNot(payload.nombre(),
+                edificioId);
         if (cantidadEdificiosDuplicados > 0) {
             log.info("Validación fallida: Ya existe otro edificio con el mismo nombre: {}", payload.nombre());
             throw new ConflictException(
@@ -68,6 +77,24 @@ public class EdificioService {
 
         edificio.updateWith(payload, usuarioId);
         edificioRepository.save(edificio);
+    }
+
+    @Transactional
+    public Long createBuildingAddress(Long edificioId, @Valid CreateBuildingAddress payload)
+            throws RecordNotFoundException {
+
+        log.info("Registrando nueva dirección para el edificio ID: {} con los datos: {}", edificioId, payload);
+
+        findById(edificioId);
+
+        toponimoRepository.findById(payload.toponimoId())
+                .orElseThrow(() -> new FieldConstraintException("toponimoId", String
+                        .format("El tipo de topónimo con id: %s que ha ingresado no se encuentra registrado.",
+                                payload.toponimoId())));
+
+        Direccion direccion = Direccion.from(payload);
+        return direccionRepository.save(direccion).getId();
+
     }
 
 }

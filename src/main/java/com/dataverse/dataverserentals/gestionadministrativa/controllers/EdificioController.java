@@ -17,6 +17,7 @@ import com.dataverse.dataverserentals.common.dto.Page;
 import com.dataverse.dataverserentals.common.exceptions.ConflictException;
 import com.dataverse.dataverserentals.common.exceptions.RecordNotFoundException;
 import com.dataverse.dataverserentals.common.factories.PageFactory;
+import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateBuildingAddress;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.CreateEdificioDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.request.UpdateEdificioDto;
 import com.dataverse.dataverserentals.gestionadministrativa.controllers.dtos.response.DetailEdificioDto;
@@ -38,7 +39,8 @@ public class EdificioController {
     private final SecurityContext securityContext;
 
     @GetMapping
-    public ResponseEntity<Page<EdificioPaginaDto>> findAll(Pageable pageable, @RequestParam(required = false) String q) {
+    public ResponseEntity<Page<EdificioPaginaDto>> findAll(Pageable pageable,
+            @RequestParam(required = false) String q) {
 
         log.info("Listando edificios con filtro '{}' y parámetros: {}", q, pageable);
         org.springframework.data.domain.Page<EdificioPaginaDto> edificioPage = edificioService.findAll(pageable, q)
@@ -72,6 +74,15 @@ public class EdificioController {
         Long usuarioId = securityContext.getUsuarioPrincipal().usuarioId();
         edificioService.update(edificioId, request, usuarioId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("{edificioId}/direcciones")
+    public ResponseEntity<CreateResponse> createBuildingAddress(@PathVariable Long edificioId,
+            @RequestBody CreateBuildingAddress request) throws RecordNotFoundException {
+
+        log.info("Iniciando la creación de una dirección para el edificio ID: {}. Request: {}", edificioId, request);
+        Long edificioDireccionId = edificioService.createBuildingAddress(edificioId, request);
+        return new ResponseEntity<>(new CreateResponse(edificioDireccionId), HttpStatus.CREATED);
     }
 
 }
