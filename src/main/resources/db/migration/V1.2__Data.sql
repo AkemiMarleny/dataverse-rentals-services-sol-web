@@ -22,8 +22,8 @@ SET row_security = off;
 --
 
 COPY public.personas (id, apellidos, correo, fecha_creacion, fecha_modificacion, fecha_nacimiento, genero_code, nombre_comercial, nombres, numero_celular, numero_documento, persona_juridica_checksum, persona_natural_checksum, persona_natural_negocio_checksum, razon_social, tipo_documento_code, tipo_persona_code, usuario_creacion_id, usuario_modificacion_id) FROM stdin;
-1	Sys	info@dataverse.com	2026-06-05 11:49:39.710268	2026-06-05 11:49:39.710287	1990-10-10	FEMENINO	\N	Dataverse	(+51) 987654212	89876567	\N	7f0a0983a69dc109d14052e1ca61deee	\N	\N	DNI	NATURAL_SIN_NEGOCIO	1	1
-2	Admi	admin@dataverse.com	2026-06-05 11:49:39.897193	2026-06-05 11:49:39.897197	1990-10-10	MASCULINO	\N	Dataverse	(+51) 997654212	12345678	\N	bf5266002fcade154e4047b1d02c3d29	\N	\N	DNI	NATURAL_SIN_NEGOCIO	1	1
+1	Sys	info@dataverse.com	2026-10-02 20:36:55.058253	2026-10-02 20:36:55.058263	1990-10-10	FEMENINO	\N	Dataverse	(+51) 987654212	89876567	\N	7f0a0983a69dc109d14052e1ca61deee	\N	\N	DNI	NATURAL_SIN_NEGOCIO	1	1
+2	Admin	admin@dataverse.com	2026-10-02 20:36:55.192727	2026-10-02 20:36:55.192732	1990-10-10	FEMENINO	\N	Dataverse	(+51) 997654212	12345678	\N	595712c05c268aa9164d49a9ff61ac1f	\N	\N	DNI	NATURAL_SIN_NEGOCIO	1	1
 \.
 
 
@@ -32,8 +32,8 @@ COPY public.personas (id, apellidos, correo, fecha_creacion, fecha_modificacion,
 --
 
 COPY public.usuarios (id, contrasena_hash, estado_code, fecha_creacion, fecha_modificacion, fecha_ultimo_login, mfa_backup_codes, mfa_enabled, mfa_secret, mfa_setup_required, nombre_usuario, persona_id, rol_code, usuario_creacion_id, usuario_modificacion_id) FROM stdin;
-1	$2a$10$x2tdEt2gl.7XH4tYwWjEXuHWGaYzRZfFI8OjgQm0wRS0b8GF0afvS	ACTIVO	2026-06-05 11:49:39.884807	\N	\N	\N	t	\N	t	dataversesys	1	SYSTEM	1	\N
-2	$2a$10$x2tdEt2gl.7XH4tYwWjEXuHWGaYzRZfFI8OjgQm0wRS0b8GF0afvS	ACTIVO	2026-06-05 11:49:39.982223	\N	\N	\N	t	\N	t	dataverseadmin	2	ADMINISTRADOR	1	\N
+1	$2a$10$j8edaBDyE/7/Wjpob7fD8.MvaS6lbfatlRiTvC6.76R48prGDtevC	ACTIVO	2026-10-02 20:36:55.181819	\N	\N	\N	t	\N	t	dataversesys	1	SYSTEM	1	\N
+2	$2a$10$hq/3q5GXgp72NveaQYlyh.PVKBiw7eFXEhlleg9OqaFFBoHA4r152	ACTIVO	2026-10-02 20:36:55.26628	\N	\N	\N	t	\N	t	dataverseadmin	2	ADMINISTRADOR	1	\N
 \.
 
 
@@ -49,7 +49,7 @@ COPY public.categorias_gasto (id, descripcion, fecha_creacion, fecha_modificacio
 -- Data for Name: edificios; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-COPY public.edificios (id, direccion, fecha_creacion, fecha_modificacion, nombre, numero_pisos, usuario_creacion_id, usuario_modificacion_id) FROM stdin;
+COPY public.edificios (id, fecha_creacion, fecha_modificacion, nombre, numero_pisos, usuario_creacion_id, usuario_modificacion_id) FROM stdin;
 \.
 
 
@@ -102,6 +102,22 @@ COPY public.detalles_recibo (id, descripcion, fecha_creacion, monto, recibo_id, 
 
 
 --
+-- Data for Name: toponimos; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.toponimos (id, fecha_creacion, fecha_modificacion, nombre, usuario_creacion_id, usuario_modificacion_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: direcciones; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.direcciones (id, edificio_id, fecha_creacion, fecha_modificacion, identificador, nombre, referencia, toponimo_id, usuario_creacion_id, usuario_modificacion_id) FROM stdin;
+\.
+
+
+--
 -- Data for Name: gastos_operativos; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
@@ -142,6 +158,14 @@ COPY public.refresh_tokens (id, created_at, expiry_date, ip_address, revoked, to
 
 
 --
+-- Data for Name: v_contratos; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.v_contratos (id, alquiler_mensual, estado, fecha_cierre, fecha_creacion, fecha_fin, fecha_inicio, pdf_url, persona_id, unidad_id, usuario_creacion_id) FROM stdin;
+\.
+
+
+--
 -- Name: categorias_gasto_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
@@ -167,6 +191,13 @@ SELECT pg_catalog.setval('public.detalle_propuestas_liquidacion_id_seq', 1, fals
 --
 
 SELECT pg_catalog.setval('public.detalles_recibo_id_seq', 1, false);
+
+
+--
+-- Name: direcciones_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.direcciones_id_seq', 1, false);
 
 
 --
@@ -230,6 +261,13 @@ SELECT pg_catalog.setval('public.recibos_id_seq', 1, false);
 --
 
 SELECT pg_catalog.setval('public.refresh_tokens_id_seq', 1, false);
+
+
+--
+-- Name: toponimos_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.toponimos_id_seq', 1, false);
 
 
 --
