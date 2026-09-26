@@ -30,6 +30,10 @@ import com.dataverse.dataverserentals.security.services.JwtService;
 import com.dataverse.dataverserentals.security.services.MfaService;
 import com.dataverse.dataverserentals.security.services.RefreshTokenService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,6 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("api/v1/auth/mfa")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Autenticación MFA", description = "Configuración y verificación del segundo factor (MFA)")
 public class MfaController {
 
     private static final String MFA_ISSUER = "Dataverse Rentals";
@@ -54,6 +59,12 @@ public class MfaController {
     private final RefreshTokenService refreshTokenService;
 
     @GetMapping("setup")
+    @Operation(
+            summary = "Iniciar configuración de MFA",
+            description = "Genera el secreto TOTP, la URL del código QR y los códigos de respaldo para registrar la app autenticadora.")
+    @ApiResponse(responseCode = "200", description = "Secreto, QR y códigos de respaldo generados")
+    @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    @ApiResponse(responseCode = "422", description = "El MFA ya se encuentra activo")
     public ResponseEntity<MfaSetupResponse> setupMfa() throws RecordNotFoundException, MfaAlreadyEnabledException {
         UsuarioPrincipal usuarioPrincipal = securityContext.getUsuarioPrincipal();
 
@@ -76,6 +87,12 @@ public class MfaController {
     }
 
     @PostMapping("verify-setup")
+    @Operation(
+            summary = "Validar código de configuración",
+            description = "Valida un código TOTP contra el secreto antes de habilitar el MFA.")
+    @ApiResponse(responseCode = "200", description = "Código TOTP válido")
+    @ApiResponse(responseCode = "401", description = "Código MFA inválido")
+    @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     public ResponseEntity<MfaVerificationResponse> verifySetup(@RequestBody MfaSetupRequest request)
             throws RecordNotFoundException, InvalidMfaCodeException {
         if (!mfaService.validateTotpCode(request.secret(), Integer.parseInt(request.code()))) {
@@ -88,6 +105,12 @@ public class MfaController {
     }
 
     @PostMapping("enable")
+    @Operation(
+            summary = "Habilitar MFA",
+            description = "Valida el código TOTP, guarda el secreto cifrado y activa el MFA para el usuario autenticado.")
+    @ApiResponse(responseCode = "204", description = "MFA habilitado correctamente")
+    @ApiResponse(responseCode = "401", description = "Código MFA inválido")
+    @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     public ResponseEntity<Void> enableMfa(@RequestBody @Valid MfaSetupRequest request,
             HttpServletResponse httpResponse)
             throws RecordNotFoundException, InvalidMfaCodeException {
@@ -111,6 +134,12 @@ public class MfaController {
 
     @PostMapping("verify")
     @Transactional(rollbackFor = Exception.class)
+    @Operation(
+            summary = "Verificar código MFA",
+            description = "Verifica el código TOTP (o código de respaldo). Si es válido, emite el access token de acceso completo y fija las cookies de sesión.")
+    @ApiResponse(responseCode = "200", description = "Código válido; se devuelve el access token y se fijan las cookies")
+    @ApiResponse(responseCode = "401", description = "Código MFA inválido o MFA no configurado")
+    @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     public ResponseEntity<MfaVerificationResponse> verifyMfa(@RequestBody MfaVerificationRequest request,
             HttpServletRequest httpRequest, HttpServletResponse httpResponse)
             throws RecordNotFoundException, InvalidMfaCodeException {
