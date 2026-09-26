@@ -28,6 +28,10 @@ import com.dataverse.dataverserentals.gestionfinanciera.services.PagoService;
 import com.dataverse.dataverserentals.security.context.SecurityContext;
 import com.dataverse.dataverserentals.security.context.UsuarioPrincipal;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,12 +40,19 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/recibos/{reciboId}/pagos")
+@Tag(name = "Pagos", description = "Registro, consulta y auditoría de pagos de recibos")
 public class PagoController {
 
     private final PagoService pagoService;
     private final SecurityContext securityContext;
 
     @GetMapping
+    @Operation(
+            summary = "Listar pagos de un recibo",
+            description = "Devuelve los pagos registrados de un recibo, paginados.")
+    @ApiResponse(responseCode = "200", description = "Página de pagos")
+    @ApiResponse(responseCode = "403", description = "Usuario no autorizado")
+    @ApiResponse(responseCode = "404", description = "Recibo no encontrado")
     public ResponseEntity<Page<PagoDto>> findPagosByReciboId(
             @PathVariable Long reciboId,
             Pageable pageable) throws AccessDeniedException, RecordNotFoundException {
@@ -56,6 +67,13 @@ public class PagoController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(
+            summary = "Registrar pago",
+            description = "Registra un pago para el recibo. Envía un formulario multipart con la parte 'pago' (JSON con los datos del pago) y la parte 'file' (voucher) opcional.")
+    @ApiResponse(responseCode = "201", description = "Pago registrado; se devuelve el ID del pago creado")
+    @ApiResponse(responseCode = "403", description = "Usuario no autorizado")
+    @ApiResponse(responseCode = "404", description = "Recibo no encontrado")
+    @ApiResponse(responseCode = "422", description = "Datos del pago inválidos o no procesables")
     public ResponseEntity<CreateResponse> createPago(
             @PathVariable Long reciboId,
             @RequestPart("pago") @Valid CreatePagoDto request,
@@ -72,6 +90,13 @@ public class PagoController {
     }
 
     @PutMapping("/{pagoId}/auditar")
+    @Operation(
+            summary = "Auditar pago",
+            description = "Aprueba o rechaza un pago registrado, con el motivo en caso de rechazo.")
+    @ApiResponse(responseCode = "204", description = "Pago auditado correctamente")
+    @ApiResponse(responseCode = "400", description = "Solicitud inválida (p. ej. campos de auditoría incorrectos)")
+    @ApiResponse(responseCode = "403", description = "Usuario no autorizado")
+    @ApiResponse(responseCode = "422", description = "Datos de auditoría no procesables")
     public ResponseEntity<Void> auditarPago(
             @PathVariable Long reciboId,
             @PathVariable Long pagoId,
