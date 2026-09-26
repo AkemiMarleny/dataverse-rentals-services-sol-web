@@ -24,6 +24,11 @@ import com.dataverse.dataverserentals.gestionfinanciera.enums.EstadoRecibo;
 import com.dataverse.dataverserentals.gestionfinanciera.services.DetalleReciboService;
 import com.dataverse.dataverserentals.gestionfinanciera.services.ReciboService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,16 +36,25 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/recibos")
+@Tag(name = "Recibos", description = "Consultas y generación de recibos de alquiler")
 public class ReciboController {
 
     private final ReciboService reciboService;
     private final DetalleReciboService detalleReciboService;
 
     @GetMapping
+    @Operation(
+            summary = "Listar recibos",
+            description = "Devuelve los recibos paginados, con filtros opcionales por fecha de emisión y estado.")
+    @ApiResponse(responseCode = "200", description = "Página de recibos")
+    @ApiResponse(responseCode = "403", description = "Usuario no autorizado")
     public ResponseEntity<Page<ReciboDto>> findAll(
             Pageable pageable,
+            @Parameter(description = "Fecha de emisión desde (yyyy-MM-dd)", example = "2026-01-01")
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> fechaDesde,
+            @Parameter(description = "Fecha de emisión hasta (yyyy-MM-dd)", example = "2026-01-31")
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> fechaHasta,
+            @Parameter(description = "Filtro por estado del recibo", example = "PENDIENTE")
             @RequestParam Optional<EstadoRecibo> estadoCode) throws AccessDeniedException {
         log.info(
                 "Listando recibos con filtros - edificioId: {}, fechaDesde: {}, fechaHasta: {}, estadoCode: {}, pageable: {}",
@@ -54,6 +68,12 @@ public class ReciboController {
     }
 
     @GetMapping("/{reciboId}")
+    @Operation(
+            summary = "Obtener recibo por ID",
+            description = "Devuelve el detalle de un recibo, incluyendo el monto pagado.")
+    @ApiResponse(responseCode = "200", description = "Detalle del recibo")
+    @ApiResponse(responseCode = "403", description = "Usuario no autorizado")
+    @ApiResponse(responseCode = "404", description = "Recibo no encontrado")
     public ResponseEntity<ReciboDetailDto> findById(
             @PathVariable Long reciboId) throws AccessDeniedException, RecordNotFoundException {
         log.info("Obteniendo recibo con ID: {}", reciboId);
@@ -64,6 +84,11 @@ public class ReciboController {
     }
 
     @PostMapping
+    @Operation(
+            summary = "Generar recibos",
+            description = "Genera los recibos pendientes de todos los contratos activos.")
+    @ApiResponse(responseCode = "204", description = "Recibos generados correctamente")
+    @ApiResponse(responseCode = "403", description = "Usuario no autorizado")
     ResponseEntity<Void> generarRecibos() throws AccessDeniedException {
         reciboService.generarRecibos();
 
@@ -71,6 +96,12 @@ public class ReciboController {
     }
 
     @GetMapping("/{reciboId}/detalles")
+    @Operation(
+            summary = "Listar detalles de un recibo",
+            description = "Devuelve los conceptos (detalles) de un recibo, paginados.")
+    @ApiResponse(responseCode = "200", description = "Página de detalles del recibo")
+    @ApiResponse(responseCode = "403", description = "Usuario no autorizado")
+    @ApiResponse(responseCode = "404", description = "Recibo no encontrado")
     public ResponseEntity<Page<DetalleReciboDto>> findDetallesByReciboId(
             @PathVariable Long reciboId,
             Pageable pageable) throws AccessDeniedException, RecordNotFoundException {
