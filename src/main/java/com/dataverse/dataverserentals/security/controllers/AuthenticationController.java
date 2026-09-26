@@ -24,6 +24,11 @@ import com.dataverse.dataverserentals.security.services.AuthenticationService;
 import com.dataverse.dataverserentals.security.services.JwtService;
 import com.dataverse.dataverserentals.security.services.RefreshTokenService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/auth")
 @Slf4j
+@Tag(name = "Autenticación", description = "Login, refresh y logout con JWT")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
@@ -42,6 +48,12 @@ public class AuthenticationController {
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("login")
+    @Operation(
+            summary = "Iniciar sesión",
+            description = "Autentica al usuario y devuelve el access token JWT en el cuerpo de la respuesta, o un token temporal si el flujo MFA está pendiente.")
+    @ApiResponse(responseCode = "200", description = "Credenciales válidas; la respuesta incluye el token JWT")
+    @ApiResponse(responseCode = "422", description = "Credenciales inválidas, usuario inactivo o bloqueado")
+    @SecurityRequirements
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request, HttpServletResponse httpResponse)
             throws CredencialesInvalidasException, UsuarioInactivoException, UsuarioBloqueadoException,
             RecordNotFoundException {
@@ -52,6 +64,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("refresh")
+    @Operation(
+            summary = "Renovar access token",
+            description = "Rota el refresh token enviado como cookie y devuelve un nuevo access token JWT.")
+    @ApiResponse(responseCode = "200", description = "Nuevo access token generado y cookies renovadas")
+    @ApiResponse(responseCode = "401", description = "Refresh token ausente, inválido o revocado")
+    @ApiResponse(responseCode = "404", description = "Usuario asociado al token no encontrado")
+    @SecurityRequirements
     public ResponseEntity<RefreshResponse> refresh(HttpServletRequest httpRequest, HttpServletResponse httpResponse)
             throws InvalidRefreshTokenException, RecordNotFoundException {
         String refreshTokenValue = extractRefreshToken(httpRequest);
@@ -76,6 +95,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("logout")
+    @Operation(
+            summary = "Cerrar sesión",
+            description = "Revoca el refresh token y limpia las cookies de sesión.")
+    @ApiResponse(responseCode = "200", description = "Sesión cerrada exitosamente")
+    @SecurityRequirements
     public ResponseEntity<Void> logout(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         log.info("Cerrando sesión de usuario");
 
