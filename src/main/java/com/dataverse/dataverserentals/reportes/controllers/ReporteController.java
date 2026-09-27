@@ -16,6 +16,11 @@ import com.dataverse.dataverserentals.reportes.services.ReporteFinancieroService
 import com.dataverse.dataverserentals.reportes.services.ReporteMorosidadService;
 import com.dataverse.dataverserentals.reportes.services.ReporteOcupacionService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/reportes")
+@Tag(name = "Reportes", description = "Reportes financieros, de morosidad y de ocupación")
 public class ReporteController {
 
     private final ReporteFinancieroService reporteFinancieroService;
@@ -30,7 +36,12 @@ public class ReporteController {
     private final ReporteMorosidadService reporteMorosidadService;
 
     @GetMapping("/resumen-anual")
+    @Operation(
+            summary = "Resumen anual de ingresos y egresos",
+            description = "Devuelve el resumen mensual de ingresos y egresos del año indicado (o el año actual si no se envía).")
+    @ApiResponse(responseCode = "200", description = "Resumen anual de ingresos y egresos")
     public ResponseEntity<IngresoEgresoMensualDto> getResumenAnual(
+            @Parameter(description = "Año a consultar (si no se envía, se usa el año actual)", example = "2026")
             @RequestParam(required = false) Integer anio) {
         log.info("Generando resumen anual para el año: {}", anio != null ? anio : "actual");
 
@@ -40,7 +51,12 @@ public class ReporteController {
     }
 
     @GetMapping("/ocupacion-unidades")
+    @Operation(
+            summary = "Reporte de ocupación de unidades",
+            description = "Devuelve la ocupación mensual de unidades del año indicado (o el año actual si no se envía).")
+    @ApiResponse(responseCode = "200", description = "Reporte de ocupación de unidades")
     public ResponseEntity<OcupacionUnidadesDto> getOcupacionUnidades(
+            @Parameter(description = "Año a consultar (si no se envía, se usa el año actual)", example = "2026")
             @RequestParam(required = false) Integer anio) {
         log.info("Generando reporte de ocupación de unidades para el año: {}", anio != null ? anio : "actual");
 
@@ -49,7 +65,12 @@ public class ReporteController {
     }
 
     @GetMapping("/morosidad")
+    @Operation(
+            summary = "Reporte de morosidad",
+            description = "Devuelve el reporte mensual de pagos morosos del año indicado (o el año actual si no se envía).")
+    @ApiResponse(responseCode = "200", description = "Reporte de morosidad")
     public ResponseEntity<MorosidadDto> getMorosidad(
+            @Parameter(description = "Año a consultar (si no se envía, se usa el año actual)", example = "2026")
             @RequestParam(required = false) Integer anio) {
         log.info("Generando reporte de morosidad para el año: {}", anio != null ? anio : "actual");
 
