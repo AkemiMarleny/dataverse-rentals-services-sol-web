@@ -28,6 +28,11 @@ import com.dataverse.dataverserentals.gestionadministrativa.enums.TipoPersona;
 import com.dataverse.dataverserentals.gestionadministrativa.services.PersonaService;
 import com.dataverse.dataverserentals.security.context.SecurityContext;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,15 +40,22 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/personas")
 @Slf4j
+@Tag(name = "Personas", description = "Gestión de personas naturales y jurídicas")
 public class PersonaController {
 
     private final PersonaService personaService;
     private final SecurityContext securityContext;
 
     @GetMapping
+    @Operation(
+            summary = "Listar personas",
+            description = "Devuelve las personas paginadas, con búsqueda opcional y filtro por tipo de persona.")
+    @ApiResponse(responseCode = "200", description = "Página de personas")
     public ResponseEntity<Page<PersonaPaginaDto>> findAll(
             Pageable pageable,
+            @Parameter(description = "Texto de búsqueda (nombres, documento, razón social)", example = "Juan")
             @RequestParam(required = false) String q,
+            @Parameter(description = "Filtro por tipo de persona", example = "NATURAL_SIN_NEGOCIO")
             @RequestParam Optional<TipoPersona> tipoPersonaCode) {
 
         log.info("Listando personas con filtro '{}', tipo: {} y parámetros: {}", q, tipoPersonaCode, pageable);
@@ -54,6 +66,13 @@ public class PersonaController {
     }
 
     @PostMapping
+    @Operation(
+            summary = "Crear persona",
+            description = "Registra una nueva persona (natural o jurídica) con sus datos de contacto y documento.")
+    @ApiResponse(responseCode = "201", description = "Persona creada; se devuelve el ID de la persona")
+    @ApiResponse(responseCode = "409", description = "Conflicto (p. ej. documento ya registrado)")
+    @ApiResponse(responseCode = "422", description = "Datos de la persona no procesables")
+    @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     public ResponseEntity<CreateResponse> create(@RequestBody CreatePersonDto request)
             throws Exception {
 
@@ -64,6 +83,11 @@ public class PersonaController {
     }
 
     @GetMapping("{personaId}")
+    @Operation(
+            summary = "Obtener persona por ID",
+            description = "Devuelve el detalle de una persona.")
+    @ApiResponse(responseCode = "200", description = "Detalle de la persona")
+    @ApiResponse(responseCode = "404", description = "Persona no encontrada")
     public ResponseEntity<DetailPersonaDto> findById(@PathVariable Long personaId) throws RecordNotFoundException {
 
         log.info("Consultando detalles de la persona con ID: {}", personaId);
@@ -73,6 +97,12 @@ public class PersonaController {
     }
 
     @PutMapping("{personaId}")
+    @Operation(
+            summary = "Actualizar persona",
+            description = "Actualiza los datos de una persona existente.")
+    @ApiResponse(responseCode = "204", description = "Persona actualizada correctamente")
+    @ApiResponse(responseCode = "404", description = "Persona no encontrada")
+    @ApiResponse(responseCode = "409", description = "Conflicto (p. ej. documento ya registrado)")
     public ResponseEntity<Void> update(@PathVariable Long personaId, @RequestBody UpdatePersonDto request)
             throws RecordNotFoundException, ConflictException {
 
