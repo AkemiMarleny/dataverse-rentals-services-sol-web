@@ -25,6 +25,11 @@ import com.dataverse.dataverserentals.gestionadministrativa.entities.Medidor;
 import com.dataverse.dataverserentals.gestionadministrativa.services.MedidorService;
 import com.dataverse.dataverserentals.security.context.SecurityContext;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,13 +37,19 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/edificios/{edificioId}/unidades/{unidadId}/medidores")
 @Slf4j
+@Tag(name = "Medidores", description = "Gestión de medidores de luz y agua por unidad")
 public class MedidorController {
 
     private final MedidorService medidorService;
     private final SecurityContext securityContext;
 
     @GetMapping
+    @Operation(
+            summary = "Listar medidores de una unidad",
+            description = "Devuelve los medidores de la unidad, paginados y con búsqueda opcional.")
+    @ApiResponse(responseCode = "200", description = "Página de medidores")
     public ResponseEntity<Page<MedidorPaginaDto>> findAll(Pageable pageable, @PathVariable Long unidadId,
+            @Parameter(description = "Texto de búsqueda (número de serie)", example = "SER-2026")
             @RequestParam(required = false) String q) {
 
         log.info("Listando medidores con filtro '{}' y parámetros: {}", q, pageable);
@@ -49,6 +60,12 @@ public class MedidorController {
     }
 
     @PostMapping
+    @Operation(
+            summary = "Crear medidor",
+            description = "Registra un nuevo medidor para la unidad indicada.")
+    @ApiResponse(responseCode = "201", description = "Medidor creado; se devuelve el ID del medidor")
+    @ApiResponse(responseCode = "404", description = "Edificio o unidad no encontrada")
+    @ApiResponse(responseCode = "409", description = "Conflicto (p. ej. número de serie ya existente)")
     public ResponseEntity<CreateResponse> create(@PathVariable Long edificioId, @PathVariable Long unidadId,
             @RequestBody CreateMedidorDto request)
             throws ConflictException, RecordNotFoundException {
@@ -60,6 +77,11 @@ public class MedidorController {
     }
 
     @GetMapping("{medidorId}")
+    @Operation(
+            summary = "Obtener medidor por ID",
+            description = "Devuelve el detalle de un medidor de la unidad.")
+    @ApiResponse(responseCode = "200", description = "Detalle del medidor")
+    @ApiResponse(responseCode = "404", description = "Medidor no encontrado")
     public ResponseEntity<DetailMedidorDto> findById(
             @PathVariable Long edificioId,
             @PathVariable Long unidadId,
@@ -72,6 +94,12 @@ public class MedidorController {
     }
 
     @PutMapping("{medidorId}")
+    @Operation(
+            summary = "Actualizar medidor",
+            description = "Actualiza el tipo y número de serie de un medidor existente.")
+    @ApiResponse(responseCode = "204", description = "Medidor actualizado correctamente")
+    @ApiResponse(responseCode = "404", description = "Medidor no encontrado")
+    @ApiResponse(responseCode = "409", description = "Conflicto (p. ej. número de serie ya existente)")
     public ResponseEntity<Void> update(
             @PathVariable Long edificioId,
             @PathVariable Long unidadId,
