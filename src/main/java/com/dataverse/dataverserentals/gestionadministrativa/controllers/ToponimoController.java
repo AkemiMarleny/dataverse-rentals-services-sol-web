@@ -26,6 +26,11 @@ import com.dataverse.dataverserentals.gestionadministrativa.entities.Toponimo;
 import com.dataverse.dataverserentals.gestionadministrativa.services.ToponimoService;
 import com.dataverse.dataverserentals.security.context.SecurityContext;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,13 +38,21 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("api/v1/toponimos")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Topónimos", description = "Gestión de topónimos para direcciones")
 public class ToponimoController {
 
     private final ToponimoService toponimoService;
     private final SecurityContext securityContext;
 
     @GetMapping
-    public ResponseEntity<Page<ToponimoPaginaDto>> findAll(Pageable pageable, @RequestParam String q)
+    @Operation(
+            summary = "Listar topónimos",
+            description = "Devuelve los topónimos paginados, con búsqueda obligatoria por nombre.")
+    @ApiResponse(responseCode = "200", description = "Página de topónimos")
+    @ApiResponse(responseCode = "403", description = "Usuario no autorizado")
+    public ResponseEntity<Page<ToponimoPaginaDto>> findAll(Pageable pageable,
+            @Parameter(description = "Texto de búsqueda (nombre del topónimo)", example = "Av. Los Alamos")
+            @RequestParam String q)
             throws AccessDeniedException {
 
         log.info("Listando topónimos con filtro '{}' y parámetros: {}", q, pageable);
@@ -50,6 +63,10 @@ public class ToponimoController {
     }
 
     @PostMapping
+    @Operation(
+            summary = "Crear topónimo",
+            description = "Registra un nuevo topónimo (avenida, calle, jirón, etc.).")
+    @ApiResponse(responseCode = "201", description = "Topónimo creado; se devuelve el ID del topónimo")
     public ResponseEntity<CreateResponse> create(@RequestBody CreateToponimoDto request) {
 
         log.info("Iniciando la creación de una nuevo topónimo: {}", request);
@@ -59,6 +76,11 @@ public class ToponimoController {
     }
 
     @GetMapping("{toponimoId}")
+    @Operation(
+            summary = "Obtener topónimo por ID",
+            description = "Devuelve el detalle de un topónimo.")
+    @ApiResponse(responseCode = "200", description = "Detalle del topónimo")
+    @ApiResponse(responseCode = "404", description = "Topónimo no encontrado")
     public ResponseEntity<DetailToponimoDto> findById(@PathVariable Long toponimoId) throws RecordNotFoundException {
 
         log.info("Consultando detalles del topónimo con ID: {}", toponimoId);
@@ -68,6 +90,11 @@ public class ToponimoController {
     }
 
     @PutMapping("{toponimoId}")
+    @Operation(
+            summary = "Actualizar topónimo",
+            description = "Actualiza el nombre de un topónimo existente.")
+    @ApiResponse(responseCode = "204", description = "Topónimo actualizado correctamente")
+    @ApiResponse(responseCode = "404", description = "Topónimo no encontrado")
     public ResponseEntity<Void> update(@PathVariable Long toponimoId, @RequestBody UpdateToponimoDto request)
             throws RecordNotFoundException {
 
