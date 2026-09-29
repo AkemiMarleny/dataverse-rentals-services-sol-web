@@ -25,6 +25,11 @@ import com.dataverse.dataverserentals.gestionadministrativa.entities.Unidad;
 import com.dataverse.dataverserentals.gestionadministrativa.services.UnidadService;
 import com.dataverse.dataverserentals.security.context.SecurityContext;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,15 +37,22 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/edificios/{edificioId}/unidades")
 @Slf4j
+@Tag(name = "Unidades", description = "Gestión de unidades dentro de un edificio")
 public class UnidadController {
 
     private final UnidadService unidadService;
     private final SecurityContext securityContext;
 
     @GetMapping
+    @Operation(
+            summary = "Listar unidades de un edificio",
+            description = "Devuelve las unidades del edificio, paginadas y con búsqueda obligatoria.")
+    @ApiResponse(responseCode = "200", description = "Página de unidades")
     public ResponseEntity<Page<UnidadPaginaDto>> findAll(
             @PathVariable Long edificioId,
-            Pageable pageable, @RequestParam String q) {
+            Pageable pageable,
+            @Parameter(description = "Texto de búsqueda (piso o puerta)", example = "5")
+            @RequestParam String q) {
 
         log.info("Listando unidades con filtro '{}' y parámetros: {}", q, pageable);
         org.springframework.data.domain.Page<UnidadPaginaDto> unidadPage = unidadService
@@ -51,6 +63,11 @@ public class UnidadController {
     }
 
     @PostMapping
+    @Operation(
+            summary = "Crear unidad",
+            description = "Registra una nueva unidad en el edificio indicado.")
+    @ApiResponse(responseCode = "201", description = "Unidad creada; se devuelve el ID de la unidad")
+    @ApiResponse(responseCode = "409", description = "Conflicto (p. ej. piso y puerta ya existentes)")
     public ResponseEntity<CreateResponse> create(@PathVariable Long edificioId, @RequestBody CreateUnidadDto request)
             throws ConflictException {
 
@@ -61,6 +78,11 @@ public class UnidadController {
     }
 
     @GetMapping("{unidadId}")
+    @Operation(
+            summary = "Obtener unidad por ID",
+            description = "Devuelve el detalle de una unidad del edificio.")
+    @ApiResponse(responseCode = "200", description = "Detalle de la unidad")
+    @ApiResponse(responseCode = "404", description = "Unidad no encontrada")
     public ResponseEntity<DetailUnidadDto> findById(@PathVariable Long edificioId, @PathVariable Long unidadId)
             throws RecordNotFoundException {
 
@@ -71,6 +93,12 @@ public class UnidadController {
     }
 
     @PutMapping("{unidadId}")
+    @Operation(
+            summary = "Actualizar unidad",
+            description = "Actualiza los datos de una unidad existente.")
+    @ApiResponse(responseCode = "204", description = "Unidad actualizada correctamente")
+    @ApiResponse(responseCode = "404", description = "Unidad no encontrada")
+    @ApiResponse(responseCode = "409", description = "Conflicto (p. ej. piso y puerta ya existentes)")
     public ResponseEntity<Void> update(@PathVariable Long edificioId, @PathVariable Long unidadId,
             @RequestBody UpdateUnidadDto request)
             throws ConflictException, RecordNotFoundException {
