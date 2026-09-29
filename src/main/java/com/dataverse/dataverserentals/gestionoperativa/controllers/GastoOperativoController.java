@@ -25,6 +25,11 @@ import com.dataverse.dataverserentals.gestionoperativa.entities.GastoOperativo;
 import com.dataverse.dataverserentals.gestionoperativa.services.GastoOperativoService;
 import com.dataverse.dataverserentals.security.context.SecurityContext;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,15 +37,21 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/edificios/{edificioId}/gastos-operativos")
 @Slf4j
+@Tag(name = "Gastos operativos", description = "Gestión de gastos operativos por edificio")
 public class GastoOperativoController {
 
     private final GastoOperativoService gastoOperativoService;
     private final SecurityContext securityContext;
 
     @GetMapping
+    @Operation(
+            summary = "Listar gastos operativos de un edificio",
+            description = "Devuelve los gastos operativos del edificio, paginados y con búsqueda opcional por categoría.")
+    @ApiResponse(responseCode = "200", description = "Página de gastos operativos")
     public ResponseEntity<Page<GastoOperativoPaginaDto>> findAll(
             Pageable pageable,
             @PathVariable Long edificioId,
+            @Parameter(description = "Texto de búsqueda (nombre de la categoría)", example = "mantenimiento")
             @RequestParam(required = false) String q) {
 
         log.info("Listando gastos operativos con edificioId: {}, categoriaNombre: {} y parámetros: {}",
@@ -54,6 +65,10 @@ public class GastoOperativoController {
     }
 
     @PostMapping
+    @Operation(
+            summary = "Crear gasto operativo",
+            description = "Registra un nuevo gasto operativo para el edificio indicado.")
+    @ApiResponse(responseCode = "201", description = "Gasto operativo creado; se devuelve el ID del gasto")
     public ResponseEntity<CreateResponse> create(
             @PathVariable Long edificioId,
             @RequestBody CreateGastoOperativoDto request) {
@@ -65,6 +80,11 @@ public class GastoOperativoController {
     }
 
     @GetMapping("{gastoOperativoId}")
+    @Operation(
+            summary = "Obtener gasto operativo por ID",
+            description = "Devuelve el detalle de un gasto operativo del edificio.")
+    @ApiResponse(responseCode = "200", description = "Detalle del gasto operativo")
+    @ApiResponse(responseCode = "404", description = "Gasto operativo no encontrado")
     public ResponseEntity<DetailGastoOperativoDto> findById(
             @PathVariable Long edificioId,
             @PathVariable Long gastoOperativoId)
@@ -77,6 +97,12 @@ public class GastoOperativoController {
     }
 
     @PutMapping("{gastoOperativoId}")
+    @Operation(
+            summary = "Actualizar gasto operativo",
+            description = "Actualiza los datos de un gasto operativo existente.")
+    @ApiResponse(responseCode = "204", description = "Gasto operativo actualizado correctamente")
+    @ApiResponse(responseCode = "400", description = "Solicitud inválida (p. ej. datos incompletos)")
+    @ApiResponse(responseCode = "404", description = "Gasto operativo no encontrado")
     public ResponseEntity<Void> update(
             @PathVariable Long edificioId,
             @PathVariable Long gastoOperativoId,
