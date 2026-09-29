@@ -27,6 +27,11 @@ import com.dataverse.dataverserentals.gestionadministrativa.entities.Usuario;
 import com.dataverse.dataverserentals.gestionadministrativa.services.UsuarioService;
 import com.dataverse.dataverserentals.security.context.SecurityContext;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,14 +40,20 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/usuarios")
 @Slf4j
+@Tag(name = "Usuarios", description = "Gestión de usuarios del sistema")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
     private final SecurityContext securityContext;
 
     @GetMapping
+    @Operation(
+            summary = "Listar usuarios",
+            description = "Devuelve los usuarios paginados, con búsqueda opcional por nombre de usuario o persona.")
+    @ApiResponse(responseCode = "200", description = "Página de usuarios")
     public ResponseEntity<Page<UsuarioPaginaDto>> findAll(
             Pageable pageable,
+            @Parameter(description = "Texto de búsqueda (nombre de usuario o persona)", example = "admin")
             @RequestParam(required = false) String q) {
 
         log.info("Listando usuarios con filtro '{}' y parámetros: {}", q, pageable);
@@ -53,6 +64,12 @@ public class UsuarioController {
     }
 
     @GetMapping("{usuarioId}")
+    @Operation(
+            summary = "Obtener usuario por ID",
+            description = "Devuelve el detalle de un usuario del sistema.")
+    @ApiResponse(responseCode = "200", description = "Detalle del usuario")
+    @ApiResponse(responseCode = "403", description = "Usuario no autorizado")
+    @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
     public ResponseEntity<DetailUsuarioDto> findById(@PathVariable Long usuarioId)
             throws RecordNotFoundException, AccessDeniedException {
 
@@ -63,6 +80,13 @@ public class UsuarioController {
     }
 
     @PostMapping
+    @Operation(
+            summary = "Crear usuario",
+            description = "Registra un nuevo usuario del sistema asociado a una persona existente.")
+    @ApiResponse(responseCode = "201", description = "Usuario creado; se devuelve el ID del usuario")
+    @ApiResponse(responseCode = "404", description = "Persona no encontrada")
+    @ApiResponse(responseCode = "409", description = "Conflicto (p. ej. nombre de usuario ya existente)")
+    @ApiResponse(responseCode = "422", description = "Datos del usuario no procesables")
     public ResponseEntity<CreateResponse> create(@RequestBody CreateUsuarioDto request)
             throws RecordNotFoundException, ConflictException, UnprocesableEntity {
 
@@ -76,6 +100,13 @@ public class UsuarioController {
     }
 
     @PutMapping("{usuarioId}")
+    @Operation(
+            summary = "Actualizar usuario",
+            description = "Actualiza el rol, estado y datos de un usuario existente.")
+    @ApiResponse(responseCode = "204", description = "Usuario actualizado correctamente")
+    @ApiResponse(responseCode = "403", description = "Usuario no autorizado")
+    @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    @ApiResponse(responseCode = "409", description = "Conflicto (p. ej. nombre de usuario ya existente)")
     public ResponseEntity<Void> actualizarUsuario(
             @PathVariable Long usuarioId,
             @RequestBody @Valid UpdateUsuarioDto request)
