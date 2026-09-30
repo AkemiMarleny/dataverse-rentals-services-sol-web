@@ -28,6 +28,11 @@ import com.dataverse.dataverserentals.gestioncampo.entities.LecturaHistorica;
 import com.dataverse.dataverserentals.gestioncampo.services.LecturaHistoricaService;
 import com.dataverse.dataverserentals.security.context.SecurityContext;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,16 +40,24 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("api/v1/lecturas-historicas")
 @Slf4j
+@Tag(name = "Lecturas históricas", description = "Gestión de lecturas históricas de medidores")
 public class LecturaHistoricaController {
 
     private final LecturaHistoricaService lecturaHistoricaService;
     private final SecurityContext securityContext;
 
     @GetMapping
+    @Operation(
+            summary = "Listar lecturas históricas",
+            description = "Devuelve las lecturas históricas paginadas, con filtros opcionales por número de serie del medidor y rango de fechas.")
+    @ApiResponse(responseCode = "200", description = "Página de lecturas históricas")
     public ResponseEntity<Page<LecturaHistoricaPaginaDto>> findAll(
+            @Parameter(description = "Texto de búsqueda (número de serie del medidor)", example = "ELEC-2026-001")
             @RequestParam(required = false) String q,
             Pageable pageable,
+            @Parameter(description = "Fecha de lectura desde (yyyy-MM-dd)", example = "2026-01-01")
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaDesde,
+            @Parameter(description = "Fecha de lectura hasta (yyyy-MM-dd)", example = "2026-01-31")
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaHasta) {
 
         log.info(
@@ -58,6 +71,11 @@ public class LecturaHistoricaController {
     }
 
     @PostMapping
+    @Operation(
+            summary = "Registrar lectura histórica",
+            description = "Registra una nueva lectura de un medidor en una fecha determinada.")
+    @ApiResponse(responseCode = "201", description = "Lectura registrada; se devuelve el ID de la lectura")
+    @ApiResponse(responseCode = "400", description = "Datos de la lectura inválidos (p. ej. valor o fecha incorrectos)")
     public ResponseEntity<CreateResponse> create(
             @RequestBody CreateLecturaHistoricaDto request)
             throws FieldConstraintException {
@@ -69,6 +87,11 @@ public class LecturaHistoricaController {
     }
 
     @GetMapping("{lecturaHistoricaId}")
+    @Operation(
+            summary = "Obtener lectura histórica por ID",
+            description = "Devuelve el detalle de una lectura histórica, incluyendo datos del medidor, unidad y edificio.")
+    @ApiResponse(responseCode = "200", description = "Detalle de la lectura histórica")
+    @ApiResponse(responseCode = "404", description = "Lectura histórica no encontrada")
     public ResponseEntity<DetailLecturaHistoricaDto> findById(
             @PathVariable Long lecturaHistoricaId) throws RecordNotFoundException {
 
@@ -80,6 +103,11 @@ public class LecturaHistoricaController {
     }
 
     @PutMapping("{lecturaHistoricaId}")
+    @Operation(
+            summary = "Actualizar lectura histórica",
+            description = "Actualiza la fecha y el valor de una lectura histórica existente.")
+    @ApiResponse(responseCode = "204", description = "Lectura actualizada correctamente")
+    @ApiResponse(responseCode = "404", description = "Lectura histórica no encontrada")
     public ResponseEntity<Void> update(@PathVariable Long lecturaHistoricaId,
             @RequestBody UpdateLecturaHistoricaDto request) throws RecordNotFoundException {
 
