@@ -1,28 +1,39 @@
 # Dataverse Rentals Services
 
-## launch.json
+Servicio backend de Dataverse Rentals. Proyecto Spring Boot (Java 24) con
+PostgreSQL (Flyway), S3 para almacenamiento de archivos y autenticación JWT + MFA.
 
-```json
-{
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "java",
-            "name": "DataverserentalsApplication",
-            "request": "launch",
-            "mainClass": "com.dataverse.dataverserentals.DataverserentalsApplication",
-            "projectName": "dataverserentals",
-            "env": {
-                "DATASOURCE_URL": "jdbc:postgresql://localhost:5432/dataverse_db",
-                "DB_USERNAME": "admin",
-                "DB_PASSWORD": "admin",
-                "JWT_SECRET": "42290b6c825e5e1653023d2c2561b9facbc65b6fec6d1c8ec9a17370923d07be",
-                "JWT_EXPIRATION": "86400000",
-                "MFA_ENCRYPTOR_PASSWORD": "tbXx956gnMckxPYWYB",
-                "MFA_ENCRYPTOR_SALT": "f0d80ee874c946bb",
-                "SPRING_PROFILES_ACTIVE": "dev"
-            }
-        }
-    ]
-}
+## Requisitos
+
+- **JDK 24**
+- **Docker** + **Docker Compose** (para PostgreSQL y LocalStack de desarrollo)
+- Maven no es necesario: se usa el wrapper `./mvnw`
+
+## Cómo ejecutar el proyecto
+
+Guía paso a paso con los prerrequisitos, las variables de entorno requeridas,
+las dependencias locales (PostgreSQL / LocalStack) y la puesta en marcha:
+
+[Guía de ejecución](docs/guia-ejecucion.md)
+
+Resumen rápido:
+
+```bash
+# 1. Levantar dependencias locales (PostgreSQL + LocalStack)
+docker compose up -d
+
+# 2. Configurar variables de entorno (ver la guía completa)
+export SPRING_PROFILES_ACTIVE=dev
+export DATASOURCE_URL=jdbc:postgresql://localhost:5432/dataverse_db
+export DB_USERNAME=admin
+export DB_PASSWORD=admin
+export JWT_SECRET="cambia-este-secreto-por-uno-seguro-de-al-menos-32-bytes"
+export MFA_ENCRYPTOR_PASSWORD="clave-mfa-local"
+export MFA_ENCRYPTOR_SALT="salt-local-16chars"
+
+# 3. Ejecutar la aplicación
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
+
+Con el perfil `dev` activo, la API queda disponible en
+`http://localhost:8080` y Swagger UI en `http://localhost:8080/swagger-ui.html`.
