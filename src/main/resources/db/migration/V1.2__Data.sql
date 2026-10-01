@@ -158,13 +158,6 @@ COPY public.refresh_tokens (id, created_at, expiry_date, ip_address, revoked, to
 
 
 --
--- Data for Name: v_contratos; Type: TABLE DATA; Schema: public; Owner: admin
---
-
-COPY public.v_contratos (id, alquiler_mensual, estado, fecha_cierre, fecha_creacion, fecha_fin, fecha_inicio, pdf_url, persona_id, unidad_id, usuario_creacion_id) FROM stdin;
-\.
-
-
 --
 -- Name: categorias_gasto_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
